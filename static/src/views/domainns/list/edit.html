@@ -1,0 +1,202 @@
+
+
+<div class="layui-form" lay-filter="domain-edit-form" style="padding: 20px 0 0 0;">
+  <script type="text/html" template lay-done="layui.data.done_edit(d);">
+  <form class="layui-row layui-col-space10 layui-form-item">
+    <div class="layui-col-lg4">
+      <label class="layui-form-label">状态</label>
+      <div class="layui-input-block">
+          <select name="domain_edit_status" id="domain_edit_status" lay-verify="required|domain_edit_status" xm-select="domain_edit_status" xm-select-radio xm-select-height="50px"  xm-select-skin="warm">
+              <option value=1>启用</option>
+              <option value=0>禁用</option>
+            </select>
+      </div>
+    </div>
+    <div class="layui-col-lg4">
+      <label class="layui-form-label">CDN</label>
+      <div class="layui-input-block">
+        <select name="domain_edit_cdn" lay-verify="domain_edit_cdn" xm-select="domain_edit_cdn" xm-select-show-count=2 xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+          {{#  layui.each(layui.setter.domain_args.cdn, function(index, item){ }}
+          <option value="{{ item.id }}" subtext="">{{ item.account }} {{ item.name }}</option>
+          {{#  }); }}
+        </select>
+      </div>
+    </div>
+    <div class="layui-col-lg4">
+        <label class="layui-form-label">CF</label>
+        <div class="layui-input-block">
+          <select name="domain_edit_cf" lay-verify="domain_edit_cf" xm-select="domain_edit_cf" xm-select-radio xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+            {{#  layui.each(layui.setter.domain_args.cf, function(index, item){ }}
+            <option value="{{ item.id }}" subtext="">{{ item.account }} {{ item.name }}</option>
+            {{#  }); }}
+          </select>
+        </div>
+      </div>
+  </from>
+
+  <form class="layui-row layui-col-space10 layui-form-item">
+      <div class="layui-col-lg4">
+        <label class="layui-form-label">所属产品</label>
+        <div class="layui-input-block">
+            <select name="domain_edit_product" id="domain_edit_product" lay-verify="domain_edit_product" xm-select="domain_edit_product" xm-select-radio xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+              {{#  layui.each(layui.setter.domain_args.product, function(index, item){ }}
+              <option value="{{ item[0] }}" subtext="">{{ item[1] }}</option>
+              {{#  }); }}
+            </select>
+        </div>
+      </div>
+      <div class="layui-col-lg4">
+        <label class="layui-form-label">所属客户</label>
+        <div class="layui-input-block">
+          <select name="domain_edit_customer" lay-verify="domain_edit_customer" xm-select="domain_edit_customer" xm-select-radio xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+            {{#  layui.each(layui.setter.domain_args.customer, function(index, item){ }}
+            <option value="{{ item[0] }}" subtext="">{{ item[1] }}</option>
+            {{#  }); }}
+          </select>
+        </div>
+      </div>
+      <div class="layui-col-lg4">
+          <label class="layui-form-label">所属组</label>
+          <div class="layui-input-block">
+            <select name="domain_edit_group" lay-verify="domain_edit_group" xm-select="domain_edit_group" xm-select-radio xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+              {{#  layui.each(layui.setter.domain_args.group, function(index, item){ }}
+              <option value="{{ item.id }}" subtext="">{{ item.group }}</option>
+              {{#  }); }}
+            </select>
+          </div>
+        </div>
+    </from>
+  </script>
+  <form class="layui-row layui-col-space10 layui-form-item">
+    <div class="layui-col-lg4">
+      <label class="layui-form-label">CDN</label>
+      <div class="layui-input-block">
+        <input type="checkbox" name="domain_cdn_status" id="domain_cdn_status" lay-filter="domain_cdn_status" title="更新">
+      </div>
+    </div>
+    <div class="layui-col-lg4">
+      <label class="layui-form-label">CloudFlare</label>
+      <div class="layui-input-block">
+        <input type="checkbox" name="domain_cf_status" id="domain_cf_status" lay-filter="domain_cf_status" title="更新" >
+      </div>
+    </div>
+  </from>
+  <div class="layui-form-item">
+    <label class="layui-form-label">域名</label>
+    <div class="layui-input-block">
+      <textarea name="domain_edit_name" id="domain_edit_name" lay-verify="domain_edit_name" placeholder="域名URL[http://domain/uri]，每行一条" class="layui-textarea" style="height: 180px;" required></textarea>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">备注</label>
+    <div class="layui-input-block">
+      <textarea name="domain_edit_content" id="domain_edit_content" lay-verify="domain_edit_content" placeholder="备注" class="layui-textarea" style="height: 100px;"></textarea>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label"></label>
+    <div class="layui-input-inline">
+      <input type="button" lay-submit lay-filter="domain-edit-form-submit" value="确认" class="layui-btn">
+    </div>
+  </div>
+</div>
+
+<script>
+layui.data.done_edit = function(d){
+  layui.use(['admin', 'form', 'upload'], function(){
+    var $ = layui.$
+    ,admin = layui.admin
+    ,element = layui.element
+    ,form = layui.form
+    ,view = layui.view
+    ,upload = layui.upload
+    ,table = layui.table
+    ,formSelects = layui.formSelects;
+    
+    form.render(null, 'domain-edit-form');
+
+    // 初始化下拉选框
+    formSelects.render('domain_edit_status', {
+      'radio': true,
+    });
+    
+    formSelects.render('domain_edit_cdn', {
+      template: function(name, value, selected, disabled){
+        return value.name.split(" ")[0] + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + value.name.split(" ")[1] + '</span>';
+      }
+    });
+    formSelects.render('domain_edit_cf', {
+      template: function(name, value, selected, disabled){
+        return value.name.split(" ")[0] + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + value.name.split(" ")[1] + '</span>';
+      }
+    });
+    formSelects.render('domain_edit_product');
+    formSelects.render('domain_edit_customer');
+    formSelects.render('domain_edit_group');
+
+    // 赋值
+    if (layui.setter.domain_edit_datas.length == 1){
+      var item = layui.setter.domain_edit_datas[0];
+      if (item.status == 1){
+        formSelects.value('domain_edit_status', ['1'], true);
+      }else {
+        formSelects.value('domain_edit_status', ['0'], true);
+      }
+      
+      if (item.cdn.length > 0){
+        formSelects.value('domain_edit_cdn', item.cdn.map(function (val) {return val.id;}), true);
+      }
+      if (item.cf.length > 0){
+        formSelects.value('domain_edit_cf', [item.cf[0].id], true);
+      }
+      formSelects.value('domain_edit_product', [item.product[0]], true);
+      formSelects.value('domain_edit_customer', [item.customer[0]], true);
+      formSelects.value('domain_edit_group', [item.group.id], true);
+
+      form.val("domain-edit-form", { // domain-edit-form 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+        "domain_cdn_status": true
+        ,"domain_cf_status": true
+        ,"domain_edit_name": item.name
+        ,"domain_edit_content": item.content
+      });
+    }else {
+      formSelects.value('domain_edit_status', [1], true);
+      var domain_edit_name_txt = layui.setter.domain_edit_datas.map(function (val) {return val.name;}).join('\n');
+      form.val("domain-edit-form", { // domain-edit-form 即 class="layui-form" 所在元素属性 lay-filter="" 对应的值
+        "domain_edit_name": domain_edit_name_txt
+      });
+    }
+
+    // 验证表单数据
+    form.verify({
+      // domain_edit_status: function(value){
+      //   if(value.length == 0){
+      //     return '状态不能为空';
+      //   }
+      // },
+      domain_edit_product: function(value){
+        if(value.length == 0){
+          return '所属产品 不能为空';
+        }
+      },
+      domain_edit_customer: function(value){
+        if(value.length == 0){
+          return '所属客户 不能为空';
+        }
+      },
+      domain_edit_group: function(value){
+        if(value.length == 0){
+          return '所属组 不能为空';
+        }
+      },
+      domain_edit_name: function(value){
+        if(value.replace(/\s+/g, '').length == 0){
+          return '域名 不能为空';
+        }
+      },
+    });
+
+  })
+
+}
+</script>

@@ -1,0 +1,220 @@
+
+<title>DnsPod</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb-dnspod">
+    <a lay-href="">主页</a>
+    <a><cite>CloudFlare</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">获取DNSPOD账号 / 抓取域名 / 获取解析</div>
+        <div class="layui-card-body">
+          <div class="layui-form" lay-filter="dnspod-form-element">
+            <form class="layui-row layui-col-space10 layui-form-item">
+
+              <script type="text/html" template lay-url="/domainns/dnspod/get_accounts" lay-done="layui.data.done(d);">
+                <div class="layui-col-lg4">
+                  <label class="layui-form-label">DP 账号：</label>
+                  <div class="layui-input-block">
+                      <select name="dnspod_account" id="dnspod_account" lay-verify="dnspod_account" xm-select="dnspod_account" xm-select-show-count=1 xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+                          {{ layui.setter.dnspod_acc_list = d.data }}
+                          {{#  for (var index in d.data){ }}
+                          <option value="{{ d.data[index].name }}">{{ d.data[index].name }}</option>
+                          {{#  }; }}
+                        </select>
+                  </div>
+                </div>
+                <div class="layui-col-lg4">
+                  <label class="layui-form-label">域名：</label>
+                  <div class="layui-input-block">
+                    <select name="dnspod_domains" lay-verify="dnspod_domains" xm-select="dnspod_domains" xm-select-skin="default" xm-select-height="50px" xm-select-show-count=2 xm-select-search="" xm-select-search-type="dl">
+                    </select>
+                  </div>
+                </div>
+                <div class="layui-col-lg4">
+                  <div>
+                    <button name="dnspodDomainsSendButton" id="dnspodDomainsSendButton" class="layui-btn" lay-submit lay-filter="dnspod-form-element" data-type="loading1">查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                  </div>
+                </div>
+              </script>
+            </from>
+          </div>
+          <table class="layui-table" id="dnspod_domains_table" name="dnspod_domains_table" lay-filter="dnspod_domains_table"></table>
+          <script type="text/html" id="switchEnabled">
+            <input type="checkbox" name="switch_enabled" id="switch_enabled" lay-filter="switch_enabled" value="{{d.enabled}}" data-json="{{ encodeURIComponent(JSON.stringify(d)) }}" title="启用" {{ d.enabled == 1 ? 'checked' : '' }}>
+          </script>
+          <div class="layui-form-item">
+            <script type="text/html" id="dnspod_domains_table_toolbar">
+              <div class="layui-inline">
+                <input class="layui-input" name="dnspod_domain_search_input" id="dnspod_domain_search_input">
+              </div>
+              <button class="layui-btn" lay-event="dnspod_domain_search">搜索</button>
+              <button class="layui-btn" lay-event="dnspod_domain_edit">编辑</button>
+            </script>
+
+            <script type="text/html" id="dnspod_domains_table_bar">
+              <a class="layui-btn layui-btn-xs" lay-event="dnspod_domain_add">新增</a>
+              <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="dnspod_domain_del">删除</a>
+            </script>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/custom/tablejs/domainns/dnspod.js"></script>
+
+<script>
+// 等待的弹层
+function loading1(){
+  loading1_iii = layui.layer.load(2, {
+      shade: [0.1,'#fff']
+    });
+  };
+
+// 在请求完账号数据后，加入表单监听
+layui.data.done = function(d){
+  layui.use(['form', 'element', 'formSelects'], function(){
+    var $ = layui.$
+    ,form = layui.form
+    ,element = layui.element
+    ,formSelects = layui.formSelects;
+
+    form.render(null, 'dnspod-form-element');
+    element.render('breadcrumb', 'breadcrumb-dnspod');
+    // 初始化下拉选框
+    formSelects.render('dnspod_domains');
+    formSelects.render('dnspod_account', {
+      template: function(name, value, selected, disabled){
+          var email = "";
+          for (index in layui.setter.dnspod_acc_list){
+            var dnspod_acc = layui.setter.dnspod_acc_list[index];
+            if (value.name == dnspod_acc.name){
+              email = dnspod_acc.email;
+            }
+          }
+          return value.name + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + email + '</span>';
+      }
+    });
+
+    // 关闭弹层
+    layer.close(loading1_iii);
+
+    // 监听 dnspod_account
+    formSelects.on('dnspod_account', (id, vals, val, isAdd, isDisabled)=>{
+      // 将新的数据加入 dnspod_domains
+      var arr = new Array();
+      for (index in vals){
+        var name = vals[index].value;
+        for (index2 in layui.setter.dnspod_acc_list){
+          var dnspod_acc = layui.setter.dnspod_acc_list[index2];
+
+          if (name == dnspod_acc.name){
+            arr.push({"name": name, "type": "optgroup"})
+            for (index3 in dnspod_acc.domain){
+              var domain = dnspod_acc.domain[index3];
+              arr.push({"name": domain['name'], "value": [name, domain['name'], domain['id']].join('_')})
+              // arr.push({"name": domain['name'], "value": {'dnspod_acc': name, 'domain': domain} })
+            }
+          }
+        }
+      };
+      //local模式
+      formSelects.data('dnspod_domains', 'local', {
+          arr: arr
+      });
+    }, true);
+  });
+};
+
+layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
+  var $ = layui.$
+  ,admin = layui.admin
+  ,element = layui.element
+  ,form = layui.form
+  ,upload = layui.upload
+  ,table = layui.table
+  ,formSelects = layui.formSelects;
+
+  // console.log('1111')
+
+  loading1.call(this); // 打开 等待的弹层
+
+  // 提交表单
+  form.on('submit(dnspod-form-element)', function(data){
+    var type = $(this).data('type');
+
+    // 验证表单
+    if (data.field.dnspod_account == ""){
+      layer.msg('请选择DNSPOD 账号', {
+          offset: '15px'
+          ,shift: 6
+          ,icon: 5
+          ,time: 1500
+      });
+      return false;
+    }
+    if (data.field.dnspod_domains == ""){
+      layer.msg('请选择要查询的域名', {
+          offset: '15px'
+          ,shift: 6
+          ,icon: 5
+          ,time: 1500
+      });
+      return false;
+    }
+
+    // 初始化所选数据
+    var postData = new Array();
+
+    for (value in data.field.dnspod_domains.split(',')){
+      var item = data.field.dnspod_domains.split(',')[value].split('_');
+      postData.push({'dnspod_acc': item[0], 'domain': item[1], 'zone_id': item[2]});
+    }
+
+    loading1.call(this); // 打开 等待的弹层
+
+    admin.req({
+      url: '/domainns/dnspod/get_zone_records' //实际使用请改成服务端真实接口code == 1001
+      ,method: "post" 
+      ,data: JSON.stringify({zones: postData})
+      ,contentType: 'application/json'
+      ,done: function(res){
+        // 发送成功的提示
+        layer.msg(res.msg, {
+          offset: '15px'
+          ,icon: 1
+          ,time: 1500
+        });
+        layui.setter.dnspod_domains_table_data = res.data;
+        layui.setter.dnspod_domains_table_postdata = postData;
+        table.reload('dnspod_domains_table', {
+          elem: '#dnspod_domains_table'
+          ,data: res.data
+        });
+        table.resize('dnspod_domains_table');
+        layer.close(loading1_iii); // 关闭 等待的弹层
+      },success:function(res){
+        if (res.code == 1001){ // 登陆失效
+          layer.msg(res.msg, {
+            offset: '15px'
+            ,icon: 1
+            ,time: 1500
+          })
+        };
+        layer.close(loading1_iii);
+      }
+      
+    });
+
+    return false;
+  });
+});
+</script>

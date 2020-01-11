@@ -1,0 +1,331 @@
+
+<title>Telegram</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb-tg">
+    <a lay-href="">主页</a>
+    <a><cite>Telegram</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">指定群组发送信息</div>
+        <div class="layui-card-body">
+          <div class="layui-form" lay-filter="component-form-element">
+            <form class="layui-row layui-col-space10 layui-form-item">
+
+              <script type="text/html" template lay-url="/detect/telegram" lay-done="layui.data.done(d);">
+
+                  <div class="layui-col-lg6">
+                    <label class="layui-form-label">Tg 群组</label>
+                    <div class="layui-input-block">
+                        <select name="group" lay-verify="group" xm-select="group" xm-select-radio xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+                            <option value=""></option>
+                            {{ layui.setter.telegram_data = d.data }}
+                            {{#  for (var group in d.data.groups){ }}
+                            <option value="{{ group }}">{{ d.data.groups[group]['name'] }}</option>
+                            {{#  }; }}
+                          </select>
+                    </div>
+                  </div>
+
+                  <div class="layui-col-lg6">
+                    <label class="layui-form-label">员工 组</label>
+                    <div class="layui-input-block">
+                      <select name="atUsers" lay-verify="atUsers" xm-select="atUsers" xm-select-skin="default" xm-select-show-count=3 xm-select-height="50px" xm-select-search="" xm-select-search-type="dl">
+                        <option value=""></option>
+                        {{#  layui.each(d.data.atUsers, function(index, item){ }}
+                        <option value="{{ item.id }}" subtext="">{{ item.department }}</option>
+                        {{#  }); }}
+                      </select>
+                    </div>
+                  </div>
+
+              </script>
+            </from>
+            <div class="layui-form-item">
+              <label class="layui-form-label">信息</label>
+              <div class="layui-input-block">
+                <textarea name="text" lay-verify="text" placeholder="信息文本可指定@人员，例如@arno" class="layui-textarea" style="height: 180px;" required></textarea>
+              </div>
+            </div>
+            <div class="layui-upload layui-form-item">
+                <label class="layui-form-label">图片</label>
+                <div class="layui-input-block">
+                <!-- <button type="button" class="layui-btn" id="upload_img">选择图片</button>  -->
+                  <div class="layui-upload">
+                      <button type="button" lay-verify="upload_img" class="layui-btn layui-btn-normal" id="upload_img">选择多文件</button> 
+                      <div class="layui-upload-list">
+                        <table class="layui-table">
+                          <thead>
+                            <tr><th>文件名</th>
+                            <th>大小</th>
+                            <th>状态</th>
+                            <th>操作</th>
+                          </tr></thead>
+                          <tbody id="demoList"></tbody>
+                        </table>
+                      </div>
+                      <!-- <button type="button" class="layui-btn" id="testListAction">开始上传</button> -->
+                    </div> 
+                </div>
+            </div>
+            <div class="layui-form-item">
+              <div class="layui-input-block">
+                <button name="telegramSendButton" id="telegramSendButton" class="layui-btn" lay-submit lay-filter="component-form-element" data-type="loading1">发送</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+layui.data.done = function(d){
+  layui.form.render(null, 'component-form-element');
+  layui.element.render('breadcrumb', 'breadcrumb-tg');
+  layui.formSelects.render('group', {
+    template: function(name, value, selected, disabled){
+      return value.name + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + value.value + '</span>';
+    }
+  });
+  layui.formSelects.render('atUsers', {
+    template: function(name, value, selected, disabled){
+      var display = "";
+      for (index in layui.setter.telegram_data.atUsers){
+        var item = layui.setter.telegram_data.atUsers[index]
+        if (value.value == item.id){
+          display = item.display;
+        }
+      }
+      return value.name + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + display + '</span>';
+    }
+  });
+  layer.close(loading1_iii);
+};
+
+layui.use(['admin', 'form', 'formSelects', 'upload'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,element = layui.element
+  ,form = layui.form
+  ,upload = layui.upload
+  ,formSelects = layui.formSelects;
+
+  //多文件列表示例
+  var demoListView = $('#demoList')
+  ,uploadListIns = upload.render({
+    elem: '#upload_img'
+    ,url: '/detect/telegram/sendgroupmessage'
+    ,accept: 'file'
+    ,async: false
+    ,multiple: true
+    ,auto: false
+    // ,bindAction: '#telegramSendButton'
+    ,bindAction: false
+    ,choose: function(obj){   
+      var files = this.files = obj.pushFile(); //将每次选择的文件追加到文件队列
+      //读取本地文件
+      obj.preview(function(index, file, result){
+        var tr = $(['<tr id="upload-'+ index +'">'
+          ,'<td>'+ file.name +'</td>'
+          ,'<td>'+ (file.size/1014).toFixed(1) +'kb</td>'
+          ,'<td>等待上传</td>'
+          ,'<td>'
+            ,'<button class="layui-btn layui-btn-xs demo-reload layui-hide">重传</button>'
+            ,'<button class="layui-btn layui-btn-xs layui-btn-danger demo-delete">删除</button>'
+          ,'</td>'
+        ,'</tr>'].join(''));
+        
+        //单个重传
+        tr.find('.demo-reload').on('click', function(){
+          obj.upload(index, file);
+        });
+        
+        //删除
+        tr.find('.demo-delete').on('click', function(){
+          delete files[index]; //删除对应的文件
+          tr.remove();
+          uploadListIns.config.elem.next()[0].value = ''; //清空 input file 值，以免删除后出现同名文件不可选
+        });
+        
+        demoListView.append(tr);
+      });
+    }
+    ,done: function(res, index, upload){
+      if(res.code == 0){ //上传成功
+        var tr = demoListView.find('tr#upload-'+ index)
+        ,tds = tr.children();
+        tds.eq(2).html('<span style="color: #5FB878;">上传成功</span>');
+        // tds.eq(3).html(''); //清空操作
+        // return delete this.files[index]; //删除文件队列已经上传成功的文件
+        layer.msg(res.msg, {
+          offset: '15px'
+          ,icon: 1
+          ,time: 1000
+        });
+        // sendText(this.send_text, this.data);
+        return false;
+      };
+      
+      this.error(index, upload);
+    }
+    ,error: function(index, upload){
+      var tr = demoListView.find('tr#upload-'+ index)
+      ,tds = tr.children();
+      tds.eq(2).html('<span style="color: #FF5722;">上传失败</span>');
+      tds.eq(3).find('.demo-reload').removeClass('layui-hide'); //显示重传
+    }
+  });
+
+  // 等待的弹层
+  function loading1(){
+    loading1_iii = layer.load(2, {
+        shade: [0.1,'#fff']
+      });
+      // setTimeout(function(){
+      //   layer.close(iii)
+      // }, 3000);
+    };
+
+  loading1.call(this); // 打开 等待的弹层
+
+  // 验证表单
+  // form.verify({
+  //     group: function(value){
+  //       if(value.length == 0){
+  //         return (content='请选择telegram 群组', offset="top");
+  //       }
+  //     }
+  //     // ,text: function(value){
+  //     //   if(value.length == 0){
+  //     //     return '信息不能为空';
+  //     //   }
+  //     // }
+  //   });
+
+  // admin 请求
+  function sendpicture(data){
+    admin.req({
+      url: '/detect/telegram/sendgroupmessage' //实际使用请改成服务端真实接口code == 1001
+      ,method: "post" 
+      ,data: data
+      ,processData: false
+      ,contentType: false
+      // ,async: false
+      ,done: function(res){
+        // 发送成功的提示
+        layer.msg(res.msg, {
+          offset: '15px'
+          ,icon: 1
+          ,time: 1000
+        });
+        // layer.close(loading1_iii); // 关闭 等待的弹层
+      },success:function(res){
+        if (res.code == 1001){ // 登陆失效
+          layer.msg(res.msg, {
+            offset: '15px'
+            ,icon: 1
+            ,time: 1000
+          })
+        };
+        // layer.close(loading1_iii);
+      }
+      
+    });
+  };
+
+  // 提交表单
+  form.on('submit(component-form-element)', function(data){
+    var type = $(this).data('type');
+    
+    // 验证表单中的tg群组 
+    if (data.field.group.length == 0){
+      layer.msg('请选择telegram 群组', {
+          offset: '15px'
+          ,shift: 6
+          ,icon: 5
+          ,time: 1000
+      });
+      return false;
+    }
+
+    loading1.call(this); // 打开 等待的弹层
+
+    // 将表单数据 放入图片请求里面
+    var postData = new FormData();
+    postData.append('group', data.field.group);
+    postData.append('atUsers', data.field.atUsers);
+    postData.append('text', data.field.text);
+
+    var fileNum = 0;
+    if (uploadListIns.config.files){
+      // uploadListIns.config.data = data.field;
+      // uploadListIns.upload();
+      $.each(uploadListIns.config.files, function (index, item) { 
+        postData.append('files[]', item, item.name);
+        fileNum = fileNum + 1;
+        // sendpicture(postData);
+      });
+
+      send_text = false;
+    }else {
+      send_text = true;
+      // console.log('no pics');
+    };
+
+    // 如果不是必须发送信息，取消等待的弹层
+    // if (send_text == false && data.field.text.length == 0){
+    //     layer.close(loading1_iii);
+    //     return false;
+    //   };
+
+    // 验证表单中的信息
+    if (data.field.text.replace(/\s+/g, "").length == 0 && fileNum == 0){
+      layer.msg('信息不能为空', {
+          offset: '15px'
+          ,shift: 6
+          ,icon: 5
+          ,time: 1000
+      });
+      layer.close(loading1_iii);
+      return false;
+    }
+
+    admin.req({
+      url: '/detect/telegram/sendgroupmessage' //实际使用请改成服务端真实接口code == 1001
+      ,method: "post" 
+      ,data: postData
+      ,processData: false
+      ,contentType: false
+      ,done: function(res){
+        // 发送成功的提示
+        layer.msg(res.msg, {
+          offset: '15px'
+          ,icon: 1
+          ,time: 1000
+        });
+        layer.close(loading1_iii); // 关闭 等待的弹层
+      },success:function(res){
+        if (res.code == 1001){ // 登陆失效
+          layer.msg(res.msg, {
+            offset: '15px'
+            ,icon: 1
+            ,time: 1000
+          })
+        };
+        layer.close(loading1_iii);
+      }
+      
+    });
+
+    return false;
+  });
+});
+</script>

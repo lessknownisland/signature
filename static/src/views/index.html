@@ -1,0 +1,42 @@
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md8">
+
+      <div class="layui-card">
+        <div class="layui-card-header">
+          小贴士
+          <i class="layui-icon layui-icon-tips" lay-tips="功能还在完善哦" lay-offset="5"></i>
+        </div>
+        <div class="layui-card-body layui-text layadmin-text">
+          <p>不同账号角色不同的权限；</p>
+          <p>指定的账号可以有特殊的额外权限。</p>
+          <!-- <p>子曰：君子不用防，小人防不住。请务必通过官网正规渠道，获得 <a href="http://www.layui.com/admin/" target="_blank">layuiAdmin</a>！</p> -->
+          <!-- <p>—— 贤心（<a href="http://www.layui.com/" target="_blank">layui.com</a>）</p> -->
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
+
+
+<script>
+//加载 controller 目录下的对应模块
+/*
+
+  小贴士：
+    这里 console 模块对应 的 console.js 并不会重复加载，
+    然而该页面的视图则是重新插入到容器，那如何保证能重新来控制视图？有两种方式：
+      1): 借助 layui.factory 方法获取 console 模块的工厂（回调函数）给 layui.use
+      2): 直接在 layui.use 方法的回调中书写业务代码，即:
+          layui.use('console', function(){ 
+            //同 console.js 中的 layui.define 回调中的代码 
+          });
+          
+  这里我们采用的是方式1。其它很多视图中采用的其实都是方式2，因为更简单些，也减少了一个请求数。
+  
+*/
+layui.use('console', layui.factory('console'));
+</script>
+

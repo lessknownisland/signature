@@ -1,0 +1,268 @@
+
+<title>域名列表</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb-domain">
+    <a lay-href="">主页</a>
+    <a><cite>域名列表</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">域名列表 / 域名监控 / 证书监控</div>
+        <div class="layui-card-body">
+          <div class="layui-form" lay-filter="domain-form-element">
+            <script type="text/html" template lay-url="/domainns/domain/args" lay-done="layui.data.done(d);">
+              <form class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-lg4">
+                  <label class="layui-form-label">状态</label>
+                  <div class="layui-input-block">
+                      <select name="domain_status" id="domain_status" lay-verify="domain_status" xm-select="domain_status" xm-select-show-count=2 xm-select-height="50px"  xm-select-search-type="dl" xm-select-skin="warm">
+                          <option value=1>启用</option>
+                          <option value=0>禁用</option>
+                        </select>
+                  </div>
+                </div>
+                <div class="layui-col-lg4">
+                  <label class="layui-form-label">CDN</label>
+                  <div class="layui-input-block">
+                    <select name="domain_cdn" lay-verify="domain_cdn" xm-select="domain_cdn" xm-select-show-count=2 xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+                      {{ layui.setter.domain_args = d.data }}
+                      {{#  layui.each(d.data.cdn, function(index, item){ }}
+                      <option value="{{ item.id }}" subtext="">{{ item.account }} {{ item.name }}</option>
+                      {{#  }); }}
+                    </select>
+                  </div>
+                </div>
+                <div class="layui-col-lg4">
+                    <label class="layui-form-label">CF</label>
+                    <div class="layui-input-block">
+                      <select name="domain_cf" lay-verify="domain_cf" xm-select="domain_cf" xm-select-show-count=2 xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+                        {{#  layui.each(d.data.cf, function(index, item){ }}
+                        <option value="{{ item.id }}" subtext="">{{ item.account }} {{ item.name }}</option>
+                        {{#  }); }}
+                      </select>
+                    </div>
+                  </div>
+              </from>
+
+              <form class="layui-row layui-col-space10 layui-form-item">
+                  <div class="layui-col-lg4">
+                    <label class="layui-form-label">所属产品</label>
+                    <div class="layui-input-block">
+                        <select name="domain_product" id="domain_product" lay-verify="domain_product" xm-select="domain_product" xm-select-show-count=2 xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+                          {{#  layui.each(d.data.product, function(index, item){ }}
+                          <option value="{{ item[0] }}" subtext="">{{ item[1] }}</option>
+                          {{#  }); }}
+                        </select>
+                    </div>
+                  </div>
+                  <div class="layui-col-lg4">
+                    <label class="layui-form-label">所属客户</label>
+                    <div class="layui-input-block">
+                      <select name="domain_customer" lay-verify="domain_customer" xm-select="domain_customer" xm-select-show-count=2 xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+                        {{#  layui.each(d.data.customer, function(index, item){ }}
+                        <option value="{{ item[0] }}" subtext="">{{ item[1] }}</option>
+                        {{#  }); }}
+                      </select>
+                    </div>
+                  </div>
+                  <div class="layui-col-lg4">
+                      <label class="layui-form-label">所属组</label>
+                      <div class="layui-input-block">
+                        <select name="domain_group" lay-verify="domain_group" xm-select="domain_group" xm-select-show-count=2 xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+                          {{#  layui.each(d.data.group, function(index, item){ }}
+                          <option value="{{ item.id }}" subtext="">{{ item.group }}</option>
+                          {{#  }); }}
+                        </select>
+                      </div>
+                    </div>
+                </from>
+                <form class="layui-row layui-col-space10 layui-form-item" >
+                    <div class="layui-col-lg4">
+                      <label class="layui-form-label">域名</label>
+                      <div class="layui-input-block">
+                          <input class="layui-input" name="domain_name" id="domain_name">
+                        </div>
+                    </div>
+
+                  </from>
+
+                <div class="layui-form-item">
+                  <div class="layui-input-block">
+                    <button name="domainQuerySendButton" id="domainQuerySendButton" class="layui-btn" lay-submit lay-filter="domain-form-element" data-type="loading1">查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                  </div>
+                </div>
+            </script>
+            
+          </div>
+          <table class="layui-table" id="domains_table" name="domains_table" lay-filter="domains_table"></table>
+          <script type="text/html" id="switchDomainStatus">
+            <input type="checkbox" name="switch_domain_status" id="switch_domain_status" lay-filter="switch_domain_status" value="{{d.status}}" data-json="{{ encodeURIComponent(JSON.stringify(d)) }}" title="启用" {{ d.status == 1 ? 'checked' : '' }}>
+          </script>
+            
+            <div class="layui-form-item">
+              <script type="text/html" id="domains_table_toolbar">
+                <div class="layui-btn-group">
+                  <button type="button" class="layui-btn" lay-event="domain_add">新增</button>
+                  <button type="button" class="layui-btn" lay-event="domain_edit">编辑</button>
+                  <button type="button" class="layui-btn" lay-event="domain_delete">删除</button>
+                </div>
+              </script>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/custom/tablejs/domainns/list.js"></script>
+
+<script>
+// 等待的弹层
+function loading1(){
+  loading1_iii = layui.layer.load(2, {
+      shade: [0.1,'#fff']
+    });
+  };
+
+// 在请求完账号数据后，加入表单监听
+layui.data.done = function(d){
+  layui.use(['form', 'element', 'formSelects'], function(){
+    var $ = layui.$
+    ,form = layui.form
+    ,element = layui.element
+    ,formSelects = layui.formSelects;
+
+    form.render(null, 'domain-form-element');
+    element.render('breadcrumb', 'breadcrumb-domain');
+    // 初始化下拉选框
+    formSelects.render('domain_status');
+    formSelects.render('domain_cdn', {
+      template: function(name, value, selected, disabled){
+        return value.name.split(" ")[0] + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + value.name.split(" ")[1] + '</span>';
+      }
+    });
+    formSelects.render('domain_cf', {
+      template: function(name, value, selected, disabled){
+        return value.name.split(" ")[0] + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + value.name.split(" ")[1] + '</span>';
+      }
+    });
+    formSelects.render('domain_product');
+    formSelects.render('domain_customer');
+    formSelects.render('domain_group', {
+      template: function(name, value, selected, disabled){
+        for (index in layui.setter.domain_args.group){
+          var item = layui.setter.domain_args.group[index];
+          if (value.value == item.id){
+            return item.group + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + [ item.client, item.method, item.ssl, item.retry ].join(" | ") + '</span>';
+          }
+        }
+      }
+    });
+
+
+
+    // 关闭弹层
+    layer.close(loading1_iii);
+
+  });
+};
+
+layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
+  var $ = layui.$
+  ,admin = layui.admin
+  ,element = layui.element
+  ,form = layui.form
+  ,upload = layui.upload
+  ,table = layui.table
+  ,formSelects = layui.formSelects;
+
+  // console.log('1111')
+
+  loading1.call(this); // 打开 等待的弹层
+
+  // 提交表单
+  form.on('submit(domain-form-element)', function(data){
+    var type = $(this).data('type');
+
+    // 初始化所选数据
+    var postData = {
+      'name': data.field.domain_name,
+      'status': data.field.domain_status,
+      'cdn': data.field.domain_cdn,
+      'cf': data.field.domain_cf,
+      'product': data.field.domain_product,
+      'customer': data.field.domain_customer,
+      'group': data.field.domain_group,
+    };
+
+    // 数据格式化，如果没有选择，默认获取所有选项的值
+    if (postData.status == ""){
+      postData.status = [1, 0];
+    }else {
+      postData.status = postData.status.split(',').map(function (val) {return parseInt(val);})
+    }
+    if (postData['group'] == ""){
+      postData['group'] = layui.setter.domain_args['group'].map(function (val) {return val.id;})
+    }else {
+      postData['group'] = postData['group'].split(',').map(function (val) {return parseInt(val);})
+    }
+    for (var index in ['cf', 'cdn']){
+      var item = ['cf', 'cdn'][index];
+      if (postData[item] == ""){
+        postData[item] = []
+      }else {
+        postData[item] = postData[item].split(',').map(function (val) {return parseInt(val);})
+      }
+    }
+    for (var index in ['product', 'customer']){
+      var item = ['product', 'customer'][index];
+      if (postData[item] == ""){
+        postData[item] = layui.setter.domain_args[item].map(function (val) {return val[0];})
+      }else {
+        postData[item] = postData[item].split(',').map(function (val) {return parseInt(val);})
+      }
+    }
+
+    loading1.call(this); // 打开 等待的弹层
+
+    admin.req({
+      url: '/domainns/domain/get_records' //实际使用请改成服务端真实接口code == 1001
+      ,method: "post" 
+      ,data: JSON.stringify(postData)
+      ,contentType: 'application/json'
+      ,done: function(res){
+        // 发送成功的提示
+        layer.msg(res.msg, {
+          offset: '15px'
+          ,icon: 1
+          ,time: 1500
+        });
+        layui.setter.domains_table_data = res.data;
+        layui.setter.domains_table_postdata = postData;
+        table.reload('domains_table', {
+          data: res.data
+        });
+        layer.close(loading1_iii); // 关闭 等待的弹层
+      },success:function(res){
+        if (res.code == 1001){ // 登陆失效
+          layer.msg(res.msg, {
+            offset: '15px'
+            ,icon: 1
+            ,time: 1500
+          })
+        };
+        layer.close(loading1_iii);
+      }
+      
+    });
+
+    return false;
+  });
+});
+</script>

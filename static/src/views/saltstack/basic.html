@@ -1,0 +1,404 @@
+<title>SaltStack</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb-tg">
+    <a lay-href="">主页</a>
+    <a><cite>SaltStack</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-body">
+          <div class="layui-tab">
+            <ul class="layui-tab-title">
+              <li class="layui-this">基本操作</li>
+              <li>服务操作</li>
+              <li>配置推送</li>
+            </ul>
+            <div class="layui-tab-content">
+              <!-- 基本操作 -->
+              <div class="layui-tab-item layui-show">
+                
+              </div>
+              <!-- 基本操作 END -->
+              <!-- <script type="text/html" template lay-url="/domainns/reflesh" lay-done="layui.data.done(d);"> -->
+                <!-- 服务操作 -->
+                <div class="layui-tab-item">
+                  <p>不开心</p>
+                </div>
+                <!-- 服务操作 END -->
+                
+                <!-- 配置推送 -->
+                <div class="layui-tab-item">
+                  <p>开心</p>
+                </div>
+                <!-- 配置推送 END -->
+              <!-- </script> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+layui.data.done = function(d){
+
+layui.use(['admin', 'form', 'formSelects', 'upload'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,element = layui.element
+  ,form = layui.form
+  ,upload = layui.upload
+  ,formSelects = layui.formSelects;
+
+  element.render('breadcrumb', 'breadcrumb-tg');
+
+  form.render(null, 'component-reflesh-form-element');
+  form.render(null, 'component-reflesh-project-form-element');
+  
+  element.render('domainns_reflesh_message');
+  element.render('domainns_reflesh_project_message');
+
+  formSelects.render('cdn_account', {
+    template: function(name, value, selected, disabled){
+      for (var index in layui.setter.reflesh_project.cdn) {
+        var cdn = layui.setter.reflesh_project.cdn[index];
+        if (value.value == cdn.id){
+          return value.name + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + cdn.name + '</span>';
+        }
+      }
+    }
+  });
+  formSelects.render('cdn_domain');
+  formSelects.render('project');
+  formSelects.render('project_domain',{
+    // init: arr,
+    template: function(name, value, selected, disabled){
+      return value.name.split(" ")[0] + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + value.name.split(" ")[1] + '</span>';
+    }
+  });
+
+  layer.close(loading1_iii);
+
+  // 监听 cdn_account
+  formSelects.on('cdn_account', (id, vals, val, isAdd, isDisabled)=>{
+    // 将新的数据加入 cdn_domain
+    var arr = new Array();
+    for (index in vals){
+      var id = vals[index].value;
+      for (index2 in layui.setter.reflesh_project.cdn){
+        var cdn_acc = layui.setter.reflesh_project.cdn[index2];
+
+        if (id == cdn_acc.id){
+          arr.push({"name": vals[index].name, "type": "optgroup"})
+          for (index3 in cdn_acc.domain){
+            var domain = cdn_acc.domain[index3];
+
+            if (cdn_acc.name == "aws"){ // 如果是aws 域名，进行特殊处理
+              arr.push({"name": domain.Id+": "+domain.name.join(", "), "value": domain['Id']})
+            }else {
+              if (domain.ssl === 1){
+                arr.push({"name": "https://"+domain.name , "value": "https://"+domain.name})
+              }else {
+                arr.push({"name": "http://"+domain.name , "value": "http://"+domain.name})
+              }
+              
+            }
+          }
+        }
+      }
+    };
+    //local模式
+    formSelects.data('cdn_domain', 'local', {
+        arr: arr
+    });
+  }, true);
+
+  // 监听 project
+  formSelects.on('project', (id, vals, val, isAdd, isDisabled)=>{
+    // 将新的数据加入 project_domain
+    var arr = new Array();
+    for (index in vals){
+      var project = vals[index].value;
+      for (index2 in layui.setter.reflesh_project.domain_project){
+        var item = layui.setter.reflesh_project.domain_project[index2];
+
+        if (project == item.project){
+          arr.push({"name": vals[index].name, "type": "optgroup"})
+          for (index3 in item.domain){
+            var domain = item.domain[index3];
+
+            arr.push({"name": domain.name +" "+domain.customer, "value": domain.id});
+
+          }
+        }
+      }
+    };
+    //local模式
+    layui.formSelects.data('project_domain', 'local', {
+        arr: arr
+    });
+  }, true);
+
+  //表单赋值
+  layui.$('#reset-reflesh-project-form').on('click', function(){
+    formSelects.render('project');
+    formSelects.render('project_domain');
+    document.getElementById('project_domain_uri').value = '';
+  });
+
+});
+  
+
+};
+
+layui.use(['admin', 'form', 'formSelects', 'upload'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,element = layui.element
+  ,form = layui.form
+  ,upload = layui.upload
+  ,formSelects = layui.formSelects;
+
+  // element.render('domainns_reflesh_progress');
+
+  // 等待的弹层
+  function loading1(){
+    loading1_iii = layer.load(2, {
+      shade: [0.1,'#fff']
+    });
+  };
+
+  loading1.call(this); // 打开 等待的弹层
+  layer.close(loading1_iii);
+
+  // 提交表单 component-reflesh-form-element
+  form.on('submit(component-reflesh-form-element)', function(data){
+    var type = $(this).data('type');
+    
+    // 验证表单中的cdn 账号
+    if (data.field.cdn_account.length == 0){
+      layer.msg('请选择cdn 账号', {
+          offset: '15px'
+          ,shift: 6
+          ,icon: 5
+          ,time: 1000
+      });
+      return false;
+    }
+    if (data.field.cdn_domain.length == 0){
+      layer.msg('请选择域名', {
+          offset: '15px'
+          ,shift: 6
+          ,icon: 5
+          ,time: 1000
+      });
+      layer.close(loading1_iii);
+      return false;
+    }
+
+    var postData = {
+      'cdn': parseInt(data.field.cdn_account),
+      'domain': data.field.cdn_domain.split(','),
+      'uri': []
+    }
+
+    if (data.field.cdn_domain_uri.length == 0){
+        postData['uri'] = ['/'];
+    }else {
+      var uri_l = data.field.cdn_domain_uri.split('\n');
+      for(var i = 0; i < uri_l.length; i++) { 
+          if(uri_l[i].replace(/ /g, '') === ''){
+              continue;
+          }
+          if (! public.isUri(uri_l[i].replace(/(^\s*)|(\s*$)/g, ""))) {
+            layer.msg(uri_l[i].replace(/(^\s*)|(\s*$)/g, "") + " 格式不正确！", {
+                offset: '15px'
+                ,shift: 6
+                ,icon: 5
+                ,time: 1000
+            });
+              // alert(uri_l[i].replace(/(^\s*)|(\s*$)/g, "") + "格式不正确！");
+            return false;
+          }
+          postData['uri'].push(uri_l[i].replace(/(^\s*)|(\s*$)/g, ""));
+      }
+    }
+
+    loading1.call(this); // 打开 等待的弹层
+
+    // 将读条归零
+    element.progress('domainns_reflesh_progress', "0%")
+
+    // 建立socket 连接
+    public.socketConn('/domainns/reflesh/execute/cdn');
+
+    window.s.onopen = function (e) {
+      window.s.send(JSON.stringify(postData));
+    };
+
+    window.s.onmessage = function (e) {
+      var data = public.socketonMessage(e); // 预处理
+
+      // 判断是否有正常的返回数据
+      if (! data){
+        return false;
+      }
+
+      // 设置读条并展示返回的结果
+      if (data.step_finished >= data.step_all){
+        var width = "100%";
+        layer.close(loading1_iii);
+        window.s.close();
+      }else {
+        var width = (100*(data.step_finished)/data.step_all).toFixed(1) + "%";
+      }
+      
+      element.progress('domainns_reflesh_progress', width)
+      $("#domainns_reflesh_message").append("<p>"+data.msg+"</p>")
+
+      // 执行完成后的动作
+      // if (data.step_finished == data.step_all){
+      //   layer.close(loading1_iii);
+      // }
+
+    }; 
+
+    window.s.onerror = function (e){
+      if (e){
+        code=e.code;
+        console.log(code);
+      }
+
+      layer.msg("网络错误", {
+          offset: '15px'
+          ,shift: 6
+          ,icon: 5
+          ,time: 1000
+      });
+      layer.close(loading1_iii);
+    };
+
+    window.s.onclose = function (e) {
+      layer.close(loading1_iii);
+    };
+
+    return false;
+  });
+
+  // 提交表单 component-reflesh-project-form-element
+  form.on('submit(component-reflesh-project-form-element)', function(data){
+    var type = $(this).data('type');
+    
+    // 验证表单中的project
+    if (data.field.project.length == 0){
+      layer.msg('请选择项目', {
+          offset: '15px'
+          ,shift: 6
+          ,icon: 5
+          ,time: 1000
+      });
+      return false;
+    }
+    if (data.field.project_domain.length == 0){
+      layer.msg('请选择域名', {
+          offset: '15px'
+          ,shift: 6
+          ,icon: 5
+          ,time: 1000
+      });
+      layer.close(loading1_iii);
+      return false;
+    }
+
+    var postData = {
+      'project': parseInt(data.field.project),
+      'domain': data.field.project_domain.split(','),
+      'uri': []
+    }
+
+    if (data.field.project_domain_uri.length == 0){
+        postData['uri'] = ['/'];
+    }else {
+      var uri_l = data.field.project_domain_uri.split('\n');
+      for(var i = 0; i < uri_l.length; i++) { 
+          if(uri_l[i].replace(/ /g, '') === ''){
+              continue;
+          }
+          if (! public.isUri(uri_l[i].replace(/(^\s*)|(\s*$)/g, ""))) {
+            layer.msg(uri_l[i].replace(/(^\s*)|(\s*$)/g, "") + " 格式不正确！", {
+                offset: '15px'
+                ,shift: 6
+                ,icon: 5
+                ,time: 1000
+            });
+              // alert(uri_l[i].replace(/(^\s*)|(\s*$)/g, "") + "格式不正确！");
+            return false;
+          }
+          postData['uri'].push(uri_l[i].replace(/(^\s*)|(\s*$)/g, ""));
+      }
+    }
+
+    loading1.call(this); // 打开 等待的弹层
+
+    // 将读条归零
+    element.progress('domainns_reflesh_project_progress', "0%")
+
+    // 建立socket 连接
+    public.socketConn('/domainns/reflesh/execute/project');
+
+    window.s.onopen = function (e) {
+      window.s.send(JSON.stringify(postData));
+    };
+
+    window.s.onmessage = function (e) {
+      var data = public.socketonMessage(e); // 预处理
+
+      // 判断是否有正常的返回数据
+      if (! data){
+        return false;
+      }
+
+      // 设置读条并展示返回的结果
+      if (data.step_finished >= data.step_all){
+        var width = "100%";
+        layer.close(loading1_iii);
+        window.s.close();
+      }else {
+        var width = (100*(data.step_finished)/data.step_all).toFixed(1) + "%";
+      }
+      
+      element.progress('domainns_reflesh_project_progress', width)
+      $("#domainns_reflesh_project_message").append("<p>"+data.msg+"</p>")
+
+      // 执行完成后的动作
+      // if (data.step_finished == data.step_all){
+      //   layer.close(loading1_iii);
+      // }
+
+    }; 
+
+    window.s.onerror = function (){
+      layer.msg("网络错误，或者登陆失效！", {
+          offset: '15px'
+          ,shift: 6
+          ,icon: 5
+          ,time: 1000
+      });
+      layer.close(loading1_iii);
+    };
+
+    window.s.onclose = function () {
+      layer.close(loading1_iii);
+    };
+
+    return false;
+  });
+
+});
+</script>

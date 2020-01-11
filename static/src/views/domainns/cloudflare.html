@@ -1,0 +1,249 @@
+
+<title>CloudFlare</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb-cf">
+    <a lay-href="">主页</a>
+    <a><cite>CloudFlare</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">获取CF账号 / 抓取域名 / 获取解析</div>
+        <div class="layui-card-body">
+          <div class="layui-form" lay-filter="cloudflare-form-element">
+            <form class="layui-row layui-col-space10 layui-form-item">
+
+              <script type="text/html" template lay-url="/domainns/cloudflare/get_accounts" lay-done="layui.data.done(d);">
+                <div class="layui-col-lg4">
+                  <label class="layui-form-label">CF 账号：</label>
+                  <div class="layui-input-block">
+                      <select name="cf_account" id="cf_account" lay-verify="cf_account" xm-select="cf_account" xm-select-show-count=1 xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+                          {{ layui.setter.cf_acc_list = d.data }}
+                          {{#  for (var index in d.data){ }}
+                          <option value="{{ d.data[index].name }}">{{ d.data[index].name }}</option>
+                          {{#  }; }}
+                        </select>
+                  </div>
+                </div>
+                <div class="layui-col-lg4">
+                  <label class="layui-form-label">域名：</label>
+                  <div class="layui-input-block">
+                    <select name="cf_domains" lay-verify="cf_domains" xm-select="cf_domains" xm-select-skin="default" xm-select-height="50px" xm-select-show-count=2 xm-select-search="" xm-select-search-type="dl">
+                    </select>
+                  </div>
+                </div>
+                <div class="layui-col-lg4">
+                  <div>
+                    <button name="cfDomainsSendButton" id="cfDomainsSendButton" class="layui-btn" lay-submit lay-filter="cloudflare-form-element" data-type="loading1">查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                  </div>
+                </div>
+              </script>
+            </from>
+          </div>
+          <table class="layui-table" id="cf_domains_table" name="cf_domains_table" lay-filter="cf_domains_table"></table>
+            
+            <div class="layui-form-item">
+              <script type="text/html" id="cf_domains_table_toolbar">
+                <div class="layui-inline">
+                  <input class="layui-input" name="cf_domain_search_input" id="cf_domain_search_input">
+                </div>
+                <button class="layui-btn" lay-event="cf_domain_search">搜索</button>
+                <button class="layui-btn" lay-event="cf_domain_edit">编辑</button>
+              </script>
+
+              <script type="text/html" id="cf_domains_table_bar">
+                <a class="layui-btn layui-btn-xs" lay-event="cf_domain_add">新增</a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="cf_domain_del">删除</a>
+              </script>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/custom/tablejs/domainns/cloudflare.js"></script>
+
+<script>
+// 等待的弹层
+function loading1(){
+  loading1_iii = layui.layer.load(2, {
+      shade: [0.1,'#fff']
+    });
+  };
+
+// 在请求完账号数据后，加入表单监听
+layui.data.done = function(d){
+  layui.use(['form', 'element', 'formSelects'], function(){
+    var $ = layui.$
+    ,form = layui.form
+    ,element = layui.element
+    ,formSelects = layui.formSelects;
+
+    form.render(null, 'cloudflare-form-element');
+    element.render('breadcrumb', 'breadcrumb-cf');
+    // 初始化下拉选框
+    formSelects.render('cf_domains');
+    formSelects.render('cf_account', {
+      template: function(name, value, selected, disabled){
+          var email = "";
+          for (index in layui.setter.cf_acc_list){
+            var cf_acc = layui.setter.cf_acc_list[index];
+            if (value.name == cf_acc.name){
+              email = cf_acc.email;
+            }
+          }
+          return value.name + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + email + '</span>';
+      }
+    });
+
+    // 关闭弹层
+    layer.close(loading1_iii);
+
+    // 监听 cf_account
+    formSelects.on('cf_account', (id, vals, val, isAdd, isDisabled)=>{
+      // 将新的数据加入 cf_domains
+      var arr = new Array();
+      for (index in vals){
+        var name = vals[index].value;
+        for (index2 in layui.setter.cf_acc_list){
+          var cf_acc = layui.setter.cf_acc_list[index2];
+
+          if (name == cf_acc.name){
+            arr.push({"name": name, "type": "optgroup"})
+            for (index3 in cf_acc.domain){
+              var domain = cf_acc.domain[index3];
+              arr.push({"name": domain['name'], "value": [name, domain['name'], domain['id']].join('_')})
+              // arr.push({"name": domain['name'], "value": {'cf_acc': name, 'domain': domain} })
+            }
+          }
+        }
+      };
+      //local模式
+      formSelects.data('cf_domains', 'local', {
+          arr: arr
+      });
+    }, true);
+  });
+};
+
+layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
+  var $ = layui.$
+  ,admin = layui.admin
+  ,element = layui.element
+  ,form = layui.form
+  ,upload = layui.upload
+  ,table = layui.table
+  ,formSelects = layui.formSelects;
+
+  // console.log('1111')
+
+  loading1.call(this); // 打开 等待的弹层
+
+  // 提交表单
+  form.on('submit(cloudflare-form-element)', function(data){
+    var type = $(this).data('type');
+
+    // 验证表单
+    if (data.field.cf_account == ""){
+      layer.msg('请选择CF 账号', {
+          offset: '15px'
+          ,shift: 6
+          ,icon: 5
+          ,time: 1500
+      });
+      return false;
+    }
+    if (data.field.cf_domains == ""){
+      layer.msg('请选择要查询的域名', {
+          offset: '15px'
+          ,shift: 6
+          ,icon: 5
+          ,time: 1500
+      });
+      return false;
+    }
+
+    // 初始化所选数据
+    var postData = new Array();
+
+    for (value in data.field.cf_domains.split(',')){
+      var item = data.field.cf_domains.split(',')[value].split('_');
+      postData.push({'cf_acc': item[0], 'domain': item[1], 'zone_id': item[2]});
+    }
+
+    loading1.call(this); // 打开 等待的弹层
+
+    // table.render({
+    //   elem: '#cf_domains_table'
+    //     // ,data: table_datas
+    //     ,url: '/domainns/cloudflare/get_zone_records'
+    //     ,method: "post"
+    //     ,where: {zones: postData}
+    //     ,contentType: 'application/json'
+    //     ,done: function(res){
+    //       // 发送成功的提示
+    //       layer.msg(res.msg, {
+    //         offset: '15px'
+    //         ,icon: 1
+    //         ,time: 1500
+    //       });
+    //       layui.setter.cf_domains_table_data = res.data;
+    //       layui.setter.cf_domains_table_postdata = postData;
+    //       layer.close(loading1_iii); // 关闭 等待的弹层
+    //     },success:function(res){
+    //     if (res.code == 1001){ // 登陆失效
+    //       layer.msg(res.msg, {
+    //         offset: '15px'
+    //         ,icon: 1
+    //         ,time: 1500
+    //       })
+    //     };
+    //     layer.close(loading1_iii);
+    //   }
+    // })
+
+    // return false;
+
+    admin.req({
+      url: '/domainns/cloudflare/get_zone_records' //实际使用请改成服务端真实接口code == 1001
+      ,method: "post" 
+      ,data: JSON.stringify({zones: postData})
+      ,contentType: 'application/json'
+      ,done: function(res){
+        // 发送成功的提示
+        layer.msg(res.msg, {
+          offset: '15px'
+          ,icon: 1
+          ,time: 1500
+        });
+        layui.setter.cf_domains_table_data = res.data;
+        layui.setter.cf_domains_table_postdata = postData;
+        table.reload('cf_domains_table', {
+          elem: '#cf_domains_table'
+          ,data: res.data
+        });
+        table.resize('cf_domains_table');
+        layer.close(loading1_iii); // 关闭 等待的弹层
+      },success:function(res){
+        if (res.code == 1001){ // 登陆失效
+          layer.msg(res.msg, {
+            offset: '15px'
+            ,icon: 1
+            ,time: 1500
+          })
+        };
+        layer.close(loading1_iii);
+      }
+      
+    });
+
+    return false;
+  });
+});
+</script>

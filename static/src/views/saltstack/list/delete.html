@@ -1,0 +1,72 @@
+
+
+<div class="layui-form" lay-filter="domain-delete-form" style="padding: 20px 0 0 0;">
+  <table class="layui-table" id="domains_delete_table" name="domains_delete_table" lay-filter="domains_delete_table"></table>
+  <div class="layui-form-item">
+    <input type="button" lay-submit lay-filter="domain-delete-form-submit" value="确认" class="layui-btn" style="float:right">
+  </div>
+</div>
+
+<script>
+layui.use(['admin', 'form', 'upload'], function(){
+  var $ = layui.$
+  ,admin = layui.admin
+  ,element = layui.element
+  ,form = layui.form
+  ,view = layui.view
+  ,upload = layui.upload
+  ,table = layui.table
+  ,formSelects = layui.formSelects;
+  
+  form.render(null, 'domain-delete-form');
+
+  // 表格初始化
+  table.init('domains_delete_table', {
+    elem: '#domains_delete_table'
+      // ,data: table_datas
+      ,toolbar: "#domains_delete_table_toolbar"
+      ,defaultToolbar: false
+      ,title: 'CF域名表'
+      ,limit: 20
+      ,limits: [20, 50, 100, 500]
+      ,cols: [[
+        {field:'name', title:'域名', sort:true, width: 300}
+        ,{field:'product', title:'产品', sort:true, templet: function(d){
+          return d.product[1];
+        }}
+        ,{field:'customer', title:'客户', sort:true, templet: function(d){
+          return d.customer[1];
+        }}
+        ,{field:'group', title:'所属组', sort:true, templet: function(d){
+          return d.group.group;
+        }}
+        ,{field:'cdn', title:'CDN', sort:true, templet: function(d){
+            var list = [];
+            for (var index in d.cdn){
+              var item = d.cdn[index];
+              list.push(item.name+"_"+item.account)
+            }
+            return list.join('<br>');
+          }}
+        ,{field:'cf', title:'CloudFlare', sort:true, templet: function(d){
+            var list = [];
+            for (var index in d.cf){
+              var item = d.cf[index];
+              list.push(item.name+"_"+item.account)
+            }
+            return list.join('<br>');
+          }}
+        ,{field:'content', title:'备注', sort:true}
+        ,{field:'status', title:'状态', templet: '#switchDomainStatus', unresize: true, sort:true, fixed: 'right'}
+      ]]
+      ,height:400
+      ,page: true
+  })
+
+  // reload 表格数据
+  table.reload('domains_delete_table', {
+    data: layui.setter.domain_delete_datas
+  })
+
+})
+</script>
