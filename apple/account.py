@@ -13,6 +13,7 @@ from control.middleware.common      import IsSomeType
 
 import json
 import logging
+import datetime
 
 logger = logging.getLogger('django')
 
@@ -22,12 +23,11 @@ def create_crt(request):
     '''
         创建苹果证书，及一些关联操作:
 
-        1. 判断账号是否已经入库
+        1. 检查账号ID是否为空
         2. 在进行创建证书前，先关闭此账号的签名请求
-        3. 删除数据库中已记录的设备记录
-        4. 获取开发者账号上的已注册设备，并写入数据库
-        5. 删除 apple 上的 IOS_DISTRIBUTION 证书
-        6. 创建新的证书，并更新账号信息
+        3. 更新数据库中的设备信息
+        4. 删除 apple 上的 IOS_DISTRIBUTION 证书
+        5. 创建新的证书，并更新账号信息
 
     '''
     username, role, clientip = User(request).get_default_values()
@@ -61,43 +61,62 @@ def create_crt(request):
             # 引入asca 类
             asca = AppStoreConnectApi(apple_account.account, apple_account.p8, apple_account.iss, apple_account.kid)
 
-            # # 获取开发者账号上的已注册设备
-            # ret_data = asca.get_devices()
+            # 获取开发者账号上的已注册设备
+            ret_data = asca.get_devices()
             
-            # # 先删除数据库中已记录的设备记录
-            # AppleDeviceTb.objects.filter(apple_id=apple_id).delete()
-
-            # if ret_data['code'] == 0: # 如果是成功的，则执行其他操作
-            #     devices = ret_data['data']['data']
-            #     for device in devices: # 将设备信息写入库
-            #         d = AppleDeviceTb()
-            #         d.udid = device['attributes']['udid']
-            #         d.apple_id = apple_id
-            #         d.device_id = device['id']
-            #         d.device_name = device['attributes']['name']
-            #         d.device_model = device['attributes']['model']
-            #         d.save()
-
-            #     return HttpResponse(json.dumps(ret_data))
-            # else:
-            #     return HttpResponse(json.dumps(ret_data))
-
-            # 获取并删除 apple 账号上的 "certificateType": "IOS_DISTRIBUTION" 证书
-            ret_data = asca.get_cer()
+            # 更新数据库中的设备信息
+            # AppleDeviceTb.objects.filter(apple_id=apple_id).delete() # 代码测试，删除当前记录的设备信息
             if ret_data['code'] == 0: # 如果是成功的，则执行其他操作
-                for cer in ret_data['data']['data']:
-                    return asca.delete_cer(cer['id'])
+                device_select = AppleDeviceTb.objects.filter(apple_id=apple_id)
+                devices = ret_data['data']['data']
+
+                # 更新 apple 表中的剩余签名数量
+                apple_account.count = 100 - ret_data['data']['meta']['paging']['total']
+                apple_account.save()
+
+                for device in devices: # 将设备信息写入库
+                    d = device_select.filter(udid=device['attributes']['udid'])
+                    if not d:
+                        d = AppleDeviceTb()
+                        d.udid = device['attributes']['udid']
+                        d.apple_id  = apple_id
+                        d.device_id = device['id']
+                        d.device_name  = device['attributes']['name']
+                        d.device_model = device['attributes']['model']
+                        # 苹果返回的是UTC 时间，格式是 "2020-01-13T13:00:46.000+0000"，即 "%Y-%m-%dT%H:%M:%S.%f%z"，所以换成北京时间，应加 8 小时
+                        d.create_time  = datetime.datetime.strptime(device['attributes']['addedDate'], '%Y-%m-%dT%H:%M:%S.%f%z')
+                        d.save()
+                        logger.info(f"udid: {device['attributes']['udid']}, name: {device['attributes']['name']}, device: {device['attributes']['model']} 写入数据库成功。")
+                    else:
+                        # d = device_select.get(udid=device['attributes']['udid']) # 修正数据库中的 设备创建时间
+                        # d.create_time = datetime.datetime.strptime(device['attributes']['addedDate'], '%Y-%m-%dT%H:%M:%S.%f%z')
+                        # d.save()
+                        logger.info(f"udid: {device['attributes']['udid']}, name: {device['attributes']['name']}, device: {device['attributes']['model']} 在数据库已有记录")
+
+                # return HttpResponse(json.dumps(ret_data)) # 代码测试
             else:
                 return HttpResponse(json.dumps(ret_data))
 
-            # # 创建证书，获取返回
-            # ret_data = asca.create_cer(csr)
+            # 获取并删除 apple 账号上的 "certificateType": "IOS_DISTRIBUTION" 证书
+            ret_data = asca.get_cer()
+            # return HttpResponse(json.dumps(ret_data)) # 代码测试
+            
+            if ret_data['code'] == 0: # 如果是成功的，则执行其他操作
+                for cer in ret_data['data']['data']:
+                    ret_data = asca.delete_cer(cer['id'])
+                    if ret_data['code'] != 0: # 如果删除证书出现错误，不再执行创建证书
+                        return HttpResponse(json.dumps(ret_data))
+            else:
+                return HttpResponse(json.dumps(ret_data))
 
-            # if ret_data['code'] == 0: # 如果创建证书是成功的，则执行其他操作
-            #     cer_data = ret_data['data']['data']
-            #     apple_account.cer_id = cer_data['id']
-            #     apple_account.cer_content = str(cer_data)
-            #     apple_account.save()
+            # 创建证书，获取返回
+            ret_data = asca.create_cer(csr)
+
+            if ret_data['code'] == 0: # 如果创建证书是成功的，则执行其他操作
+                cer_data = ret_data['data']['data']
+                apple_account.cer_id = cer_data['id']
+                apple_account.cer_content = cer_data['attributes']['certificateContent']
+                apple_account.save()
 
         return HttpResponse(json.dumps(ret_data))
 

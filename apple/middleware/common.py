@@ -33,6 +33,7 @@ class AppStoreConnectApi(object):
         self.__ret_data = RET_DATA.copy()
         self.__timeout  = 15
         self.__verify   = False
+        self.__token    = self._get_token()
 
     def _get_token(self):
         '''
@@ -132,7 +133,7 @@ class AppStoreConnectApi(object):
             GET https://api.appstoreconnect.apple.com/v1/devices
         '''
         # 初始化 req 参数
-        self.__content = "获取已注册设备"
+        self.__content = "获取已注册设备信息"
         self.__method = "GET"
         self.__url    = f"{apple_url}/devices?limit=200"
         self.__data   = {}
@@ -145,7 +146,7 @@ class AppStoreConnectApi(object):
         '''
             发送 requests 请求
         '''
-        token = self._get_token()
+        token = self.__token
         if not token: # 获取token 失败
             self.__ret_data['msg']  = "获取 苹果账号token 失败"
             self.__ret_data['code'] = 500
@@ -170,23 +171,28 @@ class AppStoreConnectApi(object):
         prepped = s.prepare_request(req)
         try:
             ret = s.send(prepped, verify=self.__verify, timeout=self.__timeout) # 发起请求
-            app_ret = ret.json()
-            self.__ret_data['data']  = app_ret
+            
             self.__ret_data['code'] = 0
-            self.__ret_data['msg']  = f"{self.__content} 成功"
-
-            if "errors" in app_ret.keys():
-                self.__ret_data['msg']  = f"{self.__content} 失败"
-                self.__ret_data['code'] = 500
-                logger.error(f"req_id: {self.__req_id} {self.__ret_data['msg']}: {self.__account}: {self.__url} :{str(app_ret)}")
-
+            if ret.status_code == 204: # 状态码 204，返回内容为空，例如 DELETE 证书的请求
+                self.__ret_data['data'] = f"{self.__account}: {self.__content} 成功"
+                logger.info(f"req_id: {self.__req_id} {self.__ret_data['data']}")
             else:
-                logger.info(f"req_id: {self.__req_id} {self.__ret_data['msg']}: {self.__account}: {self.__url} :{str(app_ret)}")
+                app_ret = ret.json()
+                self.__ret_data['data'] = app_ret
+                self.__ret_data['msg']  = f"{self.__account}: {self.__content} 成功"
+
+                if "errors" in app_ret.keys():
+                    self.__ret_data['msg']  = f"{self.__account}: {self.__content} 失败"
+                    self.__ret_data['code'] = 500
+                    logger.error(f"req_id: {self.__req_id} {self.__ret_data['msg']}: {self.__url} :{str(app_ret)}")
+
+                else:
+                    logger.info(f"req_id: {self.__req_id} {self.__ret_data['msg']}: {self.__url} :{str(app_ret)}")
         
         except Exception as e:
-            self.__ret_data['msg'] = f"{self.__content} 失败: {ret.text}"
+            self.__ret_data['msg'] = f"{self.__account}: {self.__content} 失败: {ret.text}"
             self.__ret_data['code'] = 500
-            logger.error(f"req_id: {self.__req_id} {self.__content} 失败: {self.__account}: {self.__url} : {str(e)}。返回错误: {ret.text}")
+            logger.error(f"req_id: {self.__req_id} {self.__account}: {self.__content} 失败: {self.__url} : {str(e)}。返回错误: {ret.text}")
 
         return self.__ret_data
 
