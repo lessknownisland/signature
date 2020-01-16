@@ -29,6 +29,9 @@ urlpatterns = [
     # 主页 telegram
     url(r'^detect/', include('detect.urls')),
 
+    # 苹果开发者账号
+    url(r'^apple/', include('apple.urls')),
+
     # 登陆控制及用户信息
     url(r'^', include('control.urls')),
     url(r'^control/', include('control.urls')),
