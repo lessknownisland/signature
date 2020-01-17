@@ -20,7 +20,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
       ,cols: [[
         {type: 'checkbox', fixed: 'left'}
         ,{field:'account', title:'账号', sort:true, event: 'setSign', width: 300}
-        ,{field:'count', title:'剩余次数', sort:true}
+        ,{field:'count', title:'剩余次数', sort:true, width: 100}
         ,{field:'p12', title:'p12', sort:true}
         ,{field:'cer_content', title:'证书文本', sort:true, templet: function(d){
             return d.cer_content;
