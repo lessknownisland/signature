@@ -103,7 +103,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
         ,area: ['500px', '350px']
         ,id: 'LAY-popup-user-add'
         ,success: function(layero, index){
-          view(this.id).render('apple/create/operate/index.html').done(function(){
+          view(this.id).render('apple/create/operate/index').done(function(){
             form.render(null, 'domain-add-form');
             
             //监听提交
