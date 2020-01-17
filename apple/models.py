@@ -28,9 +28,9 @@ class AppleDeviceTb(models.Model):
         苹果设备udid 表
     '''
     udid  = models.CharField(verbose_name="设备 udid", max_length=128, null=False)
-    apple_id = models.IntegerField(verbose_name="关联的苹果账号 id", null=False)
+    apple_id  = models.IntegerField(verbose_name="关联的苹果账号 id", null=False)
     device_id = models.CharField(verbose_name="设备注册 ID", max_length=64, null=False)
-    device_name = models.CharField(verbose_name="设备名", max_length=64, null=True)
+    device_name  = models.CharField(verbose_name="设备名", max_length=64, null=True)
     device_model = models.CharField(verbose_name="设备型号", max_length=64, null=True)
-    create_time = models.DateTimeField("生成的日期", default=timezone.now)
-    status   = models.IntegerField(verbose_name="是否启用", choices=choices_s, default=1)
+    create_time  = models.DateTimeField("生成的日期", default=timezone.now)
+    status = models.IntegerField(verbose_name="是否启用", choices=choices_s, default=1)

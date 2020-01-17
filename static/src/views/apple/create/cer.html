@@ -1,0 +1,185 @@
+
+<title>创建证书</title>
+
+<div class="layui-card layadmin-header">
+  <div class="layui-breadcrumb" lay-filter="breadcrumb-appleaccount">
+    <a lay-href="">苹果账号</a>
+    <a><cite>创建证书</cite></a>
+  </div>
+</div>
+
+<div class="layui-fluid">
+  <div class="layui-row layui-col-space15">
+    <div class="layui-col-md12">
+      <div class="layui-card">
+        <div class="layui-card-header">苹果账号 / 创建证书</div>
+        <div class="layui-card-body">
+          <div class="layui-form" lay-filter="appleaccount-form-element">
+              <form class="layui-row layui-col-space10 layui-form-item">
+                <div class="layui-col-lg4">
+                  <label class="layui-form-label">状态</label>
+                  <div class="layui-input-block">
+                      <select name="apple_account_status" id="apple_account_status" lay-verify="apple_account_status" xm-select="apple_account_status" xm-select-show-count=2 xm-select-height="50px"  xm-select-search-type="dl" xm-select-skin="warm">
+                          <option value=1>启用</option>
+                          <option value=0>禁用</option>
+                        </select>
+                  </div>
+                </div>
+
+                <div class="layui-col-lg4">
+                  <label class="layui-form-label">账号</label>
+                  <div class="layui-input-block">
+                      <input class="layui-input" name="apple_account" id="apple_account">
+                    </div>
+                </div>
+
+              </from>
+
+                <div class="layui-form-item">
+                  <div class="layui-input-block">
+                    <button name="appleacountQuerySendButton" id="appleacountQuerySendButton" class="layui-btn" lay-submit lay-filter="appleaccount-form-element" data-type="loading1">查询</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                  </div>
+                </div>
+            
+          </div>
+          <table class="layui-table" id="apple_accounts_table" name="apple_accounts_table" lay-filter="apple_accounts_table"></table>
+          <script type="text/html" id="switchAppleAccountStatus">
+            <input type="checkbox" name="switch_apple_account_status" id="switch_apple_account_status" lay-filter="switch_apple_account_status" value="{{d.status}}" data-json="{{ encodeURIComponent(JSON.stringify(d)) }}" title="启用" {{ d.status == 1 ? 'checked' : '' }}>
+          </script>
+            
+            <!-- <div class="layui-form-item">
+              <script type="text/html" id="apple_accounts_table_toolbar">
+                <div class="layui-btn-group">
+                  <button type="button" class="layui-btn" lay-event="apple_account_add">新增</button>
+                  <button type="button" class="layui-btn" lay-event="apple_account_edit">编辑</button>
+                  <button type="button" class="layui-btn" lay-event="apple_account_delete">删除</button>
+                </div>
+              </script>
+            </div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/custom/tablejs/apple/account.js"></script>
+
+<script>
+// 等待的弹层
+function loading1(){
+  loading1_iii = layui.layer.load(2, {
+      shade: [0.1,'#fff']
+    });
+  };
+
+// 在请求完账号数据后，加入表单监听
+layui.data.done = function(d){
+  layui.use(['form', 'element', 'formSelects'], function(){
+    var $ = layui.$
+    ,form = layui.form
+    ,element = layui.element
+    ,formSelects = layui.formSelects;
+
+    form.render(null, 'appleaccount-form-element');
+    element.render('breadcrumb', 'breadcrumb-apple_account');
+    // 初始化下拉选框
+    formSelects.render('apple_account_status');
+    formSelects.render('apple_account_cdn', {
+      template: function(name, value, selected, disabled){
+        return value.name.split(" ")[0] + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + value.name.split(" ")[1] + '</span>';
+      }
+    });
+    formSelects.render('apple_account_cf', {
+      template: function(name, value, selected, disabled){
+        return value.name.split(" ")[0] + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + value.name.split(" ")[1] + '</span>';
+      }
+    });
+    formSelects.render('apple_account_product');
+    formSelects.render('apple_account_customer');
+    formSelects.render('apple_account_group', {
+      template: function(name, value, selected, disabled){
+        for (index in layui.setter.apple_account_args.group){
+          var item = layui.setter.apple_account_args.group[index];
+          if (value.value == item.id){
+            return item.group + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + [ item.client, item.method, item.ssl, item.retry ].join(" | ") + '</span>';
+          }
+        }
+      }
+    });
+
+
+
+    // 关闭弹层
+    layer.close(loading1_iii);
+
+  });
+};
+
+layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
+  var $ = layui.$
+  ,admin = layui.admin
+  ,element = layui.element
+  ,form = layui.form
+  ,upload = layui.upload
+  ,table = layui.table
+  ,formSelects = layui.formSelects;
+
+  formSelects.render('apple_account_status');
+
+  // loading1.call(this); // 打开 等待的弹层
+
+  // 提交表单
+  form.on('submit(appleaccount-form-element)', function(data){
+    var type = $(this).data('type');
+
+    // 初始化所选数据
+    var postData = {
+      'account': data.field.apple_account,
+      'status': data.field.apple_account_status,
+    };
+
+    // 数据格式化，如果没有选择，默认获取所有选项的值
+    if (postData.status == ""){
+      postData.status = [1, 0];
+    }else {
+      postData.status = postData.status.split(',').map(function (val) {return parseInt(val);})
+    }
+
+    loading1.call(this); // 打开 等待的弹层
+
+    admin.req({
+      url: '/apple/account/get' //实际使用请改成服务端真实接口code == 1001
+      ,method: "post" 
+      ,data: JSON.stringify(postData)
+      ,contentType: 'application/json'
+      ,done: function(res){
+        // 发送成功的提示
+        layer.msg(res.msg, {
+          offset: '15px'
+          ,icon: 1
+          ,time: 1500
+        });
+        layui.setter.apple_accounts_table_data = res.data;
+        layui.setter.apple_accounts_table_postdata = postData;
+        table.reload('apple_accounts_table', {
+          data: res.data
+        });
+        layer.close(loading1_iii); // 关闭 等待的弹层
+      },success:function(res){
+        if (res.code == 1001){ // 登陆失效
+          layer.msg(res.msg, {
+            offset: '15px'
+            ,icon: 1
+            ,time: 1500
+          })
+        };
+        layer.close(loading1_iii);
+      }
+      
+    });
+
+    return false;
+  });
+});
+</script>

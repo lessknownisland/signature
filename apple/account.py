@@ -2,13 +2,12 @@ from django.test import TestCase
 from django.http                    import HttpResponse
 from django.views.decorators.csrf   import csrf_exempt, csrf_protect
 from control.middleware.config      import RET_DATA
-from apple.middleware.common import AppStoreConnectApi
-from apple.middleware.config import csr
+from apple.middleware.api           import AppStoreConnectApi
 from apple.models import AppleAccountTb, AppleDeviceTb
 from detect.telegram                import SendTelegram
 from signature                      import settings
 from control.middleware.user        import User, login_required_layui, is_authenticated_to_request
-from control.middleware.config      import RET_DATA, MESSAGE_TEST
+from control.middleware.config      import RET_DATA, MESSAGE_TEST, csr
 from control.middleware.common      import IsSomeType
 
 import json
@@ -18,8 +17,9 @@ import datetime
 logger = logging.getLogger('django')
 
 @csrf_exempt
-# @login_required_layui
-def create_crt(request):
+@login_required_layui
+@is_authenticated_to_request
+def cer_create(request):
     '''
         创建苹果证书，及一些关联操作:
 
@@ -120,3 +120,79 @@ def create_crt(request):
 
         return HttpResponse(json.dumps(ret_data))
 
+@csrf_exempt
+@login_required_layui
+@is_authenticated_to_request
+def account_get(request):
+    '''
+        获取苹果个人账号
+    '''
+    username, role, clientip = User(request).get_default_values()
+
+    # 初始化返回数据
+    ret_data = RET_DATA.copy()
+    ret_data['code'] = 0 # 请求正常，返回 0
+    ret_data['msg']  = '获取苹果个人账号'
+    ret_data['data'] = []
+
+    try:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            accounts = AppleAccountTb.objects.filter(account__icontains=data['account'], status__in=data['status'])
+            logger.info(data)
+
+            for account in accounts:
+                tmp_dict = {}
+                tmp_dict['id'] = account.id
+                tmp_dict['account'] = account.account
+                tmp_dict['count']   = account.count
+                tmp_dict['p12']     = account.p12
+                tmp_dict['cer_content'] = account.cer_content
+                tmp_dict['status']  = account.status
+
+                ret_data['data'].append(tmp_dict)
+
+    except Exception as e:
+        logger.error(str(e))
+        ret_data['code'] = 500
+        ret_data['msg']  = f"{ret_data['msg']} 失败: {str(e)}"
+
+    ret_data['msg']  = f"{ret_data['msg']} 成功"
+
+    return HttpResponse(json.dumps(ret_data))
+
+@csrf_exempt
+@login_required_layui
+@is_authenticated_to_request
+def account_edit(request):
+    '''
+        账号修改
+    '''
+    username, role, clientip = User(request).get_default_values()
+
+    # 初始化返回数据
+    ret_data = RET_DATA.copy()
+    ret_data['code'] = 0 # 请求正常，返回 0
+    ret_data['msg']  = '账号修改'
+    ret_data['data'] = []
+
+    try:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+
+            logger.info(data)
+            # return HttpResponse(json.dumps(ret_data))
+
+            account = AppleAccountTb.objects.get(id=data['id']) 
+
+            account.status = int(data['status'])
+            account.save()
+
+    except Exception as e:
+        logger.error(str(e))
+        ret_data['code'] = 500
+        ret_data['msg']  = f"{ret_data['msg']} 失败: {str(e)}"
+
+    ret_data['msg']  = f"{ret_data['msg']} 成功"
+
+    return HttpResponse(json.dumps(ret_data))

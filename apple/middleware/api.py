@@ -1,11 +1,6 @@
 #-_- coding: utf-8 -_-
 from signature                 import settings
-from control.middleware.config import RET_DATA
-from apple.middleware.config   import apple_url, csr
-# from domainns.models           import AlterHistoryTb
-
-# 装饰器
-from functools import wraps
+from control.middleware.config import RET_DATA, apple_url
 
 import re
 import json
