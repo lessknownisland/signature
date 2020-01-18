@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'detect',
     'apple',
     'alioss',
+    'customer',
     'channels', # websocket 模块
 ]
 

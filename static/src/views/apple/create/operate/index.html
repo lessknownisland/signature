@@ -1,94 +1,53 @@
 
 
-<div class="layui-form" lay-filter="domain-add-form" style="padding: 20px 0 0 0;">
-  <script type="text/html" template lay-done="layui.data.done_add(d);">
-  <form class="layui-row layui-col-space10 layui-form-item">
-    <div class="layui-col-lg4">
-      <label class="layui-form-label">状态</label>
-      <div class="layui-input-block">
-          <select name="domain_add_status" id="domain_add_status" lay-verify="required|domain_add_status" xm-select="domain_add_status" xm-select-radio xm-select-height="50px"  xm-select-skin="warm">
-              <option value=1 selected="selected">启用</option>
-              <option value=0>禁用</option>
-            </select>
-      </div>
-    </div>
-    <div class="layui-col-lg4">
-      <label class="layui-form-label">CDN</label>
-      <div class="layui-input-block">
-        <select name="domain_add_cdn" lay-verify="domain_add_cdn" xm-select="domain_add_cdn" xm-select-show-count=2 xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
-          {{#  layui.each(layui.setter.domain_args.cdn, function(index, item){ }}
-          <option value="{{ item.id }}" subtext="">{{ item.account }} {{ item.name }}</option>
-          {{#  }); }}
-        </select>
-      </div>
-    </div>
-    <div class="layui-col-lg4">
-        <label class="layui-form-label">CF</label>
-        <div class="layui-input-block">
-          <select name="domain_add_cf" lay-verify="domain_add_cf" xm-select="domain_add_cf" xm-select-radio xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
-            {{#  layui.each(layui.setter.domain_args.cf, function(index, item){ }}
-            <option value="{{ item.id }}" subtext="">{{ item.account }} {{ item.name }}</option>
-            {{#  }); }}
-          </select>
-        </div>
-      </div>
-  </from>
+<div class="layui-form" lay-filter="apple-account-form" style="padding: 20px 0 0 0;">
+  <script type="text/html" template lay-done="layui.data.done_appleaccount(d);">
 
-  <form class="layui-row layui-col-space10 layui-form-item">
-      <div class="layui-col-lg4">
-        <label class="layui-form-label">所属产品</label>
-        <div class="layui-input-block">
-            <select name="domain_add_product" id="domain_add_product" lay-verify="domain_add_product" xm-select="domain_add_product" xm-select-radio xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
-              {{#  layui.each(layui.setter.domain_args.product, function(index, item){ }}
-              <option value="{{ item[0] }}" subtext="">{{ item[1] }}</option>
-              {{#  }); }}
-            </select>
-        </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">账号</label>
+      <div class="layui-input-block">
+          <input type="text" class="layui-input" value={{ layui.data.apple_account_data.account }} disabled>
       </div>
-      <div class="layui-col-lg4">
-        <label class="layui-form-label">所属客户</label>
-        <div class="layui-input-block">
-          <select name="domain_add_customer" lay-verify="domain_add_customer" xm-select="domain_add_customer" xm-select-radio xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
-            {{#  layui.each(layui.setter.domain_args.customer, function(index, item){ }}
-            <option value="{{ item[0] }}" subtext="">{{ item[1] }}</option>
-            {{#  }); }}
-          </select>
-        </div>
-      </div>
-      <div class="layui-col-lg4">
-          <label class="layui-form-label">所属组</label>
-          <div class="layui-input-block">
-            <select name="domain_add_group" lay-verify="domain_add_group" xm-select="domain_add_group" xm-select-radio xm-select-height="50px" xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
-              {{#  layui.each(layui.setter.domain_args.group, function(index, item){ }}
-              <option value="{{ item.id }}" subtext="">{{ item.group }}</option>
-              {{#  }); }}
-            </select>
-          </div>
-        </div>
-    </from>
-  </script>
-  <div class="layui-form-item">
-    <label class="layui-form-label">域名</label>
-    <div class="layui-input-block">
-      <textarea name="domain_add_name" id="domain_add_name" lay-verify="domain_add_name" placeholder="域名URL[http://domain/uri]，每行一条" class="layui-textarea" style="height: 180px;" required></textarea>
     </div>
-  </div>
-  <div class="layui-form-item">
+    <div class="layui-form-item">
+      <label class="layui-form-label">剩余次数</label>
+      <div class="layui-input-block">
+          <input type="text" class="layui-input" value={{ layui.data.apple_account_data.count }} disabled>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">p12</label>
+      <div class="layui-input-block">
+          <input type="text" class="layui-input" value={{ layui.data.apple_account_data.p12 }} disabled>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">证书文本</label>
+      <div class="layui-input-block">
+        <textarea class="layui-textarea" style="height: 180px;"disabled>{{ layui.data.apple_account_data.cer_content }}</textarea>
+      </div>
+    </div>
+    
+
+
+  </script>
+  
+  <!-- <div class="layui-form-item">
     <label class="layui-form-label">备注</label>
     <div class="layui-input-block">
-      <textarea name="domain_add_content" id="domain_add_content" lay-verify="domain_add_content" placeholder="备注" class="layui-textarea" style="height: 100px;"></textarea>
+      <textarea name="apple_account_create_result" id="apple_account_create_result" lay-verify="apple_account_create_result" placeholder="备注" class="layui-textarea" style="height: 100px;"></textarea>
     </div>
-  </div>
+  </div> -->
   <div class="layui-form-item">
     <label class="layui-form-label"></label>
     <div class="layui-input-inline">
-      <input type="button" lay-submit lay-filter="domain-add-form-submit" value="确认" class="layui-btn">
+      <input type="button" lay-submit lay-filter="apple-account-form-submit" value="确认" class="layui-btn">
     </div>
   </div>
 </div>
 
 <script>
-layui.data.done_add = function(d){
+layui.data.done_appleaccount = function(d){
   layui.use(['admin', 'form', 'upload'], function(){
     var $ = layui.$
     ,admin = layui.admin
@@ -117,43 +76,6 @@ layui.data.done_add = function(d){
     formSelects.render('domain_add_product');
     formSelects.render('domain_add_customer');
     formSelects.render('domain_add_group');
-    form.verify({
-      // domain_add_status: function(value){
-      //   if(value.length == 0){
-      //     return '状态不能为空';
-      //   }
-      // },
-      domain_add_product: function(value){
-        if(value.length == 0){
-          return '所属产品 不能为空';
-        }
-      },
-      domain_add_customer: function(value){
-        if(value.length == 0){
-          return '所属客户 不能为空';
-        }
-      },
-      domain_add_group: function(value){
-        if(value.length == 0){
-          return '所属组 不能为空';
-        }
-      },
-      domain_add_name: function(value){
-        if(value.replace(/\s+/g, '').length == 0){
-          return '域名 不能为空';
-        }
-      },
-    });
-    // formSelects.render('domain_add_group', {
-    //   template: function(name, value, selected, disabled){
-    //     for (index in layui.setter.domain_args.group){
-    //       var item = layui.setter.domain_args.group[index];
-    //       if (value.value == item.id){
-    //         return item.group + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + [ item.client, item.method, item.ssl, item.retry ].join(" | ") + '</span>';
-    //       }
-    //     }
-    //   }
-    // });
 
   })
 

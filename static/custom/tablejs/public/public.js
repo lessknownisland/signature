@@ -24,6 +24,38 @@ var public = {
         return false;
     },
 
+    converBase64toBlob: function (content, contentType) {
+        contentType = contentType || '';
+        var sliceSize = 512;
+        var byteCharacters = window.atob(content); //method which converts base64 to binary
+        var byteArrays = [
+        ];
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+          var slice = byteCharacters.slice(offset, offset + sliceSize);
+          var byteNumbers = new Array(slice.length);
+          for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+          var byteArray = new Uint8Array(byteNumbers);
+          byteArrays.push(byteArray);
+        }
+        var blob = new Blob(byteArrays, {
+          type: contentType
+        }); //statement which creates the blob
+        return blob;
+      },
+
+    createAndDownloadFile: function (fileName, content) {
+        var aTag = document.createElement('a');
+        // var blob = new Blob([content]);
+        var blob = content;
+        aTag.download = fileName;
+        aTag.href = URL.createObjectURL(blob);
+        aTag.click();
+        URL.revokeObjectURL(blob);
+    },
+
+
     compare: function (prop, value) {
         return function (obj1, obj2) {
             var val1 = obj1[prop];

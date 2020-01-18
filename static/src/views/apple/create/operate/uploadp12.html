@@ -1,0 +1,36 @@
+
+
+<div class="layui-form" lay-filter="apple-account-uploadp12-form" style="padding: 20px 0 0 0;">
+  <script type="text/html" template >
+
+    <div class="layui-form-item">
+      <label class="layui-form-label">账号</label>
+      <div class="layui-input-block">
+          <input type="text" class="layui-input" value={{ layui.data.apple_account_data.account }} disabled>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">剩余次数</label>
+      <div class="layui-input-block">
+          <input type="text" class="layui-input" value={{ layui.data.apple_account_data.count }} disabled>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">cer_id</label>
+      <div class="layui-input-block">
+          <input type="text" class="layui-input" value={{ layui.data.apple_account_data.cer_id }} disabled>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label"></label>
+      <div class="layui-input-block">
+        <button type="button" class="layui-btn layui-btn-normal" id="apple_account_uploadp12_choose">选择文件</button>
+      </div>
+    </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label"></label>
+      <div class="layui-input-block">
+        <button type="button" class="layui-btn" id="apple_account_uploadp12_send">开始上传</button>
+      </div>
+    </div>
+  </script>

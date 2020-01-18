@@ -1,10 +1,10 @@
 
-<title>创建证书</title>
+<title>IOS 包管理</title>
 
 <div class="layui-card layadmin-header">
-  <div class="layui-breadcrumb" lay-filter="breadcrumb-appleaccount">
-    <a lay-href="">苹果账号</a>
-    <a><cite>创建证书</cite></a>
+  <div class="layui-breadcrumb" lay-filter="breadcrumb-package">
+    <a lay-href="">Package</a>
+    <a><cite>IOS 包管理</cite></a>
   </div>
 </div>
 
@@ -12,14 +12,14 @@
   <div class="layui-row layui-col-space15">
     <div class="layui-col-md12">
       <div class="layui-card">
-        <div class="layui-card-header">苹果账号 / 创建证书</div>
+        <div class="layui-card-header">Package / IOS 包管理</div>
         <div class="layui-card-body">
-          <div class="layui-form" lay-filter="appleaccount-form-element">
+          <div class="layui-form" lay-filter="package-form-element">
               <form class="layui-row layui-col-space10 layui-form-item">
                 <div class="layui-col-lg4">
                   <label class="layui-form-label">状态</label>
                   <div class="layui-input-block">
-                      <select name="apple_account_status" id="apple_account_status" lay-verify="apple_account_status" xm-select="apple_account_status" xm-select-show-count=2 xm-select-height="50px"  xm-select-search-type="dl" xm-select-skin="warm">
+                      <select name="package_status" id="package_status" lay-verify="package_status" xm-select="package_status" xm-select-show-count=2 xm-select-height="50px"  xm-select-search-type="dl" xm-select-skin="warm">
                           <option value=1>启用</option>
                           <option value=0>禁用</option>
                         </select>
@@ -27,9 +27,16 @@
                 </div>
 
                 <div class="layui-col-lg4">
-                  <label class="layui-form-label">账号</label>
+                  <label class="layui-form-label">包名</label>
                   <div class="layui-input-block">
-                      <input class="layui-input" name="apple_account" id="apple_account">
+                      <input class="layui-input" name="package" id="package">
+                    </div>
+                </div>
+
+                <div class="layui-col-lg4">
+                  <label class="layui-form-label"></label>
+                  <div class="layui-input-block">
+                    <button name="package_upload_button" id="package_upload_button" class="layui-btn" lay-submit lay-filter="package-form-element" data-type="loading1">上传</button>
                     </div>
                 </div>
 
@@ -37,17 +44,17 @@
 
                 <div class="layui-form-item">
                   <div class="layui-input-block">
-                    <button name="appleacountQuerySendButton" id="appleacountQuerySendButton" class="layui-btn" lay-submit lay-filter="appleaccount-form-element" data-type="loading1">查询</button>
+                    <button name="packageQuerySendButton" id="packageQuerySendButton" class="layui-btn" lay-submit lay-filter="package-form-element" data-type="loading1">查询</button>
                     <button type="reset" class="layui-btn layui-btn-primary">重置</button>
                   </div>
                 </div>
             
           </div>
-          <table class="layui-table" id="apple_accounts_table" name="apple_accounts_table" lay-filter="apple_accounts_table"></table>
-          <script type="text/html" id="switchAppleAccountStatus">
-            <input type="checkbox" name="switch_apple_account_status" id="switch_apple_account_status" lay-filter="switch_apple_account_status" value="{{d.status}}" data-json="{{ encodeURIComponent(JSON.stringify(d)) }}" title="启用" {{ d.status == 1 ? 'checked' : '' }}>
+          <table class="layui-table" id="packages_table" name="packages_table" lay-filter="packages_table"></table>
+          <script type="text/html" id="switchpackageStatus">
+            <input type="checkbox" name="switch_package_status" id="switch_package_status" lay-filter="switch_package_status" value="{{d.status}}" data-json="{{ encodeURIComponent(JSON.stringify(d)) }}" title="启用" {{ d.status == 1 ? 'checked' : '' }}>
           </script>
-          <script type="text/html" id="apple_accounts_table_operatebar">
+          <script type="text/html" id="packages_table_operatebar">
             <!-- <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="base64_cer">加密证书</a> -->
             <button type="button" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="base64_cer">获取cer证书</button>
             <button type="button" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="upload_p12">上传p12</button>
@@ -55,11 +62,11 @@
           </script>
             
             <!-- <div class="layui-form-item">
-              <script type="text/html" id="apple_accounts_table_toolbar">
+              <script type="text/html" id="packages_table_toolbar">
                 <div class="layui-btn-group">
-                  <button type="button" class="layui-btn" lay-event="apple_account_add">新增</button>
-                  <button type="button" class="layui-btn" lay-event="apple_account_edit">编辑</button>
-                  <button type="button" class="layui-btn" lay-event="apple_account_delete">删除</button>
+                  <button type="button" class="layui-btn" lay-event="package_add">新增</button>
+                  <button type="button" class="layui-btn" lay-event="package_edit">编辑</button>
+                  <button type="button" class="layui-btn" lay-event="package_delete">删除</button>
                 </div>
               </script>
             </div> -->
@@ -69,15 +76,17 @@
   </div>
 </div>
 
-<script src="/static/custom/tablejs/apple/account.js"></script>
+<script src="/static/custom/tablejs/apple/package.js"></script>
 
 <script>
 // 等待的弹层
 function loading1(){
   loading1_iii = layui.layer.load(2, {
-    shade: [0.1,'#fff']
-  });
-};
+      shade: [0.1,'#fff']
+    });
+  };
+
+
 
 layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
   var $ = layui.$
@@ -88,18 +97,18 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
   ,table = layui.table
   ,formSelects = layui.formSelects;
 
-  formSelects.render('apple_account_status');
+  formSelects.render('package_status');
 
   // loading1.call(this); // 打开 等待的弹层
 
   // 提交表单
-  form.on('submit(appleaccount-form-element)', function(data){
+  form.on('submit(package-form-element)', function(data){
     var type = $(this).data('type');
 
     // 初始化所选数据
     var postData = {
-      'account': data.field.apple_account,
-      'status': data.field.apple_account_status,
+      'account': data.field.package,
+      'status': data.field.package_status,
     };
 
     // 数据格式化，如果没有选择，默认获取所有选项的值
@@ -123,9 +132,9 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
           ,icon: 1
           ,time: 1500
         });
-        layui.setter.apple_accounts_table_data = res.data;
-        layui.setter.apple_accounts_table_postdata = postData;
-        table.reload('apple_accounts_table', {
+        layui.setter.packages_table_data = res.data;
+        layui.setter.packages_table_postdata = postData;
+        table.reload('packages_table', {
           data: res.data
         });
         layer.close(loading1_iii); // 关闭 等待的弹层
