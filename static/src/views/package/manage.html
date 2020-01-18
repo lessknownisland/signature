@@ -36,11 +36,11 @@
                 <div class="layui-col-lg4">
                   <label class="layui-form-label"></label>
                   <div class="layui-input-block">
-                    <button name="package_upload_button" id="package_upload_button" class="layui-btn" lay-submit lay-filter="package-form-element" data-type="loading1">上传</button>
+                    <button name="package_upload_button" id="package_upload_button" class="layui-btn">上传 IPA</button>
                     </div>
                 </div>
 
-              </from>
+              </form>
 
                 <div class="layui-form-item">
                   <div class="layui-input-block">
@@ -86,13 +86,12 @@ function loading1(){
     });
   };
 
-
-
 layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
   var $ = layui.$
   ,admin = layui.admin
   ,element = layui.element
   ,form = layui.form
+  ,view = layui.view
   ,upload = layui.upload
   ,table = layui.table
   ,formSelects = layui.formSelects;
@@ -100,6 +99,68 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
   formSelects.render('package_status');
 
   // loading1.call(this); // 打开 等待的弹层
+
+  // $(document).on('click', 'package_upload_button', function(){
+  //   layer.msg("package upload.");
+  // });
+
+  $('#package_upload_button').click(function(){
+    // layer.msg("package upload.");
+    admin.popup({
+        title: '上传 IPA文件'
+        ,offset: "auto" // t: top
+        ,area: ['700px', '550px']
+        // ,id: 'LAY-popup-user-add'
+        ,fixed: true
+        // ,closeBtn: 1
+        ,success: function(layero, index){
+          view(this.id).render('package/operate/upload').done(function(){
+            form.render(null, 'apple-account-uploadp12-form');
+
+            upload.render({
+              elem: '#package_upload_choose'
+              ,url: '/apple/package/upload' 
+              // ,data: {'id': data.id}
+              ,auto: false
+              ,accept: 'file'
+              ,exts: 'ipa'
+              ,size: 102400 // 限制文件大小，100M
+              //,multiple: true
+              ,bindAction: '#package_upload_send'
+              ,before: function(){
+                loading1.call(this);
+              }
+              ,done: function(res){
+                layer.msg(res.msg, {
+                    offset: '15px'
+                    ,icon: 1
+                    ,time: 3000
+                  });
+                  layer.close(loading1_iii); // 关闭 等待的弹层
+                  // layer.close(index); //执行关闭 
+                },success:function(res){
+                  if (res.code == 1001){ // 登陆失效
+                    layer.msg(res.msg, {
+                      offset: '15px'
+                      ,icon: 1
+                      ,time: 1500
+                    })
+                  };
+                  layer.close(loading1_iii);
+                },error: function(){
+                  layer.close(loading1_iii);
+                }
+                
+            });
+
+          });
+        }
+      });
+
+
+
+    return false;
+  });
 
   // 提交表单
   form.on('submit(package-form-element)', function(data){
