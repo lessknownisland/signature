@@ -25,9 +25,12 @@ SECRET_KEY = 'mw9g66btywz0=bd*@_$glf+efjc&x&=5+7pi3y2v_hrw48g9$='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['arnotest.le079.com', '127.0.0.1']
 
 LOGIN_URL = '/#/user/login'
+
+FILE_UPLOAD_MAX_MEMORY_SIZE = 102400000  #上传文件大小，改成 25M:26214400 100M:102400000
+DATA_UPLOAD_MAX_MEMORY_SIZE = 102400000	#上传数据大小，也改成了25M
 
 # Application definition
 

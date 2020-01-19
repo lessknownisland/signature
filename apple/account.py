@@ -10,7 +10,7 @@ from signature                      import settings
 from control.middleware.user        import User, login_required_layui, is_authenticated_to_request
 from control.middleware.config      import RET_DATA, MESSAGE_TEST, csr
 from control.middleware.common      import IsSomeType
-from alioss.middleware.api          import get_bucket
+from alioss.middleware.api          import get_bucket, AliOssApi
 
 import json
 import logging
@@ -246,28 +246,20 @@ def p12_upload(request):
             return HttpResponse(json.dumps(ret_data))
 
         ### 开始上传 ###
-        upload_file = f"{random_s}.p12"
         ret_bucket = get_bucket() 
         oss_bucket = ret_bucket['data']
         if not oss_bucket: # 如果 oss_bucket 账号不存在，则退出
             return ret_bucket
 
+        aoa = AliOssApi(oss_bucket)
+
         apple_account = AppleAccountTb.objects.get(id=data['id']) # 获取苹果账号
 
-        auth = oss2.Auth(oss_bucket.access_keyid, oss_bucket.access_keysecret)
-        bucket = oss2.Bucket(auth, oss_bucket.main_host, oss_bucket.bucket_name)
-        ret = bucket.put_object(upload_file, p12_file)
+        ret_data = aoa.upload_stream('p12', p12_file) # 上传 p12 文件
+        if ret_data['code'] != 0:
+            return HttpResponse(json.dumps(ret_data))
 
-        if ret.status == 200:
-            ret_data['msg']  = f"{ret_data['msg']} 成功: {upload_file}"
-            logger.info(ret_data['msg'])
-
-            apple_account.p12 = f"{oss_bucket.main_host}/{upload_file}".replace("https://", f"https://{oss_bucket.bucket_name}.")
-            apple_account.save() # 将 p12 的下载地址存放到指定的苹果账号中
-
-        else:
-            ret_data['code'] = 500
-            ret_data['msg']  = f"{ret_data['msg']} 失败: {upload_file}"
-            logger.error(ret_data['msg'])
+        apple_account.p12 = ret_data['data'] # 将新上传的p12 地址更新入库
+        apple_account.save()
 
         return HttpResponse(json.dumps(ret_data))

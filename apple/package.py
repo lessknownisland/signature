@@ -1,26 +1,32 @@
 from django.test import TestCase
 from django.http                    import HttpResponse
+from django.shortcuts               import redirect
 from django.views.decorators.csrf   import csrf_exempt, csrf_protect
 from control.middleware.config      import RET_DATA
 from apple.middleware.api           import AppStoreConnectApi
-from apple.models  import AppleAccountTb, AppleDeviceTb
+from apple.models  import AppleAccountTb, AppleDeviceTb, PackageTb
 from alioss.models import AliossBucketTb
+from customer.models import CustomerTb
 from detect.telegram                import SendTelegram
 from signature                      import settings
 from control.middleware.user        import User, login_required_layui, is_authenticated_to_request
-from control.middleware.config      import RET_DATA, MESSAGE_TEST, csr
+from control.middleware.config      import RET_DATA, MESSAGE_TEST, csr, xml, udid_url
 from control.middleware.common      import IsSomeType
 from alioss.middleware.api          import get_bucket, AliOssApi
 
 import re
+import os
 import json
 import logging
 import datetime
+import subprocess
 import random
 import string
 import oss2
 import zipfile
 import plistlib
+
+import xml.etree.ElementTree as et
 
 logger = logging.getLogger('django')
 
@@ -32,27 +38,24 @@ def find_path(zip_file, pattern_str):
         m = pattern.match(path)
         if m is not None:
             return m.group()
-
-# 获取ipa信息
-def get_ipa_info(plist_info):
-    print('软件名称: %s' % str(plist_info['CFBundleDisplayName']))
-    print('软件标识: %s' % str(plist_info['CFBundleIdentifier']))
-    print('软件版本: %s' % str(plist_info['CFBundleShortVersionString']))
-    print('支持版本: %s' % str(plist_info['MinimumOSVersion']))
+    return None
 
 @csrf_exempt
 @login_required_layui
 @is_authenticated_to_request
 def package_upload(request):
     '''
-        上传 IPA 文件
+        1. 上传IPA 文件
+        2. 上传Icon 图片
+        3. 将IOS 包的基本信息写入数据库
+        4. 生成 mobileconfig 并上传
     '''
     username, role, clientip = User(request).get_default_values()
 
     # 初始化返回数据
     ret_data = RET_DATA.copy()
     ret_data['code'] = 0 # 请求正常，返回 0
-    ret_data['msg']  = '上传 ipa 文件'
+    ret_data['msg']  = '上传ipa文件 成功'
     ret_data['data'] = []
 
     if request.method == 'POST':
@@ -67,20 +70,22 @@ def package_upload(request):
             logger.error(ret_data['msg'])
             return HttpResponse(json.dumps(ret_data))
 
-        ipa_file_t = zipfile.ZipFile(ipa_file) # 解压到临时文件
-
+        ### 开始上传 IPA 和 ICON ###
         # 获取 bucket
         ret_bucket = get_bucket()
         oss_bucket = ret_bucket['data']
         if not oss_bucket: # 如果 oss_bucket 账号不存在，则退出
             return ret_bucket
-
-        ### 开始上传 IPA 和 ICON ###
+        
+        # 获取上传的接口
         aoa = AliOssApi(oss_bucket)
 
-        ret_ipa = aoa.upload_stream('ipa', ipa_file) # 上传 IPA 文件
+        ### 1. 上传IPA 文件 ###
+        ret_ipa = aoa.upload_stream('ipa', ipa_file)
         if ret_ipa['code'] != 0:
-            return ret_ipa
+            return HttpResponse(json.dumps(ret_ipa))
+
+        ipa_file_t = zipfile.ZipFile(ipa_file) # IPA 解压到临时文件
 
         # 上传 IPA 成功后执行
         plist_path = find_path(ipa_file_t, 'Payload/[^/]*.app/Info.plist')
@@ -90,14 +95,120 @@ def package_upload(request):
 
         # 解析plist内容
         plist_detail_info = plistlib.loads(plist_data)
-        logger.info(plist_detail_info)
+        logger.info(f"plist: {plist_detail_info}")
         
-        device = AppleDeviceTb() # 将 package 信息写入库
-        device.name = plist_detail_info['CFBundleName']
-        device.version = plist_detail_info['CFBundleShortVersionString']
-        device.build_version = plist_detail_info['CFBundleVersion']
-        device.mini_version = plist_detail_info['MinimumOSVersion']
-        device.ipa = ret_ipa['data']
-        device.mobileconfig = "null"
+        # 新建 package 字段
+        package = PackageTb()
+
+        ### 2. 上传Icon 图片 ###
+        icon_list = plist_detail_info['CFBundleIcons']['CFBundlePrimaryIcon']['CFBundleIconFiles']
+        icon_path = find_path(ipa_file_t, f"Payload/[^/]*.app/{icon_list[-1]}@3x.png")
+        if not icon_path:
+            icon_path = find_path(ipa_file_t, f"Payload/[^/]*.app/{icon_list[-1]}@2x.png")
+        if icon_path:
+            icon = ipa_file_t.read(icon_path)
+            ret_icon = aoa.upload_stream('png', icon) # 上传 Icon 文件
+            if ret_icon['code'] == 0: # 如果上传成功，写入icon 的地址
+                package.icon = ret_icon['data']
+
+        ### 3. 将IOS 包的基本信息写入数据库 ###
+        
+        package.name = plist_detail_info['CFBundleName']
+        package.version = plist_detail_info['CFBundleShortVersionString']
+        package.build_version = plist_detail_info['CFBundleVersion']
+        package.mini_version = plist_detail_info['MinimumOSVersion']
+        package.bundle_identifier = plist_detail_info['CFBundleIdentifier']
+        package.ipa = ret_ipa['data']
+        package.mobileconfig = "null"
+        package.status = 0
+        package.save()
+
+        ### 4. 生成 mobileconfig 并上传 ###
+        sh_dir = f"{settings.BASE_DIR}/apple/shell"
+        mc_tmpname = "".join(random.sample(string.ascii_letters + string.digits, 32)) + ".mobileconfig"
+        mc_name = "".join(random.sample(string.ascii_letters + string.digits, 32)) + ".mobileconfig"
+        mc_tmpstr = xml.format(udid_url=udid_url, id=package.id, random_s="".join(random.sample(string.ascii_letters + string.digits, 32)))        
+        with open(f"{sh_dir}/tmp/{mc_tmpname}", 'w') as f:
+            f.write(mc_tmpstr)
+        
+        # 执行mobileconfig 脚本
+        shell = f"openssl smime -sign -in {sh_dir}/tmp/{mc_tmpname} -out {sh_dir}/tmp/{mc_name} -signer {sh_dir}/InnovCertificates.pem -certfile {sh_dir}/root.crt.pem -outform der -nodetach"
+        logger.info(f"执行脚本: {shell}")
+        status, result = subprocess.getstatusoutput(shell)
+        if status != 0: # 如果脚本执行失败，返回错误
+            ret_data['code'] = 500
+            ret_data['msg'] = f"mobiconfig 脚本执行错误: {result}"
+            logger.error(ret_data['msg'])
+            return HttpResponse(json.dumps(ret_data))
+
+        # 上传 mobileconfig
+        ret_mobileconfig = aoa.upload_localfile('mobileconfig', f"{sh_dir}/tmp/{mc_name}")
+        if ret_mobileconfig['code'] != 0:
+            return HttpResponse(json.dumps(ret_mobileconfig))
+        os.remove(f"{sh_dir}/tmp/{mc_tmpname}")
+        os.remove(f"{sh_dir}/tmp/{mc_name}")
+
+        package.mobileconfig = ret_mobileconfig['data']
+        package.save()
 
         return HttpResponse(json.dumps(ret_data))
+
+
+def ret_error(ret_data):
+    logger.error(ret_data['msg'])
+    response = HttpResponse(ret_data['msg'])
+    response.status_code = ret_data['code']
+    return response
+
+@csrf_exempt
+# @login_required_layui
+# @is_authenticated_to_request
+def package_get(request):
+    '''
+        给IPA 签名并返回下载地址
+    '''
+    username, role, clientip = User(request).get_default_values()
+    ret_data = RET_DATA.copy()
+
+    if request.method == "POST":
+        package_id = request.GET.get('id')
+        logger.info(f"package id: {package_id}")
+
+        body = request.body.decode()
+
+        logger.info(body)
+        # 'appendlist', 'clear', 'copy', 'dict', 'encoding', 'fromkeys', 'get', 'getlist', 'items', 'keys', 'lists', 'pop', 'popitem', 'setdefault', 'setlist', 'setlistdefault', 'update', 'urlencode', 'values']
+        # logger.info(request.POST.dict())
+        # # logger.info(request.POST.getlist())
+        # logger.info(request.POST.items())
+        # logger.info(request.POST.lists())
+
+        return HttpResponse("111")
+
+        if not package_id or not IsSomeType(package_id).is_int():  # 如果传入的 ID 不正确
+            ret_data['msg'] = '传入的 package id 不正确'
+            ret_data['code'] = 500
+            return ret_error(ret_data)
+
+        try:
+            package = PackageTb.objects.get(id=package_id)
+
+        except PackageTb.DoesNotExist as e:
+            ret_data['msg'] = f"package: {package_id} 不存在"
+            ret_data['code'] = 500
+            return ret_error(ret_data)
+
+        try:
+            customer_id = package.customer_id
+            customer = CustomerTb.objects.get(id=customer_id)
+
+        except CustomerTb.DoesNotExist as e:
+            ret_data['msg'] = f"customer: {customer_id} 不存在"
+            ret_data['code'] = 500
+            return ret_error(ret_data)
+
+
+
+
+        return HttpResponse("111")
+        # return redirect('https://www.baidu.com/')

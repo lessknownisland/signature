@@ -137,7 +137,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
                     ,time: 3000
                   });
                   layer.close(loading1_iii); // 关闭 等待的弹层
-                  // layer.close(index); //执行关闭 
+                  layer.close(index); //执行关闭 
                 },success:function(res){
                   if (res.code == 1001){ // 登陆失效
                     layer.msg(res.msg, {

@@ -1,7 +1,7 @@
 # coding: utf8
-from django.db import models
-from control.middleware.config import choices_s
+from django.db    import models
 from django.utils import timezone
+from control.middleware.config import choices_s
 
 class AppleAccountTb(models.Model):
     '''
@@ -45,8 +45,13 @@ class PackageTb(models.Model):
     version = models.CharField(verbose_name="IOS 包版本号", max_length=8, null=False)
     build_version = models.CharField(verbose_name="创建 版本号", max_length=8, null=False)
     mini_version  = models.CharField(verbose_name="最低适配IOS版本号", max_length=8, null=False)
+    bundle_identifier = models.CharField(verbose_name="BundleId", max_length=32, null=False)
     ipa = models.CharField(verbose_name="IOS 包地址", max_length=128, null=False)
     mobileconfig = models.CharField(verbose_name="mobileconfig 地址", max_length=128, null=False)
-    total_count  = models.IntegerField(verbose_name="当前下载量", null=False, default=0)
+    count = models.IntegerField(verbose_name="当前下载量", null=False, default=0)
+    customer = models.IntegerField(verbose_name="业主", null=False, default=1)
     create_time  = models.DateTimeField("生成的日期", default=timezone.now)
     status = models.IntegerField(verbose_name="是否启用", choices=choices_s, default=1)
+
+    def __str__(self):
+    	return f"包名: {self.name} 版本: {self.version} bundleId: {self.bundle_identifier} 状态: {self.get_status_display()}"

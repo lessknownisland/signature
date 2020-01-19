@@ -70,6 +70,9 @@ DNSPOD_URL = 'https://dnsapi.cn/'
 # 苹果开发者接口URL
 apple_url = "https://api.appstoreconnect.apple.com/v1"
 
+# 苹果签名 回掉API 地址
+udid_url = "https://arnotest.le079.com"
+
 # 创建苹果证书的csr
 csr = '''-----BEGIN CERTIFICATE REQUEST-----
 MIICizCCAXMCAQAwRjElMCMGCSqGSIb3DQEJARYWbGV5b3VrZWppODg4QGdtYWls
@@ -87,3 +90,42 @@ n7fQKtYCBfrSpGGj3i3ObNnhboGiG3SLW2W3eKc+maHkSDoNXx3Y8IfklLR1dNDL
 T4q/8pTfC5BqGEBCHKaLmVXppEWJEPUJprHo4hMStd7POoQDJJ4CNmUWcz/QmRDP
 tlGxNg4+tyGztlJF9hpHRCdbldBMPHU8IOl+ige4Ew==
 -----END CERTIFICATE REQUEST-----'''
+
+# mobileconfig 
+xml = "".join([
+    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",
+    "<!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">\n",
+    "<plist version=\"1.0\">\n",
+    "    <dict>\n",
+    "        <key>PayloadContent</key>\n",
+    "        <dict>\n",
+    "            <key>URL</key>\n",
+    "            <string>{udid_url}/apple/package/get?id={id}</string> <!--接收数据的接口地址-->\n",
+    "            <key>DeviceAttributes</key>\n",
+    "            <array>\n",
+    "                <string>SERIAL</string>\n",
+    "                <string>MAC_ADDRESS_EN0</string>\n",
+    "                <string>UDID</string>\n",
+    "                <string>IMEI</string>\n",
+    "                <string>ICCID</string>\n",
+    "                <string>VERSION</string>\n",
+    "                <string>PRODUCT</string>\n",
+    "            </array>\n",
+    "        </dict>\n",
+    "        <key>PayloadOrganization</key>\n",
+    "        <string>Apple Inc.</string>  <!--组织名称-->\n",
+    "        <key>PayloadDisplayName</key>\n",
+    "        <string>此文件仅用作获取设备UDID</string>  <!--安装时显示的标题-->\n",
+    "        <key>PayloadVersion</key>\n",
+    "        <integer>1</integer>\n",
+    "        <key>PayloadUUID</key>\n",
+    "        <string>{random_s}</string>  <!--自己随机填写的唯一字符串-->\n",
+    "        <key>PayloadIdentifier</key>\n",
+    "        <string>online.iizvv.profile-service</string>\n",
+    "        <key>PayloadDescription</key>\n",
+    "        <string>该配置文件帮助用户进行APP授权安装！</string>   <!--描述-->\n",
+    "        <key>PayloadType</key>\n",
+    "        <string>Profile Service</string>\n",
+    "    </dict>\n",
+    "</plist>",
+])

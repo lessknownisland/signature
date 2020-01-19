@@ -4,7 +4,7 @@ from django.views.generic.base import RedirectView
 from . import views
 from apple.tests import *
 from apple.account import cer_create, account_get, account_edit, p12_upload
-from apple.package import package_upload
+from apple.package import package_upload, package_get
 
 urlpatterns = [
     # APPLE
@@ -15,6 +15,7 @@ urlpatterns = [
 
     # package
     url('^package/upload$', package_upload, name='PackageUpload'), # 上传 IPA 文件
+    url('^package/get$', package_get, name='PackageGet'), # 获取 签名过后的IPA 文件，用于用户下载安装
 
     # 测试
     url('^test$', test, name='Test'),

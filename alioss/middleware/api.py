@@ -26,37 +26,72 @@ class AliOssApi(object):
         self.__oss_bucket = oss_bucket
         self.__access_keyid = oss_bucket.access_keyid
         self.__access_keysecret = oss_bucket.access_keysecret
+        self.__bucket_name = self.__oss_bucket.bucket_name
+        self.__main_host = self.__oss_bucket.main_host
         self.__auth = oss2.Auth(self.__access_keyid, self.__access_keysecret)
-        self.__bucket = oss2.Bucket(self.__auth, self.__oss_bucket.main_host, self.__oss_bucket.bucket_name)
+        self.__bucket = oss2.Bucket(self.__auth, self.__main_host, self.__bucket_name)
         self.__ret_data = RET_DATA.copy()
 
         self.__req_id = 'bucket_' + ''.join(str(random.choice(range(10))) for _ in range(10)) # 对每一次bucket 操作，指定一个随机的10位数
+        # self.__ret_data['msg'] = f"req_id: {self.__req_id}"
+        self.__headers = {'Content-Type': 'application/octet-stream'}
 
-    def upload_stream(self, file_ext, file_stream):
+        # 将当前 bucket 信息写入日志
+        logger.info(f"bucket: {self.__bucket_name}")
+        logger.info(f"bucket_host: {self.__main_host}")
+        logger.info(self.__ret_data['msg'])
+
+    def upload_stream(self, file_ext, file_stream, headers={'Content-Type': 'application/octet-stream'}):
         '''
             上传文件流
         '''
         # 生成一个 32 位随机名称
         random_s = "".join(random.sample(string.ascii_letters + string.digits, 32))
-        self.__file_name = f"{random_s}.{file_ext}"
+        self.__file_name = f"{random_s}.{file_ext}" # 上传到 OSS 的文件名
 
-        self.__ret_data['code'] = 0
-        self.__ret_data['msg'] = f"req_id: {self.__req_id} : {self.__file_name} 文件上传"
+        ret_data = RET_DATA.copy()
+        ret_data['code'] = 0
+        ret_data['msg'] = f"req_id: {self.__req_id} : {self.__file_name} 文件上传"
 
-        ret = self.__bucket.put_object(self.__file_name, file_stream)
+        ret = self.__bucket.put_object(self.__file_name, file_stream, headers=headers)
 
         if ret.status == 200:
-            self.__ret_data['msg']  = f"{self.__ret_data['msg']} 成功"
-            self.__ret_data['data'] = f"{self.__oss_bucket.main_host}/{self.__file_name}".replace("https://", f"https://{self.__oss_bucket.bucket_name}.")
-            logger.info(self.__ret_data['msg'])
+            ret_data['msg']  += " 成功"
+            ret_data['data'] = f"{self.__oss_bucket.main_host}/{self.__file_name}".replace("https://", f"https://{self.__oss_bucket.bucket_name}.")
+            logger.info(ret_data['msg'])
 
         else:
-            self.__ret_data['code'] = 500
-            self.__ret_data['msg']  = f"{self.__ret_data['msg']} 失败"
-            logger.error(self.__ret_data['msg'])
+            ret_data['code'] = 500
+            ret_data['msg']  += " 失败"
+            logger.error(ret_data['msg'])
 
-        return self.__ret_data['msg']
+        return ret_data
 
+    def upload_localfile(self, file_ext, file_local, headers={'Content-Type': 'application/octet-stream'}):
+        '''
+            上传文件流
+        '''
+        # 生成一个 32 位随机名称
+        random_s = "".join(random.sample(string.ascii_letters + string.digits, 32))
+        self.__file_name = f"{random_s}.{file_ext}" # 上传到 OSS 的文件名
+
+        ret_data = RET_DATA.copy()
+        ret_data['code'] = 0
+        ret_data['msg'] = f"req_id: {self.__req_id} : {self.__file_name} 文件上传"
+
+        ret = self.__bucket.put_object_from_file(self.__file_name, file_local, headers=headers)
+
+        if ret.status == 200:
+            ret_data['msg']  += " 成功"
+            ret_data['data'] = f"{self.__oss_bucket.main_host}/{self.__file_name}".replace("https://", f"https://{self.__oss_bucket.bucket_name}.")
+            logger.info(ret_data['msg'])
+
+        else:
+            ret_data['code'] = 500
+            ret_data['msg']  += " 失败"
+            logger.error(ret_data['msg'])
+
+        return ret_data
 
 def get_bucket():
     '''

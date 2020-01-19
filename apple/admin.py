@@ -24,9 +24,9 @@ admin.site.register(AppleDeviceTb, AppleDeviceTbAdmin)
 # PackageTb admin model
 class PackageTbAdmin(admin.ModelAdmin):
     # 需要显示的字段信息
-    list_display = ('id', 'name', 'version', 'mini_version', 'ipa', 'mobileconfig', 'total_count', 'create_time', 'status')
+    list_display = ('id', 'name', 'version', 'mini_version', 'bundle_identifier', 'ipa', 'mobileconfig', 'count', 'create_time', 'status')
 
     # 设置哪些字段可以点击进入编辑界面，默认是第一个字段
-    list_display_links = ('id', 'name', 'version', 'mini_version', 'ipa', 'mobileconfig', 'total_count', 'create_time', 'status')
+    list_display_links = ('id', 'name', 'version', 'mini_version', 'bundle_identifier', 'ipa', 'mobileconfig', 'count', 'create_time', 'status')
 
 admin.site.register(PackageTb, PackageTbAdmin)
