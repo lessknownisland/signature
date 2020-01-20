@@ -1,0 +1,6 @@
+2020-01-20 15:21:32,939 ERROR main net.appuploader.a.a(?:?) {"messageName":"CommonError","time":1579504892939,"message":"Login reqired before sign","status":0}
+java.lang.Exception: Login reqired before sign
+	at net.appuploader.a.a(Unknown Source)
+	at net.appuploader.a.a(Unknown Source)
+	at net.appuploader.a.a(Unknown Source)
+	at net.appuploader.Main.main(Unknown Source)

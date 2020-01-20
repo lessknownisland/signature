@@ -9,6 +9,8 @@ from functools import wraps
 import re
 import json
 import logging
+import random
+import string
 import datetime
 
 logger = logging.getLogger('django')
@@ -47,3 +49,9 @@ class IsSomeType(object):
 #         )
 
 #     insert_h.save()
+
+def get_random_s(num):
+    '''
+        获取一个随机的 num 位的字符串
+    '''
+    return "".join(random.sample(string.ascii_letters + string.digits, num))

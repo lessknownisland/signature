@@ -31,6 +31,7 @@ def cer_create(request):
         1. 检查账号ID是否为空
         2. 在进行创建证书前，先关闭此账号的签名请求
         3. 更新数据库中的设备信息
+        4. 更新 bundleIDs
         4. 删除 apple 上的 IOS_DISTRIBUTION 证书
         5. 创建新的证书，并更新账号信息
 
@@ -102,15 +103,38 @@ def cer_create(request):
             else:
                 return HttpResponse(json.dumps(ret_data))
 
+            ### 创建 bundleIds ###
+            bundleId = apple_account.bundleId
+            ret_data = asca.get_bundleIds()
+            if ret_data['code'] != 0: # 如果获取bundleIds 失败
+                return HttpResponse(json.dumps(ret_data))
+            
+            for bi in ret_data['data']['data']:
+                ret_tmp = asca.delete_bundleIds(bi['id'])
+                if ret_tmp['code'] != 0: # 如果删除bundleIds出现错误，不再执行
+                    return HttpResponse(json.dumps(ret_tmp))
+            
+            # bundleIds删除后，需要重新生成
+            apple_account.bundleIds = None
+            apple_account.save()
+
+            ret_data = asca.create_bundleIds(bundleId)
+            if ret_data['code'] != 0: # 如果创建bundleIds 失败
+                return HttpResponse(json.dumps(ret_data))
+
+            # bundleIds 创建成功后，更新入库
+            apple_account.bundleIds = ret_data['data']['data']['id']
+            apple_account.save()
+
             # 获取并删除 apple 账号上的 "certificateType": "IOS_DISTRIBUTION" 证书
             ret_data = asca.get_cer()
             # return HttpResponse(json.dumps(ret_data)) # 代码测试
             
             if ret_data['code'] == 0: # 如果是成功的，则执行其他操作
                 for cer in ret_data['data']['data']:
-                    ret_data = asca.delete_cer(cer['id'])
-                    if ret_data['code'] != 0: # 如果删除证书出现错误，不再执行创建证书
-                        return HttpResponse(json.dumps(ret_data))
+                    ret_tmp = asca.delete_cer(cer['id'])
+                    if ret_tmp['code'] != 0: # 如果删除证书出现错误，不再执行创建证书
+                        return HttpResponse(json.dumps(ret_tmp))
                     else:
                         apple_account.p12 = None # 证书删除后，需要将新证书重新生成p12
                         apple_account.save()

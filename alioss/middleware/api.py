@@ -13,6 +13,8 @@ import string
 import time
 import oss2
 
+from urllib.parse import urlparse
+
 logger = logging.getLogger('django')
 
 class AliOssApi(object):
@@ -39,7 +41,7 @@ class AliOssApi(object):
         # 将当前 bucket 信息写入日志
         logger.info(f"bucket: {self.__bucket_name}")
         logger.info(f"bucket_host: {self.__main_host}")
-        logger.info(self.__ret_data['msg'])
+        logger.info(f"req_id: {self.__req_id}")
 
     def upload_stream(self, file_ext, file_stream, headers={'Content-Type': 'application/octet-stream'}):
         '''
@@ -93,6 +95,26 @@ class AliOssApi(object):
 
         return ret_data
 
+    def download_file(self, file_remote, file_local):
+        '''
+            下载文件
+        '''
+        ret_data = RET_DATA.copy()
+        ret_data['code'] = 0
+        ret_data['msg'] = f"req_id: {self.__req_id} : {file_remote} ---> {file_local} 文件下载"
+        ret = self.__bucket.get_object_to_file(file_remote, file_local)
+
+        if ret.status == 200:
+            ret_data['msg']  += " 成功"
+            logger.info(ret_data['msg'])
+
+        else:
+            ret_data['code'] = 500
+            ret_data['msg']  += " 失败"
+            logger.error(ret_data['msg'])
+
+        return ret_data
+
 def get_bucket():
     '''
         获取可用的阿里云OSS
@@ -122,3 +144,29 @@ def get_bucket():
         }
 
     return __ret_data
+
+def get_bucket_fromurl(url):
+    '''
+        从url 中提取 bucket_name 和 main_host，筛选得到 bucket object
+    '''
+    ret_data = RET_DATA.copy()
+    result = urlparse(url)
+    bucket_name = result.netloc.split('.')[0]
+    main_host   = url.replace(result.path, '').replace(f"{bucket_name}.", '')
+
+    # 获取bucket
+    try:
+        bucket = AliossBucketTb.objects.get(bucket_name=bucket_name, main_host=main_host)
+        ret_data['msg'] = f"bucket: {bucket_name} - {main_host} 获取成功"
+        ret_data['code'] = 0
+        ret_data['data'] = bucket
+        logger.info(ret_data['msg'])
+
+    except AliossBucketTb.DoesNotExist as e:
+        ret_data['msg'] = f"bucket: {bucket_name} - {main_host} 不存在"
+        ret_data['code'] = 500
+        logger.error(ret_data['msg'])
+        
+    return ret_data
+
+

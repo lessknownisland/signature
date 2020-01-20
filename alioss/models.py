@@ -11,3 +11,6 @@ class AliossBucketTb(models.Model):
     main_host   = models.CharField(verbose_name="Bucket 主域名", max_length=128, null=False)
     vpc_host    = models.CharField(verbose_name="Bucket 内网域名", max_length=128, null=True)
     status = models.IntegerField(verbose_name="是否启用", choices=choices_s, default=1)
+
+    class Meta:
+        unique_together = ('bucket_name' ,'main_host')

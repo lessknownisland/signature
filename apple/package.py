@@ -3,7 +3,9 @@ from django.http                    import HttpResponse
 from django.shortcuts               import redirect
 from django.views.decorators.csrf   import csrf_exempt, csrf_protect
 from control.middleware.config      import RET_DATA
+from control.middleware.common      import get_random_s
 from apple.middleware.api           import AppStoreConnectApi
+from apple.middleware.get_model_object import get_apple_account
 from apple.models  import AppleAccountTb, AppleDeviceTb, PackageTb
 from alioss.models import AliossBucketTb
 from customer.models import CustomerTb
@@ -12,7 +14,7 @@ from signature                      import settings
 from control.middleware.user        import User, login_required_layui, is_authenticated_to_request
 from control.middleware.config      import RET_DATA, MESSAGE_TEST, csr, xml, udid_url
 from control.middleware.common      import IsSomeType
-from alioss.middleware.api          import get_bucket, AliOssApi
+from alioss.middleware.api          import get_bucket, AliOssApi, get_bucket_fromurl
 
 import re
 import os
@@ -25,10 +27,12 @@ import string
 import oss2
 import zipfile
 import plistlib
+import platform
 
-import xml.etree.ElementTree as et
+from bs4 import BeautifulSoup
 
 logger = logging.getLogger('django')
+sh_dir = f"{settings.BASE_DIR}/apple/shell"
 
 # 获取plist路径
 def find_path(zip_file, pattern_str):
@@ -172,24 +176,26 @@ def package_get(request):
 
     if request.method == "POST":
         package_id = request.GET.get('id')
-        logger.info(f"package id: {package_id}")
-
-        body = request.body.decode()
-
-        logger.info(body)
-        # 'appendlist', 'clear', 'copy', 'dict', 'encoding', 'fromkeys', 'get', 'getlist', 'items', 'keys', 'lists', 'pop', 'popitem', 'setdefault', 'setlist', 'setlistdefault', 'update', 'urlencode', 'values']
-        # logger.info(request.POST.dict())
-        # # logger.info(request.POST.getlist())
-        # logger.info(request.POST.items())
-        # logger.info(request.POST.lists())
-
-        return HttpResponse("111")
-
         if not package_id or not IsSomeType(package_id).is_int():  # 如果传入的 ID 不正确
             ret_data['msg'] = '传入的 package id 不正确'
             ret_data['code'] = 500
             return ret_error(ret_data)
 
+        # 获取UDID
+        body = str(request.body).split('<?xml')[-1].split('</plist>')[0]
+        body = '<?xml{}</plist>'.format(body).replace('\\t', '').replace('\\n', '')
+        soup = BeautifulSoup(body)
+
+        xml =soup.find('dict')
+        vaules = []
+        for item in xml.find_all():
+            if item.name == 'string':
+                vaules.append(item.text)
+
+        udid = vaules[-2]
+        logger.info(f"UDID: {udid}")
+
+        # 获取package
         try:
             package = PackageTb.objects.get(id=package_id)
 
@@ -198,8 +204,9 @@ def package_get(request):
             ret_data['code'] = 500
             return ret_error(ret_data)
 
+        # 获取业主
         try:
-            customer_id = package.customer_id
+            customer_id = package.customer
             customer = CustomerTb.objects.get(id=customer_id)
 
         except CustomerTb.DoesNotExist as e:
@@ -207,6 +214,83 @@ def package_get(request):
             ret_data['code'] = 500
             return ret_error(ret_data)
 
+        # 获取苹果开发者账号
+        ret_data = get_apple_account(customer, udid)
+        if ret_data['code'] != 0:
+            return ret_error(ret_data)
+        apple_account = ret_data['data']['apple_account']
+        logger.info(f"获取到可用的开发者账号: {apple_account.account}")
+        device_id = ret_data['data']['device_id']
+        cer_id = apple_account.cer_id
+        bundleIds = apple_account.bundleIds
+
+        # 创建 profile
+        # 引入asca 类
+        asca = AppStoreConnectApi(apple_account.account, apple_account.p8, apple_account.iss, apple_account.kid)
+        ret_data = asca.create_profile(bundleIds, cer_id, device_id)
+        if ret_data['code'] != 0: # 如果profile 创建失败
+            return ret_error(ret_data)
+
+        logger.info(ret_data['data'])
+
+
+        return HttpResponse("111")
+
+        ### 下载 p12 ###
+        p12 = apple_account.p12
+        remote_p12 = p12.split('/')[-1]
+        # local_p12  = f"{sh_dir}/tmp/{get_random_s}"
+        local_p12  = get_random_s + '.p12'
+
+        # 获取 bucket
+        ret_data = get_bucket_fromurl(p12)
+        if ret_data['code'] != 0:
+            return ret_error(ret_data)
+        else:
+            bucket = ret_data['data']
+
+        aoa = AliOssApi(bucket)
+        ret_data = aoa.download_file(remote_p12, f"{sh_dir}/tmp/{local_p12}")
+        if ret_data['code'] != 0:
+            return ret_error(ret_data)
+
+        ### 下载 IPA ###
+        ipa = package.ipa
+        remote_ipa = ipa.split('/')[-1]
+        # local_ipa  = f"{sh_dir}/tmp/{get_random_s}"
+        local_ipa  = get_random_s + '.ipa'
+
+        # 获取 bucket
+        ret_data = get_bucket_fromurl(ipa)
+        if ret_data['code'] != 0:
+            return ret_error(ret_data)
+        else:
+            bucket = ret_data['data']
+
+        aoa = AliOssApi(bucket)
+        ret_data = aoa.download_file(remote_ipa, f"{sh_dir}/tmp/{local_ipa}")
+        if ret_data['code'] != 0:
+            return ret_error(ret_data)
+
+        ### 开始签名 ###
+        pf = platform.platform()
+        if 'Darwin' in pf:
+            ausign = f"{sh_dir}/ausign_mac"
+        elif 'Linux' in pf:
+            ausign = f"{sh_dir}/ausign_linux"
+        else:
+            ret_data['msg'] = f"系统识别错误，既不是macos 也不是 linux"
+            ret_data['code'] = 500
+            return ret_error(ret_data)
+
+        shell = f"{ausign} --sign $1 -c $2 -m $3 -p 'a123w456'"
+        logger.info(f"执行脚本: {shell}")
+        status, result = subprocess.getstatusoutput(shell)
+        if status != 0: # 如果脚本执行失败，返回错误
+            ret_data['code'] = 500
+            ret_data['msg'] = f"mobiconfig 脚本执行错误: {result}"
+            logger.error(ret_data['msg'])
+            return HttpResponse(json.dumps(ret_data))
 
 
 

@@ -1,6 +1,7 @@
 #-_- coding: utf-8 -_-
 from signature                 import settings
 from control.middleware.config import RET_DATA, apple_url
+from control.middleware.common import get_random_s
 
 import re
 import json
@@ -60,6 +61,118 @@ class AppStoreConnectApi(object):
         except Exception as e:
             logger.error(f"获取苹果开发者 {self.__account} 接口token 错误: {str(e)}")
             return None
+
+    def create_profile(self, bundleIds, cer_id, device_id):
+        '''
+            创建profile
+        '''
+        # 初始化 req 参数
+        self.__content = "创建profile"
+        self.__method = "POST"
+        self.__url    = f"{apple_url}/profiles"
+        self.__data   = {
+            "data": {
+                "type": "profiles", 
+                "attributes": {
+                    "name": get_random_s(32),
+                    "profileType": "IOS_APP_ADHOC"
+                },
+                "relationships": {
+                    "bundleId": {
+                        "id": bundleIds,
+                        "type": "bundleIds"
+                    },
+                    "certificates": {
+                        "id": cer_id,
+                        "type": "certificates"
+                    },
+                    "devices": {
+                        "id": device_id,
+                        "type": "devices"
+                    }
+                }
+            }
+        }
+        self.__headers = {"Content-Type": "application/json"}
+
+        # 获取接口结果
+        return self._send_req()
+
+    def create_devices(self, udid):
+        '''
+            创建devices
+        '''
+        # 初始化 req 参数
+        self.__content = "创建devices"
+        self.__method = "POST"
+        self.__url    = f"{apple_url}/devices"
+        self.__data   = {
+            "data": {
+                "type": "devices", 
+                "attributes": {
+                    "udid": udid,
+                    "name": udid,
+                    "platform": "IOS",
+                }
+            }
+        }
+        self.__headers = {"Content-Type": "application/json"}
+
+        # 获取接口结果
+        return self._send_req()
+
+    def create_bundleIds(self, bundleId):
+        '''
+            创建bundleIds:
+        '''
+        # 初始化 req 参数
+        self.__content = "创建bundleIds"
+        self.__method = "POST"
+        self.__url    = f"{apple_url}/bundleIds"
+        self.__data   = {
+            "data": {
+                "type": "bundleIds", 
+                "attributes": {
+                    "identifier": bundleId,
+                    "name": "AppBundleId",
+                    "platform": "IOS",
+                }
+            }
+        }
+        self.__headers = {"Content-Type": "application/json"}
+
+        # 获取接口结果
+        return self._send_req()
+
+    def delete_bundleIds(self, bundleIds):
+        '''
+            删除bundleIds
+        '''
+        # 初始化 req 参数
+        self.__content = "删除bundleIds"
+        self.__method = "DELETE"
+        self.__url    = f"{apple_url}/bundleIds/{bundleIds}"
+        self.__data   = {}
+        self.__headers = {"Content-Type": "application/json"}
+
+        # 获取接口结果
+        return self._send_req()
+
+    def get_bundleIds(self):
+        '''
+            获取bundleIds
+        '''
+        # 初始化 req 参数
+        self.__content = "获取bundleIds"
+        self.__method = "GET"
+        self.__url    = f"{apple_url}/bundleIds?limit=200"
+        self.__data   = {
+            "platform": "IOS"
+        }
+        self.__headers = {"Content-Type": "application/json"}
+
+        # 获取接口结果
+        return self._send_req()
 
     def create_cer(self, csr):
         '''
@@ -171,6 +284,7 @@ class AppStoreConnectApi(object):
             if ret.status_code == 204: # 状态码 204，返回内容为空，例如 DELETE 证书的请求
                 self.__ret_data['data'] = f"{self.__account}: {self.__content} 成功"
                 logger.info(f"req_id: {self.__req_id} {self.__ret_data['data']}")
+
             else:
                 app_ret = ret.json()
                 self.__ret_data['data'] = app_ret
