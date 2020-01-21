@@ -1,0 +1,12 @@
+*.pyc
+logs/*
+log
+ausign_runtime
+ausign_runtime/*
+tmp/*.txt
+nohup.out
+*.ipa
+*.p12
+*.mobileprovision
+tmp/*
+#migrations
