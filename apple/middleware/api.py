@@ -74,21 +74,27 @@ class AppStoreConnectApi(object):
             "data": {
                 "type": "profiles", 
                 "attributes": {
-                    "name": get_random_s(32),
+                    "name": get_random_s(16),
                     "profileType": "IOS_APP_ADHOC"
                 },
                 "relationships": {
-                    "bundleId": {
-                        "id": bundleIds,
-                        "type": "bundleIds"
+                    "bundleId": { 
+                        "data": {
+                            "id": bundleIds,
+                            "type": "bundleIds"
+                        }
                     },
                     "certificates": {
-                        "id": cer_id,
-                        "type": "certificates"
+                        "data": [{
+                            "id": cer_id,
+                            "type": "certificates"
+                        }]
                     },
                     "devices": {
-                        "id": device_id,
-                        "type": "devices"
+                        "data": [{
+                            "id": device_id,
+                            "type": "devices"
+                        }]
                     }
                 }
             }

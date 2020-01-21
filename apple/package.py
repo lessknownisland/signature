@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.http                    import HttpResponse
+from django.http                    import HttpResponse, HttpResponseRedirect
 from django.shortcuts               import redirect
 from django.views.decorators.csrf   import csrf_exempt, csrf_protect
 from control.middleware.config      import RET_DATA
@@ -12,7 +12,7 @@ from customer.models import CustomerTb
 from detect.telegram                import SendTelegram
 from signature                      import settings
 from control.middleware.user        import User, login_required_layui, is_authenticated_to_request
-from control.middleware.config      import RET_DATA, MESSAGE_TEST, csr, xml, udid_url
+from control.middleware.config      import RET_DATA, MESSAGE_TEST, csr, xml, udid_url, plist
 from control.middleware.common      import IsSomeType
 from alioss.middleware.api          import get_bucket, AliOssApi, get_bucket_fromurl
 
@@ -20,6 +20,7 @@ import re
 import os
 import json
 import logging
+import base64
 import datetime
 import subprocess
 import random
@@ -224,53 +225,51 @@ def package_get(request):
         cer_id = apple_account.cer_id
         bundleIds = apple_account.bundleIds
 
-        # 创建 profile
+        ### 创建 profile ###
         # 引入asca 类
         asca = AppStoreConnectApi(apple_account.account, apple_account.p8, apple_account.iss, apple_account.kid)
         ret_data = asca.create_profile(bundleIds, cer_id, device_id)
         if ret_data['code'] != 0: # 如果profile 创建失败
             return ret_error(ret_data)
 
-        logger.info(ret_data['data'])
-
-
-        return HttpResponse("111")
+        profile_content = ret_data['data']['data']['attributes']['profileContent']
+        local_profile = f"{sh_dir}/tmp/{get_random_s(32)}.mobileprovision"
+        with open(local_profile, 'wb') as f:
+            f.write(base64.b64decode(profile_content))
 
         ### 下载 p12 ###
         p12 = apple_account.p12
         remote_p12 = p12.split('/')[-1]
-        # local_p12  = f"{sh_dir}/tmp/{get_random_s}"
-        local_p12  = get_random_s + '.p12'
+        local_p12  = remote_p12 + '.p12'
+        if not os.path.exists(f"{sh_dir}/tmp/{local_p12}"): # 如果本地不存在，则从OSS 下载
+            # 获取 bucket
+            ret_data = get_bucket_fromurl(p12)
+            if ret_data['code'] != 0:
+                return ret_error(ret_data)
+            else:
+                bucket = ret_data['data']
 
-        # 获取 bucket
-        ret_data = get_bucket_fromurl(p12)
-        if ret_data['code'] != 0:
-            return ret_error(ret_data)
-        else:
-            bucket = ret_data['data']
-
-        aoa = AliOssApi(bucket)
-        ret_data = aoa.download_file(remote_p12, f"{sh_dir}/tmp/{local_p12}")
-        if ret_data['code'] != 0:
-            return ret_error(ret_data)
+            aoa = AliOssApi(bucket)
+            ret_data = aoa.download_file(remote_p12, f"{sh_dir}/tmp/{local_p12}")
+            if ret_data['code'] != 0:
+                return ret_error(ret_data)
 
         ### 下载 IPA ###
         ipa = package.ipa
         remote_ipa = ipa.split('/')[-1]
-        # local_ipa  = f"{sh_dir}/tmp/{get_random_s}"
-        local_ipa  = get_random_s + '.ipa'
+        local_ipa  = remote_ipa + '.ipa'
+        if not os.path.exists(f"{sh_dir}/tmp/{local_ipa}"): # 如果本地不存在，则从OSS 下载
+            # 获取 bucket
+            ret_data = get_bucket_fromurl(ipa)
+            if ret_data['code'] != 0:
+                return ret_error(ret_data)
+            else:
+                bucket = ret_data['data']
 
-        # 获取 bucket
-        ret_data = get_bucket_fromurl(ipa)
-        if ret_data['code'] != 0:
-            return ret_error(ret_data)
-        else:
-            bucket = ret_data['data']
-
-        aoa = AliOssApi(bucket)
-        ret_data = aoa.download_file(remote_ipa, f"{sh_dir}/tmp/{local_ipa}")
-        if ret_data['code'] != 0:
-            return ret_error(ret_data)
+            aoa = AliOssApi(bucket)
+            ret_data = aoa.download_file(remote_ipa, f"{sh_dir}/tmp/{local_ipa}")
+            if ret_data['code'] != 0:
+                return ret_error(ret_data)
 
         ### 开始签名 ###
         pf = platform.platform()
@@ -283,16 +282,50 @@ def package_get(request):
             ret_data['code'] = 500
             return ret_error(ret_data)
 
-        shell = f"{ausign} --sign $1 -c $2 -m $3 -p 'a123w456'"
+        local_ipa = "fOSor6s32lxF10TeGH8KMVWXwZ7BRz9m.ipa"
+        local_p12 = "izxQaR5D82HJvqEoI46XFKuA7bfSwtPc.p12"
+        local_profile = f"{sh_dir}/tmp/A4OX61aQYxKcUynjRDC5SMg37qdT0EWt.mobileprovision"
+        signed_ipa = f"{sh_dir}/tmp/{device_id}_{cer_id}_{bundleIds}.ipa"
+
+        shell = f"{ausign} --sign {sh_dir}/tmp/{local_ipa} -c {sh_dir}/tmp/{local_p12} -m {local_profile} -p 'a123w456' -o {signed_ipa}"
         logger.info(f"执行脚本: {shell}")
+        s_time = datetime.datetime.now()
         status, result = subprocess.getstatusoutput(shell)
+        e_time = datetime.datetime.now()
         if status != 0: # 如果脚本执行失败，返回错误
             ret_data['code'] = 500
             ret_data['msg'] = f"mobiconfig 脚本执行错误: {result}"
             logger.error(ret_data['msg'])
             return HttpResponse(json.dumps(ret_data))
+        else:
+            logger.info(f"mobiconfig 脚本执行成功: 耗时 {(e_time - s_time).total_seconds()} s")
+        
+        # 获取 oss bucket
+        ret_data = get_bucket()
+        if ret_data['code'] != 0:
+            return ret_error(ret_data)
+        else:
+            bucket = ret_data['data']
+        aoa = AliOssApi(bucket)
 
+        # ### 上传 已签名的IPA ###
+        ret_data = aoa.upload_localfile('ipa', signed_ipa)
+        if ret_data['code'] != 0:
+            return ret_error(ret_data)
+        remote_signed_ipa = ret_data['data']
 
+        ### 生成plist 并上传 ###
+        # remote_signed_ipa = "https://banana003bucket.oss-cn-hongkong.aliyuncs.com/9v3VIP4KjnlhgZQTWz7MJrHs1OyqNBut.ipa"
+        final_plist = plist.format(remote_signed_ipa=remote_signed_ipa, version=package.version, name=package.name, bundleId=package.bundle_identifier, remote_icon=package.icon)
+        ret_data = aoa.upload_stream('plist', final_plist)
+        if ret_data['code'] != 0:
+            return ret_error(ret_data)
+        remote_plist = ret_data['data']
 
-        return HttpResponse("111")
-        # return redirect('https://www.baidu.com/')
+        
+
+        redirect_url = f"itms-services://?action=download-manifest&url={remote_plist}"
+        response = HttpResponse(status=301, content_type="text/html;charset=UTF-8")
+        response['Location'] = redirect_url
+
+        return response

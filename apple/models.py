@@ -56,3 +56,5 @@ class PackageTb(models.Model):
 
     def __str__(self):
     	return f"包名: {self.name} 版本: {self.version} bundleId: {self.bundle_identifier} 状态: {self.get_status_display()}"
+
+
