@@ -9,6 +9,7 @@ class CustomerTb(models.Model):
     '''
     name  = models.CharField(verbose_name="业主 名称", max_length=64, null=False, unique=True)
     apple_account = models.ManyToManyField(AppleAccountTb, verbose_name="苹果账号", blank=True)
+    money = models.IntegerField(verbose_name="余额", default=0)
     create_time = models.DateTimeField("生成的日期", default=timezone.now)
     status = models.IntegerField(verbose_name="是否启用", choices=choices_s, default=0)
     

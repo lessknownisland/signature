@@ -5,6 +5,7 @@ from django.views.decorators.csrf   import csrf_exempt, csrf_protect
 from control.middleware.config      import RET_DATA
 from control.middleware.common      import get_random_s
 from apple.middleware.api           import AppStoreConnectApi
+from apple.middleware.common        import mc_create
 from apple.middleware.get_model_object import get_apple_account
 from apple.models  import AppleAccountTb, AppleDeviceTb, PackageTb
 from alioss.models import AliossBucketTb
@@ -48,6 +49,47 @@ def find_path(zip_file, pattern_str):
 @csrf_exempt
 @login_required_layui
 @is_authenticated_to_request
+def mobileconfig_create(request):
+    '''
+        手动请求，生成mobileconfig
+    '''
+    username, role, clientip = User(request).get_default_values()
+
+    # 初始化返回数据
+    ret_data = RET_DATA.copy()
+    ret_data['code'] = 0 # 请求正常，返回 0
+    ret_data['msg']  = '生成mobileconfig 成功'
+    ret_data['data'] = []
+
+    if request.method == 'POST':
+        # 获取 POST 数据
+        data = request.POST
+
+        # 检查ID是否为空
+        if 'id' not in data or not IsSomeType(data['id']).is_int(): 
+            ret_data['msg'] = '传入的id 不正确'
+            ret_data['code'] = 500
+            logger.error(ret_data['msg'])
+            return HttpResponse(json.dumps(ret_data))
+        else:
+            package_id = int(data['id'])
+
+        # 获取package
+        try:
+            package = PackageTb.objects.get(id=package_id)
+
+        except PackageTb.DoesNotExist as e:
+            ret_data['msg'] = f"package: {package_id} 不存在"
+            ret_data['code'] = 500
+
+        else:
+            ret_data = mc_create(package, ret_data)
+
+        return HttpResponse(json.dumps(ret_data))
+
+@csrf_exempt
+@login_required_layui
+@is_authenticated_to_request
 def package_upload(request):
     '''
         1. 上传IPA 文件
@@ -80,7 +122,7 @@ def package_upload(request):
         ret_bucket = get_bucket()
         oss_bucket = ret_bucket['data']
         if not oss_bucket: # 如果 oss_bucket 账号不存在，则退出
-            return ret_bucket
+            return HttpResponse(json.dumps(ret_bucket))
         
         # 获取上传的接口
         aoa = AliOssApi(oss_bucket)
@@ -129,32 +171,7 @@ def package_upload(request):
         package.save()
 
         ### 4. 生成 mobileconfig 并上传 ###
-        sh_dir = f"{settings.BASE_DIR}/apple/shell"
-        mc_tmpname = "".join(random.sample(string.ascii_letters + string.digits, 32)) + ".mobileconfig"
-        mc_name = "".join(random.sample(string.ascii_letters + string.digits, 32)) + ".mobileconfig"
-        mc_tmpstr = xml.format(udid_url=udid_url, id=package.id, random_s="".join(random.sample(string.ascii_letters + string.digits, 32)))        
-        with open(f"{sh_dir}/tmp/{mc_tmpname}", 'w') as f:
-            f.write(mc_tmpstr)
-        
-        # 执行mobileconfig 脚本
-        shell = f"openssl smime -sign -in {sh_dir}/tmp/{mc_tmpname} -out {sh_dir}/tmp/{mc_name} -signer {sh_dir}/InnovCertificates.pem -certfile {sh_dir}/root.crt.pem -outform der -nodetach"
-        logger.info(f"执行脚本: {shell}")
-        status, result = subprocess.getstatusoutput(shell)
-        if status != 0: # 如果脚本执行失败，返回错误
-            ret_data['code'] = 500
-            ret_data['msg'] = f"mobiconfig 脚本执行错误: {result}"
-            logger.error(ret_data['msg'])
-            return HttpResponse(json.dumps(ret_data))
-
-        # 上传 mobileconfig
-        ret_mobileconfig = aoa.upload_localfile('mobileconfig', f"{sh_dir}/tmp/{mc_name}")
-        if ret_mobileconfig['code'] != 0:
-            return HttpResponse(json.dumps(ret_mobileconfig))
-        os.remove(f"{sh_dir}/tmp/{mc_tmpname}")
-        os.remove(f"{sh_dir}/tmp/{mc_name}")
-
-        package.mobileconfig = ret_mobileconfig['data']
-        package.save()
+        ret_data = mc_create(package, ret_data, aoa)
 
         return HttpResponse(json.dumps(ret_data))
 
@@ -168,7 +185,7 @@ def ret_error(ret_data):
 @csrf_exempt
 # @login_required_layui
 # @is_authenticated_to_request
-def package_get(request):
+def package_install(request):
     '''
         给IPA 签名并返回下载地址
     '''
@@ -198,20 +215,20 @@ def package_get(request):
 
         # 获取package
         try:
-            package = PackageTb.objects.get(id=package_id)
+            package = PackageTb.objects.get(id=package_id, status=1)
 
         except PackageTb.DoesNotExist as e:
-            ret_data['msg'] = f"package: {package_id} 不存在"
+            ret_data['msg'] = f"package: {package_id} 不存在或已禁用"
             ret_data['code'] = 500
             return ret_error(ret_data)
 
         # 获取业主
         try:
             customer_id = package.customer
-            customer = CustomerTb.objects.get(id=customer_id)
+            customer = CustomerTb.objects.get(id=customer_id, status=1)
 
         except CustomerTb.DoesNotExist as e:
-            ret_data['msg'] = f"customer: {customer_id} 不存在"
+            ret_data['msg'] = f"customer: {customer_id} 不存在或已禁用"
             ret_data['code'] = 500
             return ret_error(ret_data)
 
@@ -322,10 +339,68 @@ def package_get(request):
             return ret_error(ret_data)
         remote_plist = ret_data['data']
 
-        
+        # 更新当前下载量
+        package.count += 1
+        package.save()
 
+        # 跳转到对应的下载链接
         redirect_url = f"itms-services://?action=download-manifest&url={remote_plist}"
         response = HttpResponse(status=301, content_type="text/html;charset=UTF-8")
         response['Location'] = redirect_url
 
         return response
+
+@csrf_exempt
+@login_required_layui
+@is_authenticated_to_request
+def packages_get(request):
+    '''
+        获取package 信息
+    '''
+    username, role, clientip = User(request).get_default_values()
+
+    # 初始化返回数据
+    ret_data = RET_DATA.copy()
+    ret_data['code'] = 0 # 请求正常，返回 0
+    ret_data['msg']  = '获取package 信息'
+    ret_data['data'] = []
+
+    try:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+            packages = PackageTb.objects.filter(name__icontains=data['name'], status__in=data['status'])
+            logger.info(data)
+
+            for package in packages:
+                # 获取业主
+                try:
+                    customer_id = package.customer
+                    customer = CustomerTb.objects.get(id=customer_id)
+
+                except CustomerTb.DoesNotExist as e:
+                    ret_data['msg'] = f"customer: {customer_id} 不存在"
+                    ret_data['code'] = 500
+                    return HttpResponse(json.dumps(ret_data))
+
+                tmp_dict = {}
+                tmp_dict['id'] = package.id
+                tmp_dict['name'] = package.name
+                tmp_dict['count'] = package.count
+                tmp_dict['version'] = package.version
+                tmp_dict['mini_version'] = package.mini_version
+                tmp_dict['bundle_identifier'] = package.bundle_identifier
+                tmp_dict['ipa'] = package.ipa
+                tmp_dict['mobileconfig'] = package.mobileconfig
+                tmp_dict['customer'] = customer.name
+                tmp_dict['status'] = package.status
+
+                ret_data['data'].append(tmp_dict)
+
+    except Exception as e:
+        logger.error(str(e))
+        ret_data['code'] = 500
+        ret_data['msg']  = f"{ret_data['msg']} 失败: {str(e)}"
+
+    ret_data['msg']  = f"{ret_data['msg']} 成功"
+
+    return HttpResponse(json.dumps(ret_data))

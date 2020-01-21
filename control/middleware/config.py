@@ -100,7 +100,7 @@ xml = "".join([
     "        <key>PayloadContent</key>\n",
     "        <dict>\n",
     "            <key>URL</key>\n",
-    "            <string>{udid_url}/apple/package/get?id={id}</string> <!--接收数据的接口地址-->\n",
+    "            <string>{udid_url}/apple/package/install?id={id}</string> <!--接收数据的接口地址-->\n",
     "            <key>DeviceAttributes</key>\n",
     "            <array>\n",
     "                <string>SERIAL</string>\n",

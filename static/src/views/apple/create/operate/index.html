@@ -27,6 +27,12 @@
         <textarea class="layui-textarea" style="height: 180px;"disabled>{{ layui.data.apple_account_data.cer_content }}</textarea>
       </div>
     </div>
+    <div class="layui-form-item">
+      <label class="layui-form-label">备注</label>
+      <div class="layui-input-block">
+        <textarea class="layui-textarea" style="height: 15px;"disabled>对当前账号创建新证书，会把旧证书进行删除，所以账号会暂时禁用。直至将新证书导成p12 上传后，再启用账号。</textarea>
+      </div>
+    </div>
     
 
 
@@ -41,7 +47,7 @@
   <div class="layui-form-item">
     <label class="layui-form-label"></label>
     <div class="layui-input-inline">
-      <input type="button" lay-submit lay-filter="apple-account-form-submit" value="创建证书" class="layui-btn">
+      <input type="button" lay-submit lay-filter="apple-account-form-submit" value="创建新证书" class="layui-btn">
     </div>
   </div>
 </div>

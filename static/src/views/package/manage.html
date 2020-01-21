@@ -56,8 +56,8 @@
           </script>
           <script type="text/html" id="packages_table_operatebar">
             <!-- <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="base64_cer">加密证书</a> -->
-            <button type="button" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="base64_cer">获取cer证书</button>
-            <button type="button" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="upload_p12">上传p12</button>
+            <button type="button" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="mobileconfig_create">生成mobileconfig</button>
+            <!-- <button type="button" class="layui-btn layui-btn-primary layui-btn-xs" lay-event="upload_p12">上传p12</button> -->
             <!-- <a class="layui-btn layui-btn-primary layui-btn-xs" lay-event="edit">按钮2</a> -->
           </script>
             
@@ -168,7 +168,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
 
     // 初始化所选数据
     var postData = {
-      'account': data.field.package,
+      'name': data.field.package,
       'status': data.field.package_status,
     };
 
@@ -182,7 +182,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
     loading1.call(this); // 打开 等待的弹层
 
     admin.req({
-      url: '/apple/account/get' //实际使用请改成服务端真实接口code == 1001
+      url: '/apple/packages/get' //实际使用请改成服务端真实接口code == 1001
       ,method: "post" 
       ,data: JSON.stringify(postData)
       ,contentType: 'application/json'

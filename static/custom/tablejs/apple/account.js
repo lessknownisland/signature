@@ -19,9 +19,11 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
       ,limits: [20, 50, 100, 500]
       ,cols: [[
         // {type: 'checkbox', fixed: 'left'}
-        ,{field:'account', title:'账号', sort:true, event: 'setSign', width: 300}
+        ,{field:'account', title:'账号', sort:true, width: 300}
         ,{field:'count', title:'剩余次数', sort:true, width: 50}
-        ,{field:'cer_id', title:'cer_id', sort:true, width: 150}
+        ,{field:'cer_id', title:'cer_id', sort:true, event: 'setSign', width: 150}
+        ,{field:'bundleId', title:'bundleId', sort:true}
+        ,{field:'bundleIds', title:'bundleIds', sort:true}
         ,{field:'p12', title:'p12', sort:true}
         ,{field:'cer_content', title:'证书文本', sort: true, hide: true}
         ,{field:'status', title:'状态', templet: '#switchAppleAccountStatus', width: 150}
@@ -98,7 +100,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
     layui.data.apple_account_data = data;
     if(obj.event === 'setSign'){
       admin.popup({
-        title: '账号: ' + data.account + ' 创建证书'
+        title: '账号: ' + data.account + ' 创建新证书'
         ,offset: "auto" // t: top
         ,area: ['700px', '550px']
         // ,id: 'LAY-popup-user-add'

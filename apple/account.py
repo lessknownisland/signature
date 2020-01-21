@@ -179,7 +179,9 @@ def account_get(request):
                 tmp_dict['account'] = account.account
                 tmp_dict['count']   = account.count
                 tmp_dict['p12']     = account.p12
-                tmp_dict['cer_id']     = account.cer_id
+                tmp_dict['cer_id']  = account.cer_id
+                tmp_dict['bundleId']   = account.bundleId
+                tmp_dict['bundleIds']   = account.bundleIds
                 tmp_dict['cer_content'] = account.cer_content
                 tmp_dict['status']  = account.status
 
