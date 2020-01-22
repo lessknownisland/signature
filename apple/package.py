@@ -239,7 +239,7 @@ def package_install(request):
         apple_account = ret_data['data']['apple_account']
         device = ret_data['data']['device']
         logger.info(f"获取到可用的开发者账号: {apple_account.account}")
-        device_id = device.id
+        device_id = device.device_id
         cer_id = apple_account.cer_id
         bundleIds = apple_account.bundleIds
 
