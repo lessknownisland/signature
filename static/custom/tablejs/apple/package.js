@@ -27,7 +27,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
         ,{field:'mini_version', title:'最低适配', sort:true}
         ,{field:'bundle_identifier', title:'bundleId', sort:true}
         ,{field:'ipa', title:'ipa', sort:true, hide: true}
-        ,{field:'mobileconfig', title:'mobileconfig', sort:true, hide: true}
+        ,{field:'mobileconfig', title:'mobileconfig', sort:true}
         ,{field:'customer', title:'业主', sort:true}
         ,{field:'status', title:'状态', templet: '#switchpackageStatus', width: 150}
         ,{field:'operate', title:'操作', toolbar: '#packages_table_operatebar', fixed: 'right', width: 200}
