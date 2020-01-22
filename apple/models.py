@@ -57,7 +57,7 @@ class PackageTb(models.Model):
     def __str__(self):
     	return f"包名: {self.name} 版本: {self.version} bundleId: {self.bundle_identifier} 状态: {self.get_status_display()}"
 
-class PackageIstalledTb(models.Model):
+class PackageInstalledTb(models.Model):
     '''
         苹果Ipa安装历史记录表
     '''

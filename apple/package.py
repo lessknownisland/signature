@@ -7,7 +7,7 @@ from control.middleware.common      import get_random_s
 from apple.middleware.api           import AppStoreConnectApi
 from apple.middleware.common        import mc_create
 from apple.middleware.get_model_object import get_apple_account
-from apple.models  import AppleAccountTb, AppleDeviceTb, PackageTb, PackageIstalledTb
+from apple.models  import AppleAccountTb, AppleDeviceTb, PackageTb, PackageInstalledTb
 from alioss.models import AliossBucketTb
 from customer.models import CustomerTb
 from detect.telegram                import SendTelegram
@@ -244,7 +244,7 @@ def package_install(request):
         bundleIds = apple_account.bundleIds
 
         # 安装信息记录历史表
-        package_installed = PackageIstalledTb()
+        package_installed = PackageInstalledTb()
         package_installed.package_id = package.id
         package_installed.package_name = package.name
         package_installed.package_version = package.version

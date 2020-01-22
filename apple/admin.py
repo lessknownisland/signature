@@ -1,5 +1,5 @@
 from django.contrib import admin
-from apple.models   import AppleAccountTb, AppleDeviceTb, PackageTb, CsrTb, PackageIstalledTb
+from apple.models   import AppleAccountTb, AppleDeviceTb, PackageTb, CsrTb, PackageInstalledTb
 
 # AppleAccountTb admin model
 class AppleAccountTbAdmin(admin.ModelAdmin):
@@ -31,15 +31,15 @@ class PackageTbAdmin(admin.ModelAdmin):
 
 admin.site.register(PackageTb, PackageTbAdmin)
 
-# PackageIstalledTb admin model
-class PackageIstalledTbAdmin(admin.ModelAdmin):
+# PackageInstalledTb admin model
+class PackageInstalledTbAdmin(admin.ModelAdmin):
     # 需要显示的字段信息
     list_display = ('package_id', 'package_name', 'package_version', 'device_udid', 'device_name', 'device_model', 'customer_id', 'customer_name', 'is_first_install', 'install_status', 'create_time')
 
     # 设置哪些字段可以点击进入编辑界面，默认是第一个字段
     list_display_links = ('package_id', 'package_name', 'package_version', 'device_udid', 'device_name', 'device_model', 'customer_id', 'customer_name', 'is_first_install', 'install_status', 'create_time')
 
-admin.site.register(PackageIstalledTb, PackageIstalledTbAdmin)
+admin.site.register(PackageInstalledTb, PackageInstalledTbAdmin)
 
 # CsrTb admin model
 class CsrTbAdmin(admin.ModelAdmin):
