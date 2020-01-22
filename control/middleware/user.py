@@ -65,12 +65,12 @@ def login_required_layui(func):
     @wraps(func)
     def wrapper(request, *args, **kwargs):
         # 判断 websocket 请求
-        if request.scope and 'user' in request.scope:
-            if not request.scope['user'].is_authenticated: 
-                request.send(text_data=json.dumps(RET_DATA))
-                request.close()
-            else:
-                return func(request, *args, **kwargs)
+        # if request.scope and 'user' in request.scope:
+        #     if not request.scope['user'].is_authenticated: 
+        #         request.send(text_data=json.dumps(RET_DATA))
+        #         request.close()
+        #     else:
+        #         return func(request, *args, **kwargs)
 
         # 判断 http 请求
         if not request.user.is_authenticated: 

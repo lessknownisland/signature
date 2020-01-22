@@ -10,7 +10,7 @@ do
     echo "port ${port}: pid ${pid} killed..."
     pid=$(ps -ef |grep uwsgi |grep -v grep |grep ${port} |awk '{print $2}' |sort |uniq |head -1)
 done
-nohup uwsgi --http 0.0.0.0:8088 --file signature/wsgi.py --processes 16 --threads 8 &
+nohup uwsgi --http 0.0.0.0:8088 --http-websockets --env signature/settings.py --file signature/wsgi.py --processes 16 --threads 8 &
 sleep 3
 pid=$(ps -ef |grep uwsgi |grep -v grep |grep ${port} |awk '{print $2}' |sort |uniq |head -1)
 if [ ! -z ${pid} ];then
