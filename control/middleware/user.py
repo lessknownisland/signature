@@ -100,13 +100,16 @@ def is_authenticated_to_request(func):
     def wrapper(request, *args, **kwargs):
         socket = False
         # 判断 是否是 websocket 请求
-        if request.scope and 'user' in request.scope:
-            socket = True
-            user = request.scope['user']
-            path = request.scope['path']
-        else:
-            user = request.user
-            path = request.path
+        # if request.scope and 'user' in request.scope:
+        #     socket = True
+        #     user = request.scope['user']
+        #     path = request.scope['path']
+        # else:
+        #     user = request.user
+        #     path = request.path
+
+        user = request.user
+        path = request.path
 
         if user.is_superuser: # 超级用户拥有所有权限
             return func(request, *args, **kwargs)
