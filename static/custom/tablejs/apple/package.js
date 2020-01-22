@@ -62,7 +62,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
       ,contentType: 'application/json'
       ,done: function(res){
         // 发送成功的提示
-        layer.msg(message, {
+        layer.msg(res.msg, {
           offset: '15px'
           ,icon: 1
           ,time: 1500
