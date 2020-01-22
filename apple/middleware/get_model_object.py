@@ -20,25 +20,46 @@ def get_apple_account(customer, udid):
     ret_data = RET_DATA.copy()
     ret_data['msg'] = f"customer: {customer.name} 开发者账号获取成功。"
     ret_data['code'] = 0
-    ret_data['data'] = {}
+    ret_data['data'] = {
+        'apple_account': None,
+        'is_first_install': 1 # 1 代表是需要新注册的设备
+    }
 
     # 获取苹果开发者账号
-    try:
-        device = AppleDeviceTb.objects.get(udid=udid)
+    # try:
+    #     devices = AppleDeviceTb.objects.get(udid=udid)
+    #     apple_account_id = device.apple_id
+
+    # except AppleDeviceTb.DoesNotExist as e:
+    #     logger.info(f"device udid: {udid} 不存在。开始分配新账号...")
+
+    #     ret_data = get_available_aa(customer, udid)
+    #     ret_data['data']['is_first_install'] = 1
+
+    # else:
+    #     apple_accounts = customer.apple_account.filter(status=1, id=apple_account_id)
+    #     if len(apple_accounts) == 0:
+    #         ret_data = get_available_aa(customer, udid)
+    #         ret_data['data']['is_first_install'] = 1
+    #     else:
+    #         ret_data['data']['apple_account'] = apple_accounts[0]
+    #         ret_data['data']['device_id'] = device.device_id
+    #         ret_data['data']['is_first_install'] = 0
+
+    devices = AppleDeviceTb.objects.filter(udid=udid, status=1).all()
+    for device in devices:
         apple_account_id = device.apple_id
-
-    except AppleDeviceTb.DoesNotExist as e:
-        logger.info(f"device udid: {udid} 不存在。开始分配新账号...")
-
-        ret_data = get_available_aa(customer, udid)
-
-    else:
         apple_accounts = customer.apple_account.filter(status=1, id=apple_account_id)
-        if len(apple_accounts) == 0:
-            ret_data = get_available_aa(customer, udid)
-        else:
+        if len(apple_accounts) != 0:
             ret_data['data']['apple_account'] = apple_accounts[0]
-            ret_data['data']['device_id'] = device.device_id
+            ret_data['data']['device'] = device
+            ret_data['data']['is_first_install'] = 0
+            break
+
+    if not ret_data['data']['apple_account']:
+        ret_data = get_available_aa(customer, udid)
+        ret_data['data']['is_first_install'] = 1
+
 
     return ret_data
 
@@ -62,7 +83,7 @@ def get_available_aa(customer, udid):
         if ret_tmp['code'] != 0:
             return ret_tmp
         else:
-            ret_data['data']['device_id'] = ret_tmp['data']['data']['id']
+            device_id = ret_tmp['data']['data']['id']
             
             # 更新账号剩余签名次数
             apple_account.count -= 1
@@ -71,12 +92,14 @@ def get_available_aa(customer, udid):
             # 将新注册的设备信息写入库
             device = AppleDeviceTb()
             device.apple_id = apple_account.id
-            device.device_id = ret_data['data']['device_id']
+            device.device_id = device_id
             device.udid = udid
             device.device_name = ret_data['data']['attributes']['name']
             device.device_model = ret_data['data']['attributes']['model']
             device.save()
         
+            ret_data['data']['device'] = device
+
     else:
         ret_data['msg'] = f"customer: {customer.name} 已无可用的开发者账号。"
         ret_data['code'] = 500

@@ -1,7 +1,7 @@
 
 
-<div class="layui-form" lay-filter="apple-account-form" style="padding: 20px 0 0 0;">
-  <script type="text/html" template lay-done="layui.data.done_appleaccount(d);">
+<div class="layui-form" lay-filter="apple-account-createcer-form" style="padding: 20px 0 0 0;">
+  <script type="text/html" template lay-url="/apple/csr/get" lay-done="layui.data.done_appleaccount(d);">
 
     <div class="layui-form-item">
       <label class="layui-form-label">账号</label>
@@ -9,28 +9,47 @@
           <input type="text" class="layui-input" value={{ layui.data.apple_account_data.account }} disabled>
       </div>
     </div>
-    <div class="layui-form-item">
-      <label class="layui-form-label">剩余次数</label>
-      <div class="layui-input-block">
-          <input type="text" class="layui-input" value={{ layui.data.apple_account_data.count }} disabled>
-      </div>
-    </div>
+    
     <div class="layui-form-item">
       <label class="layui-form-label">p12</label>
       <div class="layui-input-block">
           <input type="text" class="layui-input" value={{ layui.data.apple_account_data.p12 }} disabled>
       </div>
     </div>
-    <div class="layui-form-item">
+    <form class="layui-row layui-form-item">
+          <div class="layui-col-lg6">
+            <label class="layui-form-label">csr 证书</label>
+            <div class="layui-input-block">
+                <select name="apple_csr" lay-verify="apple_csr" xm-select="apple_csr" xm-select-radio xm-select-search="" xm-select-search-type="dl" xm-select-skin="warm">
+                    <option value=""></option>
+                    {{# if(d.data) { }}
+                      {{#  for (var i in d.data){ }}
+                      {{# var csr = d.data[i] }}
+                      <option value="{{ csr.csr_content }}">{{ csr.name }}</option>
+                      {{#  }; }}
+                    {{#  } }}
+                  </select>
+            </div>
+          </div>
+
+          <div class="layui-col-lg6">
+            <label class="layui-form-label">剩余次数</label>
+            <div class="layui-input-block">
+                <input type="text" class="layui-input" value={{ layui.data.apple_account_data.count }} disabled>
+            </div>
+          </div>
+    </form>
+
+    <!-- <div class="layui-form-item">
       <label class="layui-form-label">证书文本</label>
       <div class="layui-input-block">
         <textarea class="layui-textarea" style="height: 180px;"disabled>{{ layui.data.apple_account_data.cer_content }}</textarea>
       </div>
-    </div>
+    </div> -->
     <div class="layui-form-item">
       <label class="layui-form-label">备注</label>
       <div class="layui-input-block">
-        <textarea class="layui-textarea" style="height: 15px;"disabled>对当前账号创建新证书，会把旧证书进行删除，所以账号会暂时禁用。直至将新证书导成p12 上传后，再启用账号。</textarea>
+        <textarea class="layui-textarea" id="apple_account_createcer_content" style="height: 15px; white-space: pre-wrap;" disabled></textarea>
       </div>
     </div>
     
@@ -47,7 +66,7 @@
   <div class="layui-form-item">
     <label class="layui-form-label"></label>
     <div class="layui-input-inline">
-      <input type="button" lay-submit lay-filter="apple-account-form-submit" value="创建新证书" class="layui-btn">
+      <input type="button" lay-submit lay-filter="apple-account-createcer-form" value="创建新证书" class="layui-btn" data-type="loading1">
     </div>
   </div>
 </div>
@@ -56,32 +75,24 @@
 layui.data.done_appleaccount = function(d){
   layui.use(['admin', 'form', 'upload'], function(){
     var $ = layui.$
-    ,admin = layui.admin
-    ,element = layui.element
     ,form = layui.form
-    ,view = layui.view
-    ,upload = layui.upload
-    ,table = layui.table
     ,formSelects = layui.formSelects;
     
-    // 初始化下拉选框
-    formSelects.render('domain_add_status', {
-      'radio': true,
-    });
-    formSelects.value('domain_add_status', [1], true)
-    formSelects.render('domain_add_cdn', {
-      template: function(name, value, selected, disabled){
-        return value.name.split(" ")[0] + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + value.name.split(" ")[1] + '</span>';
+    formSelects.render('apple_csr');
+
+    document.getElementById('apple_account_createcer_content').innerHTML = [
+      "1. 对当前账号创建新证书，会把旧证书进行删除，所以账号会暂时禁用。直至将新证书导成p12 上传后，再启用账号。",
+      "2. 选择指定csr 来生成苹果cer 证书，不同的mac 电脑生成特定csr 证书。"
+    ].join("\n")
+
+    // 验证表单
+    form.verify({
+      apple_csr: function(value){
+        if(value.length == 0){
+          return (content='请选择csr 证书');
+        }
       }
     });
-    formSelects.render('domain_add_cf', {
-      template: function(name, value, selected, disabled){
-        return value.name.split(" ")[0] + '<span style="position: absolute; right: 0; color: #A0A0A0; font-size: 12px;">' + value.name.split(" ")[1] + '</span>';
-      }
-    });
-    formSelects.render('domain_add_product');
-    formSelects.render('domain_add_customer');
-    formSelects.render('domain_add_group');
 
   })
 

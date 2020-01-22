@@ -7,13 +7,13 @@ from control.middleware.common      import get_random_s
 from apple.middleware.api           import AppStoreConnectApi
 from apple.middleware.common        import mc_create
 from apple.middleware.get_model_object import get_apple_account
-from apple.models  import AppleAccountTb, AppleDeviceTb, PackageTb
+from apple.models  import AppleAccountTb, AppleDeviceTb, PackageTb, PackageIstalledTb
 from alioss.models import AliossBucketTb
 from customer.models import CustomerTb
 from detect.telegram                import SendTelegram
 from signature                      import settings
 from control.middleware.user        import User, login_required_layui, is_authenticated_to_request
-from control.middleware.config      import RET_DATA, MESSAGE_TEST, csr, xml, udid_url, plist
+from control.middleware.config      import RET_DATA, MESSAGE_TEST, xml, udid_url, plist
 from control.middleware.common      import IsSomeType
 from alioss.middleware.api          import get_bucket, AliOssApi, get_bucket_fromurl
 
@@ -237,10 +237,25 @@ def package_install(request):
         if ret_data['code'] != 0:
             return ret_error(ret_data)
         apple_account = ret_data['data']['apple_account']
+        device = ret_data['data']['device']
         logger.info(f"获取到可用的开发者账号: {apple_account.account}")
-        device_id = ret_data['data']['device_id']
+        device_id = device.id
         cer_id = apple_account.cer_id
         bundleIds = apple_account.bundleIds
+
+        # 安装信息记录历史表
+        package_installed = PackageIstalledTb()
+        package_installed.package_id = package.id
+        package_installed.package_name = package.name
+        package_installed.package_version = package.version
+        package_installed.device_udid = device.udid
+        package_installed.device_name = device.device_name
+        package_installed.device_model = device.device_model
+        package_installed.customer_id = customer.id
+        package_installed.customer_name = customer.name
+        package_installed.is_first_install = ret_data['data']['is_first_install']
+        package_installed.install_status = 0
+        package_installed.save()
 
         ### 创建 profile ###
         # 引入asca 类
@@ -299,9 +314,9 @@ def package_install(request):
             ret_data['code'] = 500
             return ret_error(ret_data)
 
-        local_ipa = "fOSor6s32lxF10TeGH8KMVWXwZ7BRz9m.ipa"
-        local_p12 = "izxQaR5D82HJvqEoI46XFKuA7bfSwtPc.p12"
-        local_profile = f"{sh_dir}/tmp/A4OX61aQYxKcUynjRDC5SMg37qdT0EWt.mobileprovision"
+        # local_ipa = "fOSor6s32lxF10TeGH8KMVWXwZ7BRz9m.ipa"
+        # local_p12 = "izxQaR5D82HJvqEoI46XFKuA7bfSwtPc.p12"
+        # local_profile = f"{sh_dir}/tmp/A4OX61aQYxKcUynjRDC5SMg37qdT0EWt.mobileprovision"
         signed_ipa = f"{sh_dir}/tmp/{device_id}_{cer_id}_{bundleIds}.ipa"
 
         shell = f"{ausign} --sign {sh_dir}/tmp/{local_ipa} -c {sh_dir}/tmp/{local_p12} -m {local_profile} -p 'a123w456' -o {signed_ipa}"
@@ -342,6 +357,10 @@ def package_install(request):
         # 更新当前下载量
         package.count += 1
         package.save()
+
+        # 更新安装状态
+        package_installed.install_status = 1
+        package_installed.save()
 
         # 跳转到对应的下载链接
         redirect_url = f"itms-services://?action=download-manifest&url={remote_plist}"

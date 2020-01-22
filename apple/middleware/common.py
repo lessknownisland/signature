@@ -8,7 +8,7 @@ from customer.models import CustomerTb
 from detect.telegram                import SendTelegram
 from signature                      import settings
 from control.middleware.user        import User, login_required_layui, is_authenticated_to_request
-from control.middleware.config      import RET_DATA, MESSAGE_TEST, csr, xml, udid_url, plist, logger
+from control.middleware.config      import RET_DATA, MESSAGE_TEST, xml, udid_url, plist, logger
 from control.middleware.common      import IsSomeType
 from alioss.middleware.api          import get_bucket, AliOssApi, get_bucket_fromurl
 

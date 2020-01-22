@@ -57,4 +57,29 @@ class PackageTb(models.Model):
     def __str__(self):
     	return f"包名: {self.name} 版本: {self.version} bundleId: {self.bundle_identifier} 状态: {self.get_status_display()}"
 
+class PackageIstalledTb(models.Model):
+    '''
+        苹果Ipa安装历史记录表
+    '''
+    package_id = models.IntegerField(verbose_name="包ID", null=False)
+    package_name = models.CharField(verbose_name="IOS包名", max_length=12, null=False)
+    package_version = models.CharField(verbose_name="IOS 包版本号", max_length=8, null=False)
+    device_udid = models.CharField(verbose_name="设备注册ID", max_length=64, null=False)
+    device_name  = models.CharField(verbose_name="设备名", max_length=64, blank=True, null=True)
+    device_model = models.CharField(verbose_name="设备型号", max_length=64, blank=True, null=True)
+    customer_id = models.IntegerField(verbose_name="业主", null=False, default=1)
+    customer_name = models.CharField(verbose_name="业主名称", max_length=12, null=False)
+    create_time  = models.DateTimeField("生成的日期", default=timezone.now)
+    is_first_install = models.IntegerField(verbose_name="是否是第一次注册安装", choices=choices_s, default=1)
+    install_status = models.IntegerField(verbose_name="是否安装成功", choices=choices_s, default=1)
 
+class CsrTb(models.Model):
+    '''
+        生成证书用到的 csr 证书，每台mac 电脑可独立生成不同的csr，用于解密生成的cer 来导出成 p12 证书
+    '''
+    name = models.CharField(verbose_name="csr 名称", max_length=12, null=False, unique=True)
+    csr_content = models.TextField(verbose_name="证书 详情", null=False)
+    status = models.IntegerField(verbose_name="是否启用", choices=choices_s, default=1)
+
+    def __str__(self):
+    	return f"csr 名称: {self.name} 状态: {self.get_status_display()}"

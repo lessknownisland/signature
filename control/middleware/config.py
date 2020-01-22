@@ -73,24 +73,6 @@ apple_url = "https://api.appstoreconnect.apple.com/v1"
 # 苹果签名 回掉API 地址
 udid_url = "https://arnotest.le079.com"
 
-# 创建苹果证书的csr
-csr = '''-----BEGIN CERTIFICATE REQUEST-----
-MIICizCCAXMCAQAwRjElMCMGCSqGSIb3DQEJARYWbGV5b3VrZWppODg4QGdtYWls
-LmNvbTEQMA4GA1UEAwwHbHlzdXBlcjELMAkGA1UEBhMCQ04wggEiMA0GCSqGSIb3
-DQEBAQUAA4IBDwAwggEKAoIBAQC5kzD6aUCgYlNirp5/1IJYvqn+e7jcCdCsP65e
-5dMc70TLUoA3nCaZlurmKiLw0Sog5LDt1+WPXU2j4T5BnH8bkXgD2DEC98+5dRDt
-I4CojVln0XBW2ZCZ7HSkGEXSws7k8qqtbjDI4X44aCi3M3XyqZMkeE8IGJIygMql
-7CgBFfQdWf9g9H3Prf+ef0UG20sYpF/wsZVOnwQCztz6/+iksAvQ/ATcnu9F3T7g
-6MA398kXFF22TQI7Hdf5qxQSeQi3RU6bIShzsOP1Jt4Cg7mX19O+f6s9awb4/bhA
-hgIQQxJMvwaki74BG2sFrSlb/7KEsYbrdXFm6wEuJg06s49lAgMBAAGgADANBgkq
-hkiG9w0BAQsFAAOCAQEApWgX/FC+O3pHx9PDn1wOIrnkVsA9NRzqETOmOOoFfoFZ
-wwdykLuntzDvfl8fRw7BN/hEzgfVJiiWRZH3+VL22X7EX5FB2GBpdXhY5KsPQ18x
-mNvlwxtMoYLZ5hG1nwbS4MwtHzcujX0ldvHwVgMcjUXhDN/VE4PuQBrvRc3i9j8N
-n7fQKtYCBfrSpGGj3i3ObNnhboGiG3SLW2W3eKc+maHkSDoNXx3Y8IfklLR1dNDL
-T4q/8pTfC5BqGEBCHKaLmVXppEWJEPUJprHo4hMStd7POoQDJJ4CNmUWcz/QmRDP
-tlGxNg4+tyGztlJF9hpHRCdbldBMPHU8IOl+ige4Ew==
------END CERTIFICATE REQUEST-----'''
-
 # mobileconfig 
 xml = "".join([
     "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n",

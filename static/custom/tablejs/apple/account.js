@@ -18,16 +18,24 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
       ,limit: 20
       ,limits: [20, 50, 100, 500]
       ,cols: [[
-        // {type: 'checkbox', fixed: 'left'}
+        {type: 'checkbox', fixed: 'left'}
+        ,{field:'id', title:'ID', sort:true}
         ,{field:'account', title:'账号', sort:true, width: 300}
         ,{field:'count', title:'剩余次数', sort:true, width: 50}
-        ,{field:'cer_id', title:'cer_id', sort:true, event: 'setSign', width: 150}
+        ,{field:'cer_id', title:'cer_id', sort:true, event: 'setSign', width: 150, style:'background-color: #FFB800; color: #fff;', templet: function(d){
+          if (!d.cer_id){
+            return "创建证书";
+          }else {
+            return d.cer_id;
+          }
+        }}
         ,{field:'bundleId', title:'bundleId', sort:true}
         ,{field:'bundleIds', title:'bundleIds', sort:true}
         ,{field:'p12', title:'p12', sort:true}
         ,{field:'cer_content', title:'证书文本', sort: true, hide: true}
         ,{field:'status', title:'状态', templet: '#switchAppleAccountStatus', width: 150}
         ,{field:'operate', title:'操作', toolbar: '#apple_accounts_table_operatebar', fixed: 'right', width: 200}
+        ,{field:'operate', title:'危险操作', toolbar: '#apple_accounts_table_dangerousoperatebar', fixed: 'right', width: 100}
       ]]
       ,height:530
       ,page: true
@@ -111,14 +119,14 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
             form.render(null, 'apple-account-form');
             
             //监听提交
-            form.on('submit(apple-account-form-submit)', function(){
+            form.on('submit(apple-account-createcer-form)', function(form_data){
 
               loading1.call(this); // 打开 等待的弹层
 
               admin.req({
                 url: '/apple/cer/create' //实际使用请改成服务端真实接口code == 1001
                 ,method: "post" 
-                ,data: {'id': data.id}
+                ,data: {'id': data.id, 'csr': form_data.field.apple_csr}
                 // ,contentType: 'application/json'
                 ,done: function(res){
                   // 发送成功的提示
@@ -214,6 +222,43 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
 
           });
         }
+      });
+    }else if(obj.event === 'apple_account_delete'){
+      layer.confirm('删除：'+ data.account, {
+          icon: 3
+          ,title:'危险操作，请三思一下'
+        },function(index){
+
+          loading1.call(this); // 打开 等待的弹层
+
+          admin.req({
+            url: '/apple/account/delete' //实际使用请改成服务端真实接口code == 1001
+            ,method: "post" 
+            ,data: {'id': data.id}
+            // ,contentType: 'application/json'
+            ,done: function(res){
+              // 发送成功的提示
+              layer.msg(res.msg, {
+                offset: '15px'
+                ,icon: 1
+                ,time: 1500
+              });
+
+              layer.close(loading1_iii); // 关闭 等待的弹层
+              layer.close(index);
+              obj.del(); // 删除行
+            },success:function(res){
+              if (res.code == 1001){ // 登陆失效
+                layer.msg(res.msg, {
+                  offset: '15px'
+                  ,icon: 1
+                  ,time: 1500
+                })
+              };
+              layer.close(loading1_iii);
+            }
+          
+        });
       });
     }
   });

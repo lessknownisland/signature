@@ -3,12 +3,12 @@ from django.http                    import HttpResponse
 from django.views.decorators.csrf   import csrf_exempt, csrf_protect
 from control.middleware.config      import RET_DATA
 from apple.middleware.api           import AppStoreConnectApi
-from apple.models  import AppleAccountTb, AppleDeviceTb
+from apple.models  import AppleAccountTb, AppleDeviceTb, CsrTb
 from alioss.models import AliossBucketTb
 from detect.telegram                import SendTelegram
 from signature                      import settings
 from control.middleware.user        import User, login_required_layui, is_authenticated_to_request
-from control.middleware.config      import RET_DATA, MESSAGE_TEST, csr
+from control.middleware.config      import RET_DATA, MESSAGE_TEST
 from control.middleware.common      import IsSomeType
 from alioss.middleware.api          import get_bucket, AliOssApi
 
@@ -58,6 +58,8 @@ def cer_create(request):
             return HttpResponse(json.dumps(ret_data))
         else:
             apple_id = int(data['id'])
+
+        csr = data['csr']
 
         apple_account = AppleAccountTb.objects.get(id=apple_id)
         apple_account.status = 0 # 在进行创建证书前，先关闭此账号的签名请求
@@ -199,6 +201,42 @@ def account_get(request):
 @csrf_exempt
 @login_required_layui
 @is_authenticated_to_request
+def csr_get(request):
+    '''
+        获取 csr 证书
+    '''
+    username, role, clientip = User(request).get_default_values()
+
+    # 初始化返回数据
+    ret_data = RET_DATA.copy()
+    ret_data['code'] = 0 # 请求正常，返回 0
+    ret_data['msg']  = '获取csr证书'
+    ret_data['data'] = []
+
+    try:
+        if request.method == 'GET':
+            csrs = CsrTb.objects.filter(status=1).all()
+
+            for csr in csrs:
+                tmp_dict = {}
+                tmp_dict['id'] = csr.id
+                tmp_dict['name'] = csr.name
+                tmp_dict['csr_content'] = csr.csr_content
+
+                ret_data['data'].append(tmp_dict)
+
+    except Exception as e:
+        logger.error(str(e))
+        ret_data['code'] = 500
+        ret_data['msg']  = f"{ret_data['msg']} 失败: {str(e)}"
+
+    ret_data['msg']  = f"{ret_data['msg']} 成功"
+
+    return HttpResponse(json.dumps(ret_data))
+
+@csrf_exempt
+@login_required_layui
+@is_authenticated_to_request
 def account_edit(request):
     '''
         账号修改
@@ -231,6 +269,54 @@ def account_edit(request):
     ret_data['msg']  = f"{ret_data['msg']} 成功"
 
     return HttpResponse(json.dumps(ret_data))
+
+@csrf_exempt
+@login_required_layui
+@is_authenticated_to_request
+def account_delete(request):
+    '''
+        账号删除
+    '''
+    username, role, clientip = User(request).get_default_values()
+
+    # 初始化返回数据
+    ret_data = RET_DATA.copy()
+    ret_data['code'] = 0 # 请求正常，返回 0
+    ret_data['msg']  = '账号删除'
+    ret_data['data'] = []
+
+    if request.method == 'POST':
+        data = request.POST
+
+        # 检查账号ID是否为空
+        if 'id' not in data or not IsSomeType(data['id']).is_int(): 
+            ret_data['msg'] = '传入的账号id 不正确'
+            ret_data['code'] = 500
+            logger.error(ret_data['msg'])
+            return HttpResponse(json.dumps(ret_data))
+        else:
+            apple_id = int(data['id'])
+
+        logger.info(data)
+
+        try:
+            account = AppleAccountTb.objects.get(id=int(data['id']))
+            
+            # 删除关联的设备
+            AppleDeviceTb.objects.filter(apple_id=account.id).delete()
+
+            # 删除账号
+            account.delete()
+
+        except Exception as e:
+            logger.error(str(e))
+            ret_data['code'] = 500
+            ret_data['msg']  = f"{ret_data['msg']} 失败: {str(e)}"
+
+        else:
+            ret_data['msg']  = f"{ret_data['msg']} 成功"
+
+        return HttpResponse(json.dumps(ret_data))
 
 @csrf_exempt
 @login_required_layui
