@@ -8,7 +8,7 @@ from customer.models import CustomerTb
 from detect.telegram                import SendTelegram
 from signature                      import settings
 from control.middleware.user        import User, login_required_layui, is_authenticated_to_request
-from control.middleware.config      import RET_DATA, MESSAGE_TEST, xml, udid_url, plist, logger
+from control.middleware.config      import RET_DATA, MESSAGE_TEST, xml, plist, logger
 from control.middleware.common      import IsSomeType
 from alioss.middleware.api          import get_bucket, AliOssApi, get_bucket_fromurl
 
@@ -34,7 +34,15 @@ def mc_create(package, ret_data=RET_DATA.copy(), aoa=False):
         # 获取上传的接口
         aoa = AliOssApi(oss_bucket)
 
+    try:
+        customer = CustomerTb.objects.get(id=package.customer, status=1)
+    except CustomerTb.DoesNotExist as e:
+        ret_data['msg'] = f"customer: {package.customer} 不存在或已禁用"
+        ret_data['code'] = 500
+        return ret_data
+
     ### 生成 mobileconfig 并上传 ###
+    udid_url = customer.udid_url
     mc_tmpname = get_random_s(32) + ".mobileconfig"
     mc_name = get_random_s(32) + ".mobileconfig"
     mc_tmpstr = xml.format(udid_url=udid_url, id=package.id, random_s=get_random_s(32))        
