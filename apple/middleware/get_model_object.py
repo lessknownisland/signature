@@ -94,8 +94,8 @@ def get_available_aa(customer, udid):
             device.apple_id = apple_account.id
             device.device_id = device_id
             device.udid = udid
-            device.device_name = ret_data['data']['data']['attributes']['name']
-            device.device_model = ret_data['data']['data']['attributes']['model']
+            device.device_name = ret_tmp['data']['data']['attributes']['name']
+            device.device_model = ret_tmp['data']['data']['attributes']['model']
             device.save()
         
             ret_data['data']['device'] = device
