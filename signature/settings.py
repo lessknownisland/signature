@@ -25,7 +25,7 @@ SECRET_KEY = 'mw9g66btywz0=bd*@_$glf+efjc&x&=5+7pi3y2v_hrw48g9$='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['arnotest.le079.com', '127.0.0.1']
+ALLOWED_HOSTS = ['arnotest.le079.com', '127.0.0.1', '*.cdn3721.com']
 
 LOGIN_URL = '/#/user/login'
 
