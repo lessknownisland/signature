@@ -30,8 +30,9 @@ class AliOssApi(object):
         self.__access_keysecret = oss_bucket.access_keysecret
         self.__bucket_name = self.__oss_bucket.bucket_name
         self.__main_host = self.__oss_bucket.main_host
+        self.__vpc_host = self.__oss_bucket.vpc_host
         self.__auth = oss2.Auth(self.__access_keyid, self.__access_keysecret)
-        self.__bucket = oss2.Bucket(self.__auth, self.__main_host, self.__bucket_name)
+        self.__bucket = oss2.Bucket(self.__auth, self.__vpc_host, self.__bucket_name)
         self.__ret_data = RET_DATA.copy()
 
         self.__req_id = 'bucket_' + ''.join(str(random.choice(range(10))) for _ in range(10)) # 对每一次bucket 操作，指定一个随机的10位数
