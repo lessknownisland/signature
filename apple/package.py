@@ -372,6 +372,42 @@ def package_install(request):
 @csrf_exempt
 @login_required_layui
 @is_authenticated_to_request
+def package_edit(request):
+    '''
+        package 修改
+    '''
+    username, role, clientip = User(request).get_default_values()
+
+    # 初始化返回数据
+    ret_data = RET_DATA.copy()
+    ret_data['code'] = 0 # 请求正常，返回 0
+    ret_data['msg']  = 'package 修改'
+    ret_data['data'] = []
+
+    try:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+
+            logger.info(data)
+            # return HttpResponse(json.dumps(ret_data))
+
+            account = PackageTb.objects.get(id=data['id']) 
+
+            account.status = int(data['status'])
+            account.save()
+
+    except Exception as e:
+        logger.error(str(e))
+        ret_data['code'] = 500
+        ret_data['msg']  = f"{ret_data['msg']} 失败: {str(e)}"
+
+    ret_data['msg']  = f"{ret_data['msg']} 成功"
+
+    return HttpResponse(json.dumps(ret_data))
+
+@csrf_exempt
+@login_required_layui
+@is_authenticated_to_request
 def packages_get(request):
     '''
         获取package 信息

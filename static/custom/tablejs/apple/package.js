@@ -56,7 +56,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
 
     loading1.call(this); // 打开 等待的弹层
     admin.req({
-      url: '/apple/account/edit' //实际使用请改成服务端真实接口code == 1001
+      url: '/apple/package/edit' //实际使用请改成服务端真实接口code == 1001
       ,method: "post" 
       ,data: JSON.stringify(postData)
       ,contentType: 'application/json'
