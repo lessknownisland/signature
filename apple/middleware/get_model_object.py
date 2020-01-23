@@ -87,7 +87,7 @@ def get_available_aa(customer, udid):
             
             # 更新账号剩余签名次数
             apple_account.count -= 1
-            apple_account.save
+            apple_account.save()
 
             # 将新注册的设备信息写入库
             device = AppleDeviceTb()
