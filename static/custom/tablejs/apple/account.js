@@ -21,7 +21,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
         {type: 'checkbox', fixed: 'left'}
         ,{field:'id', title:'ID', sort:true}
         ,{field:'account', title:'账号', sort:true, width: 300}
-        ,{field:'count', title:'剩余次数', sort:true, width: 50}
+        ,{field:'count', title:'剩余次数', sort:true, width: 100}
         ,{field:'cer_id', title:'cer_id', sort:true, event: 'setSign', width: 150, style:'background-color: #FFB800; color: #fff;', templet: function(d){
           if (!d.cer_id){
             return "创建证书";
