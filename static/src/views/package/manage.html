@@ -93,10 +93,13 @@ layui.data.done_customeraccount = function(d){
     var $ = layui.$
     ,form = layui.form
     
+    layui.data.customer_account_data = d.data;
+
     layui.data.customer_account = xmSelect.render({
       el: '#customer_account', 
-      radio: true,
-      // toolbar: {show: true},
+      // radio: false,
+      // repeat: true,
+      toolbar: {show: true},
       theme: {
         color: '#8dc63f',
       },
@@ -146,8 +149,8 @@ layui.use(['admin', 'form', 'upload', 'table'], ()=>{
     // layer.msg("package upload.");
     var customer_account = layui.data.customer_account.getValue();
 
-    if (customer_account.length === 0){
-      layer.msg('请先选择业主', { // 如果证书文本不存在，则提示
+    if (customer_account.length !== 1){
+      layer.msg('请选择一个业主', { // 如果证书文本不存在，则提示
         offset: '15px'
         ,icon: 1
         ,time: 1500
@@ -169,7 +172,7 @@ layui.use(['admin', 'form', 'upload', 'table'], ()=>{
             var upload_package = upload.render({
               elem: '#package_upload_choose'
               ,url: '/apple/package/upload' 
-              ,data: {'id': customer_account[0].id}
+              ,data: {'id': customer_account[0].value}
               ,auto: false
               ,accept: 'file'
               ,exts: 'ipa'
@@ -215,10 +218,13 @@ layui.use(['admin', 'form', 'upload', 'table'], ()=>{
   form.on('submit(package-form-element)', function(data){
     var type = $(this).data('type');
 
+    var ca = layui.data.customer_account;
+
     // 初始化所选数据
     var postData = {
       'name': data.field.package,
-      'status': package_status.getValue()
+      'status': package_status.getValue(),
+      'customer': []
     };
 
     // 数据格式化，如果没有选择，默认获取所有选项的值
@@ -226,6 +232,13 @@ layui.use(['admin', 'form', 'upload', 'table'], ()=>{
       postData.status = [1, 0];
     }else {
       postData.status = [postData.status[0].value];
+    }
+    if (ca.getValue().length === 0){
+      for (var i in layui.data.customer_account_data){
+        postData.customer.push(layui.data.customer_account_data[i].value);
+      }
+    }else {
+      postData.customer = [ca.getValue()[0].value];
     }
 
     loading1.call(this); // 打开 等待的弹层

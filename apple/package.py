@@ -433,7 +433,7 @@ def packages_get(request):
     try:
         if request.method == 'POST':
             data = json.loads(request.body)
-            packages = PackageTb.objects.filter(name__icontains=data['name'], status__in=data['status']).order_by('-id')
+            packages = PackageTb.objects.filter(name__icontains=data['name'], status__in=data['status'], customer__in=data['customer']).order_by('-id')
             logger.info(data)
 
             for package in packages:

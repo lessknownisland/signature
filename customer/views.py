@@ -28,7 +28,7 @@ def account_get(request):
 
             for account in accounts:
                 tmp_dict = {}
-                tmp_dict['id'] = account.id
+                tmp_dict['value'] = account.id
                 tmp_dict['name'] = account.name
 
                 ret_data['data'].append(tmp_dict)
