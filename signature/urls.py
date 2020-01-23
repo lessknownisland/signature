@@ -33,12 +33,15 @@ urlpatterns = [
     # 苹果开发者账号
     url(r'^apple/', include('apple.urls')),
 
+    #业主账号
+    url(r'^customer/', include('customer.urls')),
+
     # 登陆控制及用户信息
     url(r'^', include('control.urls')),
     url(r'^control/', include('control.urls')),
 
     # 配置静态文件的映射(在settings中我的静态文件配置使用的是STATICFILES_DIRS
-    url(r'^static/(?P<path>.*)$', serve,
-        {'document_root': settings.STATICFILES_DIRS}, name='static'),
+    # url(r'^static/(?P<path>.*)$', serve,
+    #     {'document_root': settings.STATICFILES_DIRS}, name='static'),
 
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

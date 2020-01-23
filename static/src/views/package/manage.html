@@ -15,23 +15,22 @@
         <div class="layui-card-header">Package / IOS 包管理</div>
         <div class="layui-card-body">
           <div class="layui-form" lay-filter="package-form-element">
-              <form class="layui-row layui-col-space10 layui-form-item">
+              <form class="layui-row layui-form-item">
                 <div class="layui-col-lg4">
                   <label class="layui-form-label">状态</label>
                   <div class="layui-input-block">
-                      <select name="package_status" id="package_status" lay-verify="package_status" xm-select="package_status" xm-select-show-count=2 xm-select-height="50px"  xm-select-search-type="dl" xm-select-skin="warm">
-                          <option value=1>启用</option>
-                          <option value=0>禁用</option>
-                        </select>
+                    <div name="package_status" id="package_status" class="xm-select-demo" lay-verify="package_status"></div>
                   </div>
                 </div>
 
-                <div class="layui-col-lg4">
-                  <label class="layui-form-label">包名</label>
-                  <div class="layui-input-block">
-                      <input class="layui-input" name="package" id="package">
+                <script type="text/html" template lay-url="/customer/account/get" lay-done="layui.data.done_customeraccount(d);">
+                    <div class="layui-col-lg4">
+                      <label class="layui-form-label">业主</label>
+                      <div class="layui-input-block">
+                        <div name="customer_account" id="customer_account" class="xm-select-demo" lay-verify="customer_account"></div>
+                      </div>
                     </div>
-                </div>
+                </script>
 
                 <div class="layui-col-lg4">
                   <label class="layui-form-label"></label>
@@ -41,15 +40,25 @@
                 </div>
 
               </form>
+              <div class="layui-form-item">
+                <div class="layui-col-lg4">
+                  <label class="layui-form-label">包名</label>
+                  <div class="layui-input-block">
+                      <input class="layui-input" name="package" id="package">
+                    </div>
+                </div>
+            </div>
+
 
                 <div class="layui-form-item">
                   <div class="layui-input-block">
                     <button name="packageQuerySendButton" id="packageQuerySendButton" class="layui-btn" lay-submit lay-filter="package-form-element" data-type="loading1">查询</button>
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                    <!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
                   </div>
                 </div>
             
           </div>
+
           <table class="layui-table" id="packages_table" name="packages_table" lay-filter="packages_table"></table>
           <script type="text/html" id="switchpackageStatus">
             <input type="checkbox" name="switch_package_status" id="switch_package_status" lay-filter="switch_package_status" value="{{d.status}}" data-json="{{ encodeURIComponent(JSON.stringify(d)) }}" title="启用" {{ d.status == 1 ? 'checked' : '' }}>
@@ -79,6 +88,25 @@
 <script src="/static/custom/tablejs/apple/package.js"></script>
 
 <script>
+layui.data.done_customeraccount = function(d){
+  layui.use(['admin', 'form', 'upload'], function(){
+    var $ = layui.$
+    ,form = layui.form
+    
+    layui.data.customer_account = xmSelect.render({
+      el: '#customer_account', 
+      radio: true,
+      // toolbar: {show: true},
+      theme: {
+        color: '#8dc63f',
+      },
+      data: d.data
+    });
+
+  })
+
+}
+
 // 等待的弹层
 function loading1(){
   loading1_iii = layui.layer.load(2, {
@@ -86,7 +114,20 @@ function loading1(){
     });
   };
 
-layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
+var package_status = xmSelect.render({
+  el: '#package_status', 
+  radio: true,
+  // toolbar: {show: true},
+	theme: {
+		color: '#8dc63f',
+	},
+	data: [
+		{name: '启用', value: 1},
+		{name: '禁用', value: 0},
+	]
+});
+
+layui.use(['admin', 'form', 'upload', 'table'], ()=>{
   var $ = layui.$
   ,admin = layui.admin
   ,element = layui.element
@@ -94,9 +135,6 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
   ,view = layui.view
   ,upload = layui.upload
   ,table = layui.table
-  ,formSelects = layui.formSelects;
-
-  formSelects.render('package_status');
 
   // loading1.call(this); // 打开 等待的弹层
 
@@ -106,6 +144,17 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
 
   $('#package_upload_button').click(function(){
     // layer.msg("package upload.");
+    var customer_account = layui.data.customer_account.getValue();
+
+    if (customer_account.length === 0){
+      layer.msg('请先选择业主', { // 如果证书文本不存在，则提示
+        offset: '15px'
+        ,icon: 1
+        ,time: 1500
+      })
+      return false;
+    }
+
     admin.popup({
         title: '上传 IPA文件'
         ,offset: "auto" // t: top
@@ -114,13 +163,13 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
         ,fixed: true
         // ,closeBtn: 1
         ,success: function(layero, index){
-          view(this.id).render('package/operate/upload').done(function(){
-            form.render(null, 'apple-account-uploadp12-form');
+          view(this.id).render('package/operate/upload').done(function(data){
+            form.render(null, 'package-upload-form');
 
-            upload.render({
+            var upload_package = upload.render({
               elem: '#package_upload_choose'
               ,url: '/apple/package/upload' 
-              // ,data: {'id': data.id}
+              ,data: {'id': customer_account[0].id}
               ,auto: false
               ,accept: 'file'
               ,exts: 'ipa'
@@ -169,14 +218,14 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
     // 初始化所选数据
     var postData = {
       'name': data.field.package,
-      'status': data.field.package_status,
+      'status': package_status.getValue()
     };
 
     // 数据格式化，如果没有选择，默认获取所有选项的值
     if (postData.status == ""){
       postData.status = [1, 0];
     }else {
-      postData.status = postData.status.split(',').map(function (val) {return parseInt(val);})
+      postData.status = [postData.status[0].value];
     }
 
     loading1.call(this); // 打开 等待的弹层

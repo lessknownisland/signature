@@ -1,4 +1,4 @@
-layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
+layui.use(['admin', 'form', 'upload', 'table'], ()=>{
   var $ = layui.$
   ,admin = layui.admin
   ,element = layui.element
@@ -6,7 +6,6 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
   ,view = layui.view
   ,upload = layui.upload
   ,table = layui.table
-  ,formSelects = layui.formSelects;
 
   // 表格初始化
   table.init('packages_table', {

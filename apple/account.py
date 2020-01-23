@@ -172,7 +172,7 @@ def account_get(request):
     try:
         if request.method == 'POST':
             data = json.loads(request.body)
-            accounts = AppleAccountTb.objects.filter(account__icontains=data['account'], status__in=data['status'])
+            accounts = AppleAccountTb.objects.filter(account__icontains=data['account'], status__in=data['status']).order_by('-id')
             logger.info(data)
 
             for account in accounts:

@@ -34,10 +34,10 @@ admin.site.register(PackageTb, PackageTbAdmin)
 # PackageInstalledTb admin model
 class PackageInstalledTbAdmin(admin.ModelAdmin):
     # 需要显示的字段信息
-    list_display = ('package_id', 'package_name', 'package_version', 'device_udid', 'device_name', 'device_model', 'customer_id', 'customer_name', 'is_first_install', 'install_status', 'create_time')
+    list_display = ('id', 'package_id', 'package_name', 'package_version', 'device_udid', 'device_name', 'device_model', 'customer_id', 'customer_name', 'is_first_install', 'install_status', 'create_time')
 
     # 设置哪些字段可以点击进入编辑界面，默认是第一个字段
-    list_display_links = ('package_id', 'package_name', 'package_version', 'device_udid', 'device_name', 'device_model', 'customer_id', 'customer_name', 'is_first_install', 'install_status', 'create_time')
+    list_display_links = ('id', 'package_id', 'package_name', 'package_version', 'device_udid', 'device_name', 'device_model', 'customer_id', 'customer_name', 'is_first_install', 'install_status', 'create_time')
 
 admin.site.register(PackageInstalledTb, PackageInstalledTbAdmin)
 

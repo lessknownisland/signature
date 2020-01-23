@@ -109,6 +109,15 @@ def package_upload(request):
         # 获取 POST 数据
         data = request.POST
 
+        # 检查业主ID是否为空
+        if 'id' not in data or not IsSomeType(data['id']).is_int(): 
+            ret_data['msg'] = '传入的业主id 不正确'
+            ret_data['code'] = 500
+            logger.error(ret_data['msg'])
+            return HttpResponse(json.dumps(ret_data))
+        else:
+            customer_id = int(data['id'])
+
         ipa_file = request.FILES.get('file',None) # 获取上传的文件
 
         if not ipa_file: # 判断文件是否存在
@@ -167,6 +176,7 @@ def package_upload(request):
         package.bundle_identifier = plist_detail_info['CFBundleIdentifier']
         package.ipa = ret_ipa['data']
         package.mobileconfig = "null"
+        package.customer = customer_id
         package.status = 0
         package.save()
 
@@ -423,7 +433,7 @@ def packages_get(request):
     try:
         if request.method == 'POST':
             data = json.loads(request.body)
-            packages = PackageTb.objects.filter(name__icontains=data['name'], status__in=data['status'])
+            packages = PackageTb.objects.filter(name__icontains=data['name'], status__in=data['status']).order_by('-id')
             logger.info(data)
 
             for package in packages:
@@ -456,6 +466,7 @@ def packages_get(request):
         ret_data['code'] = 500
         ret_data['msg']  = f"{ret_data['msg']} 失败: {str(e)}"
 
-    ret_data['msg']  = f"{ret_data['msg']} 成功"
+    else:
+        ret_data['msg']  = f"{ret_data['msg']} 成功"
 
     return HttpResponse(json.dumps(ret_data))
