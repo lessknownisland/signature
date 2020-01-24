@@ -282,7 +282,7 @@ def package_install(request):
         ### 下载 p12 ###
         p12 = apple_account.p12
         remote_p12 = p12.split('/')[-1]
-        local_p12  = remote_p12 + '.p12'
+        local_p12  = remote_p12
         if not os.path.exists(f"{sh_dir}/tmp/{local_p12}"): # 如果本地不存在，则从OSS 下载
             # 获取 bucket
             ret_data = get_bucket_fromurl(p12)
@@ -299,7 +299,7 @@ def package_install(request):
         ### 下载 IPA ###
         ipa = package.ipa
         remote_ipa = ipa.split('/')[-1]
-        local_ipa  = remote_ipa + '.ipa'
+        local_ipa  = remote_ipa
         if not os.path.exists(f"{sh_dir}/tmp/{local_ipa}"): # 如果本地不存在，则从OSS 下载
             # 获取 bucket
             ret_data = get_bucket_fromurl(ipa)
