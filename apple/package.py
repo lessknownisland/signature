@@ -341,7 +341,7 @@ def package_install(request):
             return HttpResponse(json.dumps(ret_data))
         else:
             logger.info(f"mobiconfig 脚本执行成功: 耗时 {(e_time - s_time).total_seconds()} s")
-        
+
         # 获取 oss bucket
         ret_data = get_bucket()
         if ret_data['code'] != 0:
@@ -363,6 +363,10 @@ def package_install(request):
         if ret_data['code'] != 0:
             return ret_error(ret_data)
         remote_plist = ret_data['data']
+
+        # 删除 mobileprovision 和 ipa 临时文件
+        os.remove(local_profile)
+        os.remove(signed_ipa)
 
         # 更新当前下载量
         package.count += 1
