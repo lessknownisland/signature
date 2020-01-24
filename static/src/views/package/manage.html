@@ -238,7 +238,9 @@ layui.use(['admin', 'form', 'upload', 'table'], ()=>{
         postData.customer.push(layui.data.customer_account_data[i].value);
       }
     }else {
-      postData.customer = [ca.getValue()[0].value];
+      for (var i in ca.getValue()){
+        postData.customer.push(ca.getValue()[i].value)
+      }
     }
 
     loading1.call(this); // 打开 等待的弹层
