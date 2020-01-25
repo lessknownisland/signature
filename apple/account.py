@@ -134,12 +134,13 @@ def cer_create(request):
             
             if ret_data['code'] == 0: # 如果是成功的，则执行其他操作
                 for cer in ret_data['data']['data']:
-                    ret_tmp = asca.delete_cer(cer['id'])
-                    if ret_tmp['code'] != 0: # 如果删除证书出现错误，不再执行创建证书
-                        return HttpResponse(json.dumps(ret_tmp))
-                    else:
-                        apple_account.p12 = None # 证书删除后，需要将新证书重新生成p12
-                        apple_account.save()
+                    if cer['attributes']['identifier'] == apple_account.bundleId:
+                        ret_tmp = asca.delete_cer(cer['id'])
+                        if ret_tmp['code'] != 0: # 如果删除证书出现错误，不再执行创建证书
+                            return HttpResponse(json.dumps(ret_tmp))
+                        else:
+                            apple_account.p12 = None # 证书删除后，需要将新证书重新生成p12
+                            apple_account.save()
             else:
                 return HttpResponse(json.dumps(ret_data))
 
