@@ -320,7 +320,7 @@ class AppStoreConnectApi(object):
         self.__method = "GET"
         self.__url    = f"{apple_url}/apps"
         self.__data   = {}
-        # self.__headers = {"Authorization": f"Bearer {token}"}
+        self.__headers = {"Content-Type": "application/json"}
 
         # 获取接口结果
         return self._send_req()

@@ -23,7 +23,7 @@ class AppleAccountTb(models.Model):
     status   = models.IntegerField(verbose_name="是否启用", choices=choices_s, default=0)
 
     def __str__(self):
-    	return f"账号: {self.account} 剩余次数: {self.count} 状态: {self.get_status_display()}"
+    	return f"{self.id} 账号: {self.account} 剩余次数: {self.count} 状态: {self.get_status_display()}"
 
 class AppleDeviceTb(models.Model):
     '''
@@ -64,7 +64,7 @@ class PackageInstalledTb(models.Model):
     package_id = models.IntegerField(verbose_name="包ID", null=False)
     package_name = models.CharField(verbose_name="IOS包名", max_length=12, null=False)
     package_version = models.CharField(verbose_name="IOS 包版本号", max_length=8, null=False)
-    device_udid = models.CharField(verbose_name="设备注册ID", max_length=64, null=False)
+    device_udid = models.CharField(verbose_name="设备UDID", max_length=64, null=False)
     device_name  = models.CharField(verbose_name="设备名", max_length=64, blank=True, null=True)
     device_model = models.CharField(verbose_name="设备型号", max_length=64, blank=True, null=True)
     customer_id = models.IntegerField(verbose_name="业主", null=False, default=1)

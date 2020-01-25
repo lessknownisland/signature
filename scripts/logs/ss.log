@@ -1,0 +1,492 @@
+2020-01-10 13:16:16,222 - INFO - 
+
+
+
+
+
+2020-01-10 13:16:16,222 - INFO - ####################################################################################################
+2020-01-10 13:16:16,222 - INFO - 开始操作 业主: ali
+2020-01-10 13:16:16,222 - INFO - 超级签URL: https://alisuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 13:16:16,425 - INFO - 账号: tifanydekeyzerann@yahoo.com
+2020-01-10 13:16:17,424 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:17,424 - INFO - 账号: clevegelbowitzoxu@yahoo.com
+2020-01-10 13:16:18,565 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:18,565 - INFO - 账号: jiangxinx0060@163.com
+2020-01-10 13:16:19,722 - INFO - 苹果接口返回信息: {'data': [{'type': 'apps', 'id': '1487018703', 'attributes': {'name': 'TipCalcPro', 'bundleId': 'abb.lorry.tipCalc', 'sku': 'TipCalcPro', 'primaryLocale': 'fr-FR'}, 'relationships': {'betaTesters': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaTesters', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaTesters'}}, 'betaGroups': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaGroups', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaGroups'}}, 'preReleaseVersions': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/preReleaseVersions', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/preReleaseVersions'}}, 'betaAppLocalizations': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaAppLocalizations', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaAppLocalizations'}}, 'builds': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/builds', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/builds'}}, 'betaLicenseAgreement': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaLicenseAgreement', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaLicenseAgreement'}}, 'betaAppReviewDetail': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaAppReviewDetail', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaAppReviewDetail'}}}, 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703'}}], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 1, 'limit': 50}}}
+2020-01-10 13:16:19,722 - INFO - 账号: kuangpeng41747363@163.com
+2020-01-10 13:16:20,601 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:20,601 - INFO - 账号: zhuang6625858558@163.com
+2020-01-10 13:16:21,469 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:21,469 - INFO - 账号: guanjunga88474@163.com
+2020-01-10 13:16:22,595 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:22,595 - INFO - 账号: edwenawaideoaq@yahoo.com0
+2020-01-10 13:16:23,466 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:23,466 - INFO - 账号: fanglinshi19720216@163.com
+2020-01-10 13:16:24,597 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:24,597 - INFO - 账号: caigouboh6@163.com
+2020-01-10 13:16:25,897 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:25,897 - INFO - 账号: se5ej44@163.com
+2020-01-10 13:16:26,807 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:26,807 - INFO - ####################################################################################################
+2020-01-10 13:16:26,807 - INFO - 开始操作 业主: leying
+2020-01-10 13:16:26,807 - INFO - 超级签URL: https://lysuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 13:16:27,116 - INFO - 账号: liaohe035huanya@163.com
+2020-01-10 13:16:28,320 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:28,320 - INFO - 账号: sanfusiyan198511@163.com
+2020-01-10 13:16:29,461 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:29,461 - INFO - 账号: hanyin1970@163.com
+2020-01-10 13:16:30,620 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:30,620 - INFO - 账号: yanchengcu013212@163.com
+2020-01-10 13:16:31,769 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:31,769 - INFO - 账号: suisu8587745@163.com
+2020-01-10 13:16:32,919 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:32,919 - INFO - 账号: wozheng325565@163.com
+2020-01-10 13:16:33,830 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:33,830 - INFO - 账号: faqiagong3335591@163.com
+2020-01-10 13:16:34,715 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:34,715 - INFO - 账号: chaniaoni75322lgp@163.com
+2020-01-10 13:16:35,863 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:35,863 - INFO - 账号: xijiexifu1th@163.com
+2020-01-10 13:16:37,011 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:37,011 - INFO - 账号: pubi1999918@163.com
+2020-01-10 13:16:38,128 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:38,128 - INFO - ####################################################################################################
+2020-01-10 13:16:38,128 - INFO - 开始操作 业主: guangda
+2020-01-10 13:16:38,129 - INFO - 超级签URL: https://gdsuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 13:16:38,391 - INFO - 账号: beatrizcomodo@hotmail.com
+2020-01-10 13:16:39,536 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:39,536 - INFO - 账号: amarketo@hotmail.com
+2020-01-10 13:16:40,663 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:40,663 - INFO - 账号: smkugelmas@hotmail.com
+2020-01-10 13:16:41,780 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:41,780 - INFO - 账号: aninhadanc@hotmail.com
+2020-01-10 13:16:42,903 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:42,903 - INFO - 账号: jdmipod@hotmail.com
+2020-01-10 13:16:44,015 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:44,015 - INFO - 账号: barbaracno@hotmail.com
+2020-01-10 13:16:45,179 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:45,179 - INFO - ####################################################################################################
+2020-01-10 13:16:45,179 - INFO - 开始操作 业主: uc
+2020-01-10 13:16:45,179 - INFO - 超级签URL: https://ucsuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 13:16:45,383 - INFO - 账号: chiruqibei367@163.com
+2020-01-10 13:16:46,512 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:46,512 - INFO - 账号: choumengzhiai1yk@163.com
+2020-01-10 13:16:47,704 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:47,704 - INFO - 账号: yebucheng554551qe@163.com
+2020-01-10 13:16:48,854 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:48,854 - INFO - 账号: jincun5244@163.com
+2020-01-10 13:16:49,732 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:49,732 - INFO - 账号: tongfanhao19920412@163.com
+2020-01-10 13:16:50,850 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:16:50,850 - INFO - 账号: shenlanbai19770715@163.com
+2020-01-10 13:16:51,995 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:35:53,804 - INFO - 
+
+
+
+
+
+2020-01-10 13:35:53,804 - INFO - ####################################################################################################
+2020-01-10 13:35:53,804 - INFO - 开始操作 业主: ali
+2020-01-10 13:35:53,804 - INFO - 超级签URL: https://alisuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 13:35:53,982 - INFO - 账号: tifanydekeyzerann@yahoo.com
+2020-01-10 13:35:55,308 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:35:55,308 - INFO - 账号: clevegelbowitzoxu@yahoo.com
+2020-01-10 13:35:56,215 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:35:56,216 - INFO - 账号: jiangxinx0060@163.com
+2020-01-10 13:35:57,134 - INFO - 苹果接口返回信息: {'data': [{'type': 'apps', 'id': '1487018703', 'attributes': {'name': 'TipCalcPro', 'bundleId': 'abb.lorry.tipCalc', 'sku': 'TipCalcPro', 'primaryLocale': 'fr-FR'}, 'relationships': {'betaTesters': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaTesters', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaTesters'}}, 'betaGroups': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaGroups', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaGroups'}}, 'preReleaseVersions': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/preReleaseVersions', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/preReleaseVersions'}}, 'betaAppLocalizations': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaAppLocalizations', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaAppLocalizations'}}, 'builds': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/builds', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/builds'}}, 'betaLicenseAgreement': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaLicenseAgreement', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaLicenseAgreement'}}, 'betaAppReviewDetail': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaAppReviewDetail', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaAppReviewDetail'}}}, 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703'}}], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 1, 'limit': 50}}}
+2020-01-10 13:35:57,134 - INFO - 账号: kuangpeng41747363@163.com
+2020-01-10 13:35:58,286 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:35:58,286 - INFO - 账号: zhuang6625858558@163.com
+2020-01-10 13:35:59,431 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:35:59,431 - INFO - 账号: guanjunga88474@163.com
+2020-01-10 13:36:00,999 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:00,999 - INFO - 账号: edwenawaideoaq@yahoo.com
+2020-01-10 13:36:01,910 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:01,910 - INFO - 账号: fanglinshi19720216@163.com
+2020-01-10 13:36:03,108 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:03,108 - INFO - 账号: caigouboh6@163.com
+2020-01-10 13:36:04,273 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:04,273 - INFO - 账号: se5ej44@163.com
+2020-01-10 13:36:05,451 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:05,452 - INFO - ####################################################################################################
+2020-01-10 13:36:05,452 - INFO - 开始操作 业主: leying
+2020-01-10 13:36:05,452 - INFO - 超级签URL: https://lysuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 13:36:05,769 - INFO - 账号: liaohe035huanya@163.com
+2020-01-10 13:36:06,961 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:06,961 - INFO - 账号: sanfusiyan198511@163.com
+2020-01-10 13:36:07,873 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:07,873 - INFO - 账号: hanyin1970@163.com
+2020-01-10 13:36:09,085 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:09,085 - INFO - 账号: yanchengcu013212@163.com
+2020-01-10 13:36:09,984 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:09,985 - INFO - 账号: suisu8587745@163.com
+2020-01-10 13:36:11,174 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:11,174 - INFO - 账号: wozheng325565@163.com
+2020-01-10 13:36:12,488 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:12,488 - INFO - 账号: faqiagong3335591@163.com
+2020-01-10 13:36:13,641 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:13,642 - INFO - 账号: chaniaoni75322lgp@163.com
+2020-01-10 13:36:14,809 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:14,809 - INFO - 账号: xijiexifu1th@163.com
+2020-01-10 13:36:15,981 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:15,981 - INFO - 账号: pubi1999918@163.com
+2020-01-10 13:36:17,159 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:17,159 - INFO - ####################################################################################################
+2020-01-10 13:36:17,159 - INFO - 开始操作 业主: guangda
+2020-01-10 13:36:17,159 - INFO - 超级签URL: https://gdsuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 13:36:17,334 - INFO - 账号: beatrizcomodo@hotmail.com
+2020-01-10 13:36:18,500 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:18,500 - INFO - 账号: amarketo@hotmail.com
+2020-01-10 13:36:19,703 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:19,703 - INFO - 账号: smkugelmas@hotmail.com
+2020-01-10 13:36:20,655 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:20,656 - INFO - 账号: aninhadanc@hotmail.com
+2020-01-10 13:36:21,558 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:21,558 - INFO - 账号: jdmipod@hotmail.com
+2020-01-10 13:36:22,717 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:22,717 - INFO - 账号: barbaracno@hotmail.com
+2020-01-10 13:36:23,621 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:23,621 - INFO - ####################################################################################################
+2020-01-10 13:36:23,621 - INFO - 开始操作 业主: uc
+2020-01-10 13:36:23,621 - INFO - 超级签URL: https://ucsuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 13:36:23,823 - INFO - 账号: chiruqibei367@163.com
+2020-01-10 13:36:24,729 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:24,729 - INFO - 账号: choumengzhiai1yk@163.com
+2020-01-10 13:36:25,872 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:25,872 - INFO - 账号: yebucheng554551qe@163.com
+2020-01-10 13:36:27,048 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:27,048 - INFO - 账号: jincun5244@163.com
+2020-01-10 13:36:28,202 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:28,202 - INFO - 账号: tongfanhao19920412@163.com
+2020-01-10 13:36:29,751 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 13:36:29,751 - INFO - 账号: shenlanbai19770715@163.com
+2020-01-10 13:36:30,702 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:26:50,818 - INFO - 
+
+
+
+
+
+2020-01-10 17:26:50,819 - INFO - ####################################################################################################
+2020-01-10 17:26:50,819 - INFO - 开始操作 业主: ali
+2020-01-10 17:26:50,819 - INFO - 超级签URL: https://alisuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 17:26:52,552 - INFO - 账号: tifanydekeyzerann@yahoo.com
+2020-01-10 17:26:53,660 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:26:53,660 - INFO - 账号: clevegelbowitzoxu@yahoo.com
+2020-01-10 17:26:54,535 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:26:54,535 - INFO - 账号: jiangxinx0060@163.com
+2020-01-10 17:26:55,429 - INFO - 苹果接口返回信息: {'data': [{'type': 'apps', 'id': '1487018703', 'attributes': {'name': 'TipCalcPro', 'bundleId': 'abb.lorry.tipCalc', 'sku': 'TipCalcPro', 'primaryLocale': 'fr-FR'}, 'relationships': {'betaTesters': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaTesters', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaTesters'}}, 'betaGroups': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaGroups', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaGroups'}}, 'preReleaseVersions': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/preReleaseVersions', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/preReleaseVersions'}}, 'betaAppLocalizations': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaAppLocalizations', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaAppLocalizations'}}, 'builds': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/builds', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/builds'}}, 'betaLicenseAgreement': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaLicenseAgreement', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaLicenseAgreement'}}, 'betaAppReviewDetail': {'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/relationships/betaAppReviewDetail', 'related': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703/betaAppReviewDetail'}}}, 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps/1487018703'}}], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 1, 'limit': 50}}}
+2020-01-10 17:26:55,429 - INFO - 账号: kuangpeng41747363@163.com
+2020-01-10 17:26:56,569 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:26:56,570 - INFO - 账号: zhuang6625858558@163.com
+2020-01-10 17:26:57,440 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:26:57,440 - INFO - 账号: guanjunga88474@163.com
+2020-01-10 17:26:58,318 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:26:58,318 - INFO - 账号: edwenawaideoaq@yahoo.com
+2020-01-10 17:26:59,450 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:26:59,450 - INFO - 账号: fanglinshi19720216@163.com
+2020-01-10 17:27:00,546 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:00,546 - INFO - 账号: caigouboh6@163.com
+2020-01-10 17:27:01,457 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:01,457 - INFO - 账号: se5ej44@163.com
+2020-01-10 17:27:02,592 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:02,593 - INFO - ####################################################################################################
+2020-01-10 17:27:02,593 - INFO - 开始操作 业主: leying
+2020-01-10 17:27:02,593 - INFO - 超级签URL: https://lysuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 17:27:02,893 - INFO - 账号: liaohe035huanya@163.com
+2020-01-10 17:27:04,090 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:04,090 - INFO - 账号: sanfusiyan198511@163.com
+2020-01-10 17:27:05,236 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:05,236 - INFO - 账号: hanyin1970@163.com
+2020-01-10 17:27:06,116 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:06,116 - INFO - 账号: yanchengcu013212@163.com
+2020-01-10 17:27:07,509 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:07,509 - INFO - 账号: suisu8587745@163.com
+2020-01-10 17:27:08,379 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:08,379 - INFO - 账号: wozheng325565@163.com
+2020-01-10 17:27:09,544 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:09,544 - INFO - 账号: faqiagong3335591@163.com
+2020-01-10 17:27:10,403 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:10,403 - INFO - 账号: chaniaoni75322lgp@163.com
+2020-01-10 17:27:11,574 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:11,574 - INFO - 账号: xijiexifu1th@163.com
+2020-01-10 17:27:12,433 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:12,433 - INFO - 账号: pubi1999918@163.com
+2020-01-10 17:27:13,615 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:13,615 - INFO - ####################################################################################################
+2020-01-10 17:27:13,615 - INFO - 开始操作 业主: guangda
+2020-01-10 17:27:13,615 - INFO - 超级签URL: https://gdsuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 17:27:13,931 - INFO - 账号: beatrizcomodo@hotmail.com
+2020-01-10 17:27:14,836 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:14,836 - INFO - 账号: amarketo@hotmail.com
+2020-01-10 17:27:15,977 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:15,977 - INFO - 账号: smkugelmas@hotmail.com
+2020-01-10 17:27:17,125 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:17,125 - INFO - 账号: aninhadanc@hotmail.com
+2020-01-10 17:27:18,006 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:18,006 - INFO - 账号: jdmipod@hotmail.com
+2020-01-10 17:27:19,158 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:19,158 - INFO - 账号: barbaracno@hotmail.com
+2020-01-10 17:27:20,274 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:20,274 - INFO - ####################################################################################################
+2020-01-10 17:27:20,274 - INFO - 开始操作 业主: uc
+2020-01-10 17:27:20,274 - INFO - 超级签URL: https://ucsuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 17:27:20,600 - INFO - 账号: chiruqibei367@163.com
+2020-01-10 17:27:21,476 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:21,476 - INFO - 账号: choumengzhiai1yk@163.com
+2020-01-10 17:27:22,589 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:22,589 - INFO - 账号: yebucheng554551qe@163.com
+2020-01-10 17:27:23,815 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:23,815 - INFO - 账号: jincun5244@163.com
+2020-01-10 17:27:24,957 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:24,957 - INFO - 账号: tongfanhao19920412@163.com
+2020-01-10 17:27:26,122 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:26,122 - INFO - 账号: shenlanbai19770715@163.com
+2020-01-10 17:27:27,276 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:27,276 - INFO - ####################################################################################################
+2020-01-10 17:27:27,276 - INFO - 开始操作 业主: 58yl
+2020-01-10 17:27:27,276 - INFO - 超级签URL: https://58ylsuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 17:27:27,602 - INFO - 账号: zhushu19760715@163.com
+2020-01-10 17:27:28,471 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:28,471 - INFO - 账号: luxingquan19690213@163.com
+2020-01-10 17:27:29,344 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:29,344 - INFO - 账号: sheguan19960616@163.com
+2020-01-10 17:27:30,212 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:30,212 - INFO - 账号: miehe19690414@163.com
+2020-01-10 17:27:31,391 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:31,391 - INFO - 账号: qimi19930116@163.com
+2020-01-10 17:27:32,538 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:27:32,538 - INFO - 账号: dongyazhan19610316@163.com
+2020-01-10 17:27:33,463 - INFO - 苹果接口返回信息: {'data': [], 'links': {'self': 'https://api.appstoreconnect.apple.com/v1/apps'}, 'meta': {'paging': {'total': 0, 'limit': 50}}}
+2020-01-10 17:34:56,170 - INFO - 
+
+
+
+
+
+2020-01-10 17:34:56,171 - INFO - ####################################################################################################
+2020-01-10 17:34:56,171 - INFO - 开始操作 业主: ali
+2020-01-10 17:34:56,171 - INFO - 超级签URL: https://alisuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 17:35:18,719 - INFO - 
+
+
+
+
+
+2020-01-10 17:35:18,719 - INFO - ####################################################################################################
+2020-01-10 17:35:18,719 - INFO - 开始操作 业主: ali
+2020-01-10 17:35:18,719 - INFO - 超级签URL: https://alisuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 17:35:37,591 - INFO - 
+
+
+
+
+
+2020-01-10 17:35:37,591 - INFO - ####################################################################################################
+2020-01-10 17:35:37,591 - INFO - 开始操作 业主: ali
+2020-01-10 17:35:37,591 - INFO - 超级签URL: https://alisuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 17:35:39,196 - INFO - ####################################################################################################
+2020-01-10 17:35:39,196 - INFO - 开始操作 业主: leying
+2020-01-10 17:35:39,196 - INFO - 超级签URL: https://lysuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 17:35:40,547 - INFO - ####################################################################################################
+2020-01-10 17:35:40,548 - INFO - 开始操作 业主: guangda
+2020-01-10 17:35:40,548 - INFO - 超级签URL: https://gdsuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 17:35:41,851 - INFO - ####################################################################################################
+2020-01-10 17:35:41,851 - INFO - 开始操作 业主: uc
+2020-01-10 17:35:41,851 - INFO - 超级签URL: https://ucsuper.le079.com/apple/getAllAppleAccounts
+2020-01-10 17:35:43,251 - INFO - ####################################################################################################
+2020-01-10 17:35:43,252 - INFO - 开始操作 业主: 58yl
+2020-01-10 17:35:43,252 - INFO - 超级签URL: https://58ylsuper.le079.com/apple/getAllAppleAccounts
+2020-01-25 22:09:55,311 - INFO - 
+
+
+
+
+
+2020-01-25 22:09:55,312 - INFO - ####################################################################################################
+2020-01-25 22:09:55,312 - INFO - 开始操作 业主: ali
+2020-01-25 22:09:55,312 - INFO - 超级签URL: https://alisuper.le079.com/apple/getAllAppleAccounts
+2020-01-25 22:09:55,505 - INFO - tifanydekeyzerann@yahoo.com: 15
+2020-01-25 22:09:55,505 - INFO - clevegelbowitzoxu@yahoo.com: 15
+2020-01-25 22:09:55,505 - INFO - jiangxinx0060@163.com: 15
+2020-01-25 22:09:55,505 - INFO - kuangpeng41747363@163.com: 15
+2020-01-25 22:09:55,505 - INFO - zhuang6625858558@163.com: 15
+2020-01-25 22:09:55,506 - INFO - guanjunga88474@163.com: 15
+2020-01-25 22:09:55,506 - INFO - edwenawaideoaq@yahoo.com: 15
+2020-01-25 22:09:55,506 - INFO - fanglinshi19720216@163.com: 29
+2020-01-25 22:09:55,506 - INFO - caigouboh6@163.com: 29
+2020-01-25 22:09:55,506 - INFO - se5ej44@163.com: 30
+2020-01-25 22:09:56,593 - INFO - ####################################################################################################
+2020-01-25 22:09:56,593 - INFO - 开始操作 业主: leying
+2020-01-25 22:09:56,593 - INFO - 超级签URL: https://lysuper.le079.com/apple/getAllAppleAccounts
+2020-01-25 22:09:56,903 - INFO - ####################################################################################################
+2020-01-25 22:09:56,903 - INFO - 开始操作 业主: guangda
+2020-01-25 22:09:56,903 - INFO - 超级签URL: https://gdsuper.le079.com/apple/getAllAppleAccounts
+2020-01-25 22:09:57,199 - INFO - beatrizcomodo@hotmail.com: 75
+2020-01-25 22:09:57,199 - INFO - amarketo@hotmail.com: 75
+2020-01-25 22:09:57,199 - INFO - smkugelmas@hotmail.com: 75
+2020-01-25 22:09:57,199 - INFO - aninhadanc@hotmail.com: 75
+2020-01-25 22:09:57,200 - INFO - jdmipod@hotmail.com: 75
+2020-01-25 22:09:57,200 - INFO - barbaracno@hotmail.com: 75
+2020-01-25 22:09:58,244 - INFO - ####################################################################################################
+2020-01-25 22:09:58,245 - INFO - 开始操作 业主: uc
+2020-01-25 22:09:58,245 - INFO - 超级签URL: https://ucsuper.le079.com/apple/getAllAppleAccounts
+2020-01-25 22:09:58,476 - INFO - chiruqibei367@163.com: 89
+2020-01-25 22:09:58,476 - INFO - choumengzhiai1yk@163.com: 89
+2020-01-25 22:09:58,477 - INFO - yebucheng554551qe@163.com: 89
+2020-01-25 22:09:58,477 - INFO - jincun5244@163.com: 89
+2020-01-25 22:09:58,477 - INFO - tongfanhao19920412@163.com: 90
+2020-01-25 22:09:58,477 - INFO - shenlanbai19770715@163.com: 90
+2020-01-25 22:09:59,495 - INFO - ####################################################################################################
+2020-01-25 22:09:59,495 - INFO - 开始操作 业主: 58yl
+2020-01-25 22:09:59,496 - INFO - 超级签URL: https://58ylsuper.le079.com/apple/getAllAppleAccounts
+2020-01-25 22:09:59,676 - INFO - zhushu19760715@163.com: 98
+2020-01-25 22:09:59,677 - INFO - luxingquan19690213@163.com: 98
+2020-01-25 22:09:59,677 - INFO - sheguan19960616@163.com: 98
+2020-01-25 22:09:59,678 - INFO - miehe19690414@163.com: 98
+2020-01-25 22:09:59,678 - INFO - qimi19930116@163.com: 98
+2020-01-25 22:09:59,678 - INFO - dongyazhan19610316@163.com: 99
+####################################################################################################
+2020-01-25 15:20:01,485 - INFO - ####################################################################################################
+开始操作 业主: 业主: 默认
+2020-01-25 15:20:01,485 - INFO - 开始操作 业主: 业主: 默认
+####################################################################################################
+2020-01-25 15:21:02,967 - INFO - ####################################################################################################
+开始操作 业主: 业主: 默认
+2020-01-25 15:21:02,967 - INFO - 开始操作 业主: 业主: 默认
+####################################################################################################
+2020-01-25 15:21:26,168 - INFO - ####################################################################################################
+开始操作 业主: 业主: 默认
+2020-01-25 15:21:26,168 - INFO - 开始操作 业主: 业主: 默认
+####################################################################################################
+2020-01-25 15:21:54,197 - INFO - ####################################################################################################
+开始操作 业主: 业主: 默认
+2020-01-25 15:21:54,197 - INFO - 开始操作 业主: 业主: 默认
+shanmeishanyan1993@163.com: 98
+2020-01-25 15:21:54,199 - INFO - shanmeishanyan1993@163.com: 98
+####################################################################################################
+2020-01-25 15:21:55,836 - INFO - ####################################################################################################
+开始操作 业主: 业主: 默认2
+2020-01-25 15:21:55,837 - INFO - 开始操作 业主: 业主: 默认2
+####################################################################################################
+2020-01-25 15:22:12,689 - INFO - ####################################################################################################
+开始操作 业主: 业主: 默认
+2020-01-25 15:22:12,689 - INFO - 开始操作 业主: 业主: 默认
+shanmeishanyan1993@163.com: 98
+2020-01-25 15:22:12,691 - INFO - shanmeishanyan1993@163.com: 98
+####################################################################################################
+2020-01-25 15:22:14,113 - INFO - ####################################################################################################
+开始操作 业主: 业主: 默认2
+2020-01-25 15:22:14,113 - INFO - 开始操作 业主: 业主: 默认2
+####################################################################################################
+2020-01-25 15:23:00,329 - INFO - ####################################################################################################
+开始操作 业主: 默认
+2020-01-25 15:23:00,329 - INFO - 开始操作 业主: 默认
+shanmeishanyan1993@163.com: 98
+2020-01-25 15:23:00,330 - INFO - shanmeishanyan1993@163.com: 98
+####################################################################################################
+2020-01-25 15:23:01,634 - INFO - ####################################################################################################
+开始操作 业主: 默认2
+2020-01-25 15:23:01,634 - INFO - 开始操作 业主: 默认2
+####################################################################################################
+2020-01-25 15:24:09,466 - INFO - ####################################################################################################
+开始操作 业主: 默认
+2020-01-25 15:24:09,466 - INFO - 开始操作 业主: 默认
+shanmeishanyan1993@163.com: 98
+2020-01-25 15:24:09,468 - INFO - shanmeishanyan1993@163.com: 98
+####################################################################################################
+2020-01-25 15:24:10,726 - INFO - ####################################################################################################
+开始操作 业主: 默认2
+2020-01-25 15:24:10,726 - INFO - 开始操作 业主: 默认2
+####################################################################################################
+2020-01-25 15:25:52,093 - INFO - ####################################################################################################
+开始操作 业主: 默认
+2020-01-25 15:25:52,095 - INFO - 开始操作 业主: 默认
+shanmeishanyan1993@163.com: 98
+2020-01-25 15:25:52,097 - INFO - shanmeishanyan1993@163.com: 98
+####################################################################################################
+2020-01-25 15:25:53,594 - INFO - ####################################################################################################
+开始操作 业主: 默认2
+2020-01-25 15:25:53,594 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:31:27,916 - INFO - ####################################################################################################
+2020-01-25 15:31:27,916 - INFO - 开始操作 业主: 默认
+2020-01-25 15:31:27,918 - INFO - shanmeishanyan1993@163.com: 98
+2020-01-25 15:31:29,234 - INFO - ####################################################################################################
+2020-01-25 15:31:29,234 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:31:48,408 - INFO - ####################################################################################################
+2020-01-25 15:31:48,408 - INFO - 开始操作 业主: 默认
+2020-01-25 15:31:48,410 - INFO - shanmeishanyan1993@163.com: 98
+2020-01-25 15:31:49,680 - INFO - ####################################################################################################
+2020-01-25 15:31:49,680 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:32:43,490 - INFO - ####################################################################################################
+2020-01-25 15:32:43,490 - INFO - 开始操作 业主: 默认
+2020-01-25 15:32:43,492 - INFO - shanmeishanyan1993@163.com: 98
+2020-01-25 15:32:44,846 - INFO - ####################################################################################################
+2020-01-25 15:32:44,846 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:33:12,335 - INFO - ####################################################################################################
+2020-01-25 15:33:12,335 - INFO - 开始操作 业主: 默认
+2020-01-25 15:33:12,337 - INFO - shanmeishanyan1993@163.com: 98
+2020-01-25 15:33:13,758 - INFO - ####################################################################################################
+2020-01-25 15:33:13,758 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:34:54,807 - INFO - ####################################################################################################
+2020-01-25 15:34:54,807 - INFO - 开始操作 业主: 默认
+2020-01-25 15:34:54,809 - INFO - shanmeishanyan1993@163.com: 98
+2020-01-25 15:34:54,810 - INFO - 所剩名额总数: 98
+2020-01-25 15:34:56,133 - INFO - ####################################################################################################
+2020-01-25 15:34:56,133 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:34:56,134 - INFO - 所剩名额总数: 0
+####################################################################################################
+开始操作 业主: 默认
+shanmeishanyan1993@163.com: 98
+所剩名额总数: 98
+####################################################################################################
+开始操作 业主: 默认2
+所剩名额总数: 0
+2020-01-25 15:40:23,517 - INFO - ####################################################################################################
+2020-01-25 15:40:23,517 - INFO - 开始操作 业主: 默认
+2020-01-25 15:40:23,520 - INFO - shanmeishanyan1993@163.com: 98
+2020-01-25 15:40:23,520 - INFO - 所剩名额总数: 98
+2020-01-25 15:40:24,857 - INFO - ####################################################################################################
+2020-01-25 15:40:24,857 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:40:24,858 - INFO - 所剩名额总数: 0
+2020-01-25 15:51:51,257 - INFO - ####################################################################################################
+2020-01-25 15:51:51,258 - INFO - 开始操作 业主: 默认
+2020-01-25 15:52:37,719 - INFO - ####################################################################################################
+2020-01-25 15:52:37,719 - INFO - 开始操作 业主: 默认
+2020-01-25 15:52:38,792 - ERROR - sanfusiyan198511@163.com: 测试连接 失败
+2020-01-25 15:52:40,950 - INFO - ####################################################################################################
+2020-01-25 15:52:40,950 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:54:37,831 - INFO - ####################################################################################################
+2020-01-25 15:54:37,831 - INFO - 开始操作 业主: 默认
+2020-01-25 15:54:38,664 - ERROR - sanfusiyan198511@163.com: 测试连接 失败
+2020-01-25 15:54:41,038 - INFO - ####################################################################################################
+2020-01-25 15:54:41,038 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:54:55,015 - INFO - ####################################################################################################
+2020-01-25 15:54:55,015 - INFO - 开始操作 业主: 默认
+2020-01-25 15:54:55,846 - ERROR - {'errors': [{'status': '401', 'code': 'NOT_AUTHORIZED', 'title': 'Authentication credentials are missing or invalid.', 'detail': 'Provide a properly configured and signed bearer token, and make sure that it has not expired. Learn more about Generating Tokens for API Requests https://developer.apple.com/go/?id=api-generating-tokens'}]}
+2020-01-25 15:54:58,394 - INFO - ####################################################################################################
+2020-01-25 15:54:58,394 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:55:13,163 - INFO - ####################################################################################################
+2020-01-25 15:55:13,163 - INFO - 开始操作 业主: 默认
+2020-01-25 15:55:14,110 - ERROR - {'errors': [{'status': '401', 'code': 'NOT_AUTHORIZED', 'title': 'Authentication credentials are missing or invalid.', 'detail': 'Provide a properly configured and signed bearer token, and make sure that it has not expired. Learn more about Generating Tokens for API Requests https://developer.apple.com/go/?id=api-generating-tokens'}]}
+2020-01-25 15:55:40,334 - INFO - ####################################################################################################
+2020-01-25 15:55:40,334 - INFO - 开始操作 业主: 默认
+2020-01-25 15:55:41,160 - ERROR - {'errors': [{'status': '401', 'code': 'NOT_AUTHORIZED', 'title': 'Authentication credentials are missing or invalid.', 'detail': 'Provide a properly configured and signed bearer token, and make sure that it has not expired. Learn more about Generating Tokens for API Requests https://developer.apple.com/go/?id=api-generating-tokens'}]}
+2020-01-25 15:55:43,647 - INFO - ####################################################################################################
+2020-01-25 15:55:43,647 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:56:07,910 - INFO - ####################################################################################################
+2020-01-25 15:56:07,910 - INFO - 开始操作 业主: 默认
+2020-01-25 15:56:08,731 - ERROR - {'errors': [{'status': '401', 'code': 'NOT_AUTHORIZED', 'title': 'Authentication credentials are missing or invalid.', 'detail': 'Provide a properly configured and signed bearer token, and make sure that it has not expired. Learn more about Generating Tokens for API Requests https://developer.apple.com/go/?id=api-generating-tokens'}]}
+2020-01-25 15:56:11,243 - INFO - ####################################################################################################
+2020-01-25 15:56:11,244 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:57:04,545 - INFO - ####################################################################################################
+2020-01-25 15:57:04,546 - INFO - 开始操作 业主: 默认
+2020-01-25 15:57:05,395 - ERROR - {'errors': [{'status': '401', 'code': 'NOT_AUTHORIZED', 'title': 'Authentication credentials are missing or invalid.', 'detail': 'Provide a properly configured and signed bearer token, and make sure that it has not expired. Learn more about Generating Tokens for API Requests https://developer.apple.com/go/?id=api-generating-tokens'}]}
+2020-01-25 15:57:07,673 - INFO - ####################################################################################################
+2020-01-25 15:57:07,673 - INFO - 开始操作 业主: 默认2
+2020-01-25 15:59:03,059 - INFO - ####################################################################################################
+2020-01-25 15:59:03,060 - INFO - 开始操作 业主: 默认
+2020-01-25 15:59:04,213 - ERROR - {'errors': [{'status': '401', 'code': 'NOT_AUTHORIZED', 'title': 'Authentication credentials are missing or invalid.', 'detail': 'Provide a properly configured and signed bearer token, and make sure that it has not expired. Learn more about Generating Tokens for API Requests https://developer.apple.com/go/?id=api-generating-tokens'}]}
+2020-01-25 15:59:07,743 - INFO - ####################################################################################################
+2020-01-25 15:59:07,743 - INFO - 开始操作 业主: 默认2
