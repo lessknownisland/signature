@@ -3,7 +3,7 @@ from django.conf.urls          import url, include
 from django.views.generic.base import RedirectView
 from . import views
 from apple.tests import *
-from apple.account import cer_create, account_get, account_delete, account_edit, p12_upload, csr_get
+from apple.account import cer_create, account_get, account_delete, account_edit, p12_upload, csr_get, account_test_connect
 from apple.package import package_upload, mobileconfig_create, package_install, packages_get, package_edit
 
 urlpatterns = [
@@ -11,6 +11,7 @@ urlpatterns = [
     url('^cer/create$', cer_create, name='CerCreate'), # 创建苹果证书
     url('^p12/upload$', p12_upload, name='P12Upload'), # 上传p12 文件
     url('^account/get$', account_get, name='AccountGet'), # 获取苹果个人账号
+    url('^account/testconnect$', account_test_connect, name='AccountTestConnect'), # 账号测试连接
     url('^account/delete$', account_delete, name='AccountDelete'), # 删除苹果个人账号
     url('^csr/get$', csr_get, name='CsrGet'), # 获取csr证书
     url('^account/edit$', account_edit, name='AccountEdit'), # 修改苹果个人账号

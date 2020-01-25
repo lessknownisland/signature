@@ -269,9 +269,39 @@ def account_edit(request):
         ret_data['code'] = 500
         ret_data['msg']  = f"{ret_data['msg']} 失败: {str(e)}"
 
-    ret_data['msg']  = f"{ret_data['msg']} 成功"
+    else:
+        ret_data['msg']  = f"{ret_data['msg']} 成功"
 
     return HttpResponse(json.dumps(ret_data))
+
+@csrf_exempt
+@login_required_layui
+@is_authenticated_to_request
+def account_test_connect(request):
+    '''
+        账号测试连接
+    '''
+    username, role, clientip = User(request).get_default_values()
+
+    # 初始化返回数据
+    ret_data = RET_DATA.copy()
+    ret_data['code'] = 0 # 请求正常，返回 0
+    ret_data['msg']  = '账号测试连接'
+    ret_data['data'] = []
+
+    if request.method == 'POST':
+        data = request.POST
+
+        logger.info(data)
+        # return HttpResponse(json.dumps(ret_data))
+
+        apple_account = AppleAccountTb.objects.get(id=data['id']) 
+
+        # 引入asca 类
+        asca = AppStoreConnectApi(apple_account.account, apple_account.p8, apple_account.iss, apple_account.kid)
+        ret_data = asca.test_connect()
+
+        return HttpResponse(json.dumps(ret_data))
 
 @csrf_exempt
 @login_required_layui

@@ -34,7 +34,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
         ,{field:'p12', title:'p12', sort:true}
         ,{field:'cer_content', title:'证书文本', sort: true, hide: true}
         ,{field:'status', title:'状态', templet: '#switchAppleAccountStatus', width: 150}
-        ,{field:'operate', title:'操作', toolbar: '#apple_accounts_table_operatebar', fixed: 'right', width: 200}
+        ,{field:'operate', title:'操作', toolbar: '#apple_accounts_table_operatebar', fixed: 'right', width: 250}
         ,{field:'operate', title:'危险操作', toolbar: '#apple_accounts_table_dangerousoperatebar', fixed: 'right', width: 100}
       ]]
       ,height:530
@@ -291,6 +291,37 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
           
         });
       });
+    }else if(obj.event === 'test_connect'){
+
+      loading1.call(this); // 打开 等待的弹层
+
+      admin.req({
+        url: '/apple/account/testconnect' //实际使用请改成服务端真实接口code == 1001
+        ,method: "post" 
+        ,data: {'id': data.id}
+        // ,contentType: 'application/json'
+        ,done: function(res){
+          // 发送成功的提示
+          layer.msg(res.msg, {
+            offset: '15px'
+            ,icon: 1
+            ,time: 1500
+          });
+
+          layer.close(loading1_iii); // 关闭 等待的弹层
+        },success:function(res){
+          if (res.code == 1001){ // 登陆失效
+            layer.msg(res.msg, {
+              offset: '15px'
+              ,icon: 1
+              ,time: 1500
+            })
+          };
+          layer.close(loading1_iii);
+        }
+      
+    });
+
     }
   });
 
