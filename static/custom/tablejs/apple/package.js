@@ -153,12 +153,27 @@ layui.use(['admin', 'form', 'upload', 'table'], ()=>{
         }
       });
     }else if(obj.event === 'mobileconfig_create'){
+
+      var oss_bucket = layui.data.package_oss_bucket.getValue();
+
+      if (oss_bucket.length !== 1){
+        layer.msg('请选择Oss Bucket', { // 如果证书文本不存在，则提示
+          offset: '15px'
+          ,icon: 1
+          ,time: 1500
+        })
+        return false;
+      }
+
       loading1.call(this); // 打开 等待的弹层
 
       admin.req({
         url: '/apple/package/mobileconfig/create' //实际使用请改成服务端真实接口code == 1001
         ,method: "post" 
-        ,data: {'id': data.id}
+        ,data: {
+            'id': data.id,
+            'oss_bucket_id': oss_bucket[0].value,
+          }
         // ,contentType: 'application/json'
         ,done: function(res){
           // 发送成功的提示

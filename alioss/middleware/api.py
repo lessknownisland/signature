@@ -116,7 +116,7 @@ class AliOssApi(object):
 
         return ret_data
 
-def get_bucket():
+def get_bucket(id=None):
     '''
         获取可用的阿里云OSS
         ret_data: {
@@ -128,21 +128,36 @@ def get_bucket():
     __ret_data = RET_DATA.copy()
     __ret_data['data'] = None
 
-    buckets = AliossBucketTb.objects.filter(status=1).all()
-    for bucket in buckets:
-        __ret_data = {
-            'code': 0,
-            'msg': "bucket 获取成功",
-            'data': bucket
-        }
-        break
-    
-    if not __ret_data['data']:
-        __ret_data = {
-            'code': 404,
-            'msg': "bucket 获取失败",
-            'data': bucket
-        }
+    if not id:
+        buckets = AliossBucketTb.objects.filter(status=1).all()
+        for bucket in buckets:
+            __ret_data = {
+                'code': 0,
+                'msg': "bucket 获取成功",
+                'data': bucket
+            }
+            break
+        
+        if not __ret_data['data']:
+            __ret_data = {
+                'code': 404,
+                'msg': "bucket 获取失败",
+                'data': None
+            }
+    else:
+        try:
+            bucket = AliossBucketTb.objects.get(id=id, status=1)
+            __ret_data = {
+                'code': 0,
+                'msg': "bucket 获取成功",
+                'data': bucket
+            }
+        except AliossBucketTb.DoesNotExist as e:
+            __ret_data = {
+                'code': 500,
+                'msg': f"bucket id:{id} 获取失败",
+                'data': None
+            }
 
     return __ret_data
 

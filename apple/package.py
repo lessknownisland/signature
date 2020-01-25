@@ -74,6 +74,14 @@ def mobileconfig_create(request):
         else:
             package_id = int(data['id'])
 
+        if 'oss_bucket_id' not in data or not IsSomeType(data['oss_bucket_id']).is_int(): 
+            ret_data['msg'] = '传入的oss_bucket_id 不正确'
+            ret_data['code'] = 500
+            logger.error(ret_data['msg'])
+            return HttpResponse(json.dumps(ret_data))
+        else:
+            oss_bucket_id = int(data['oss_bucket_id'])
+
         # 获取package
         try:
             package = PackageTb.objects.get(id=package_id)
@@ -83,7 +91,7 @@ def mobileconfig_create(request):
             ret_data['code'] = 500
 
         else:
-            ret_data = mc_create(package, ret_data)
+            ret_data = mc_create(package, ret_data, oss_bucket_id=oss_bucket_id)
 
         return HttpResponse(json.dumps(ret_data))
 
@@ -118,6 +126,15 @@ def package_upload(request):
         else:
             customer_id = int(data['id'])
 
+        if 'oss_bucket_id' not in data or not IsSomeType(data['oss_bucket_id']).is_int(): 
+            ret_data['msg'] = '传入的oss_bucket_id 不正确'
+            ret_data['code'] = 500
+            logger.error(ret_data['msg'])
+            return HttpResponse(json.dumps(ret_data))
+        else:
+            oss_bucket_id = int(data['oss_bucket_id'])
+
+
         ipa_file = request.FILES.get('file',None) # 获取上传的文件
 
         if not ipa_file: # 判断文件是否存在
@@ -128,9 +145,10 @@ def package_upload(request):
 
         ### 开始上传 IPA 和 ICON ###
         # 获取 bucket
-        ret_bucket = get_bucket()
+        ret_bucket = get_bucket(id=oss_bucket_id)
         oss_bucket = ret_bucket['data']
         if not oss_bucket: # 如果 oss_bucket 账号不存在，则退出
+            logger.error(ret_bucket['msg'])
             return HttpResponse(json.dumps(ret_bucket))
         
         # 获取上传的接口

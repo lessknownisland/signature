@@ -32,30 +32,43 @@
                     </div>
                 </script>
 
+              </form>
+              <div class="layui-form-item">
+                <div class="layui-col-lg4">
+                  <label class="layui-form-label">包名</label>
+                  <div class="layui-input-block">
+                      <input class="layui-input" name="package" id="package" placeholder="查询package 名称的关键词">
+                    </div>
+                </div>
+                <script type="text/html" template lay-url="/oss/bucket/get" lay-done="layui.data.done_packageossbucket(d);">
+                  <div class="layui-col-lg4">
+                    <label class="layui-form-label">Oss Bucket</label>
+                    <div class="layui-input-block">
+                      <div name="package_oss_bucket" id="package_oss_bucket" class="xm-select-demo" lay-verify="package_oss_bucket"></div>
+                    </div>
+                  </div>
+                </script>
+            </div>
+
+
+            <div class="layui-form-item">
+              <form class="layui-row layui-form-item">
+                <div class="layui-col-lg4">
+                  <div class="layui-input-block">
+                    <button name="packageQuerySendButton" id="packageQuerySendButton" class="layui-btn" lay-submit lay-filter="package-form-element" data-type="loading1">查询</button>
+                    <!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
+                  </div>
+                </div>
+
                 <div class="layui-col-lg4">
                   <label class="layui-form-label"></label>
                   <div class="layui-input-block">
                     <button name="package_upload_button" id="package_upload_button" class="layui-btn">上传 IPA</button>
                     </div>
                 </div>
-
               </form>
-              <div class="layui-form-item">
-                <div class="layui-col-lg4">
-                  <label class="layui-form-label">包名</label>
-                  <div class="layui-input-block">
-                      <input class="layui-input" name="package" id="package">
-                    </div>
-                </div>
             </div>
-
-
-                <div class="layui-form-item">
-                  <div class="layui-input-block">
-                    <button name="packageQuerySendButton" id="packageQuerySendButton" class="layui-btn" lay-submit lay-filter="package-form-element" data-type="loading1">查询</button>
-                    <!-- <button type="reset" class="layui-btn layui-btn-primary">重置</button> -->
-                  </div>
-                </div>
+                
             
           </div>
 
@@ -110,6 +123,28 @@ layui.data.done_customeraccount = function(d){
 
 }
 
+layui.data.done_packageossbucket = function(d){
+  layui.use(['form'], function(){
+    var $ = layui.$
+    ,form = layui.form
+    
+    layui.data.package_oss_bucket_data = d.data;
+
+    layui.data.package_oss_bucket = xmSelect.render({
+      el: '#package_oss_bucket', 
+      radio: true,
+      // repeat: true,
+      // toolbar: {show: true},
+      theme: {
+        color: '#8dc63f',
+      },
+      data: d.data
+    });
+
+  })
+
+}
+
 // 等待的弹层
 function loading1(){
   loading1_iii = layui.layer.load(2, {
@@ -148,9 +183,19 @@ layui.use(['admin', 'form', 'upload', 'table'], ()=>{
   $('#package_upload_button').click(function(){
     // layer.msg("package upload.");
     var customer_account = layui.data.customer_account.getValue();
+    var oss_bucket = layui.data.package_oss_bucket.getValue();
 
     if (customer_account.length !== 1){
       layer.msg('请选择一个业主', { // 如果证书文本不存在，则提示
+        offset: '15px'
+        ,icon: 1
+        ,time: 1500
+      })
+      return false;
+    }
+
+    if (oss_bucket.length !== 1){
+      layer.msg('请选择Oss Bucket', { // 如果证书文本不存在，则提示
         offset: '15px'
         ,icon: 1
         ,time: 1500
@@ -172,7 +217,10 @@ layui.use(['admin', 'form', 'upload', 'table'], ()=>{
             var upload_package = upload.render({
               elem: '#package_upload_choose'
               ,url: '/apple/package/upload' 
-              ,data: {'id': customer_account[0].value}
+              ,data: {
+                  'id': customer_account[0].value,
+                  'oss_bucket_id': oss_bucket[0].value,
+                }
               ,auto: false
               ,accept: 'file'
               ,exts: 'ipa'

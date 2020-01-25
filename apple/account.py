@@ -194,7 +194,8 @@ def account_get(request):
         ret_data['code'] = 500
         ret_data['msg']  = f"{ret_data['msg']} 失败: {str(e)}"
 
-    ret_data['msg']  = f"{ret_data['msg']} 成功"
+    else:
+        ret_data['msg']  = f"{ret_data['msg']} 成功"
 
     return HttpResponse(json.dumps(ret_data))
 
@@ -346,6 +347,14 @@ def p12_upload(request):
         else:
             apple_id = int(data['id'])
 
+        if 'oss_bucket_id' not in data or not IsSomeType(data['oss_bucket_id']).is_int(): 
+            ret_data['msg'] = '传入的oss_bucket_id 不正确'
+            ret_data['code'] = 500
+            logger.error(ret_data['msg'])
+            return HttpResponse(json.dumps(ret_data))
+        else:
+            oss_bucket_id = int(data['oss_bucket_id'])
+
         # 生成一个 p12 随机名称
         random_s = "".join(random.sample(string.ascii_letters + string.digits, 32))
 
@@ -358,7 +367,7 @@ def p12_upload(request):
             return HttpResponse(json.dumps(ret_data))
 
         ### 开始上传 ###
-        ret_bucket = get_bucket() 
+        ret_bucket = get_bucket(id=oss_bucket_id) 
         oss_bucket = ret_bucket['data']
         if not oss_bucket: # 如果 oss_bucket 账号不存在，则退出
             return ret_bucket

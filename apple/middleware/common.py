@@ -19,14 +19,14 @@ import subprocess
 
 sh_dir = f"{settings.BASE_DIR}/apple/shell"
 
-def mc_create(package, ret_data=RET_DATA.copy(), aoa=False):
+def mc_create(package, ret_data=RET_DATA.copy(), aoa=False, oss_bucket_id=None):
     '''
         生成mobileconfig
     '''
 
     if not aoa:
         # 获取 bucket
-        ret_bucket = get_bucket()
+        ret_bucket = get_bucket(id=oss_bucket_id)
         oss_bucket = ret_bucket['data']
         if not oss_bucket: # 如果 oss_bucket 账号不存在，则退出
             return ret_bucket
