@@ -112,7 +112,7 @@ def cer_create(request):
                 return HttpResponse(json.dumps(ret_data))
             
             for bi in ret_data['data']['data']:
-                if cer['attributes']['identifier'] == apple_account.bundleId: # 删除指定 bundleId
+                if bi['attributes']['identifier'] == apple_account.bundleId: # 删除指定 bundleId
                     ret_tmp = asca.delete_bundleIds(bi['id'])
                     if ret_tmp['code'] != 0: # 如果删除bundleIds出现错误，不再执行
                         return HttpResponse(json.dumps(ret_tmp))
