@@ -234,7 +234,7 @@ class AppStoreConnectApi(object):
         self.__method = "GET"
         self.__url    = f"{apple_url}/certificates?limit=200"
         self.__data   = {
-            "certificateType": "IOS_DISTRIBUTION"
+            "certificateType": "IOS_DISTRIBUTION" # 这个筛选参数是不生效的，filter[certificateType] 这个不清楚怎么加入到参数里进行请求
         }
         self.__headers = {"Content-Type": "application/json"}
 
