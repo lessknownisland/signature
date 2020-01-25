@@ -37,7 +37,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
         ,{field:'operate', title:'操作', toolbar: '#apple_accounts_table_operatebar', fixed: 'right', width: 280}
         ,{field:'operate', title:'危险操作', toolbar: '#apple_accounts_table_dangerousoperatebar', fixed: 'right', width: 100}
       ]]
-      ,height:530
+      ,height:510
       ,page: true
   })
 
