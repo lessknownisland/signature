@@ -21,7 +21,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
         {type: 'checkbox', fixed: 'left'}
         ,{field:'id', title:'ID', sort:true}
         ,{field:'account', title:'账号', sort:true, width: 300}
-        ,{field:'count', title:'剩余次数', sort:true, width: 100}
+        ,{field:'count', title:'剩余次数', sort:true, width: 80}
         ,{field:'cer_id', title:'cer_id', sort:true, event: 'setSign', width: 150, style:'background-color: #FFB800; color: #fff;', templet: function(d){
           if (!d.cer_id){
             return "创建证书";
@@ -30,11 +30,11 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
           }
         }}
         ,{field:'bundleId', title:'bundleId', sort:true}
-        ,{field:'bundleIds', title:'bundleIds', sort:true}
+        ,{field:'bundleIds', title:'bundleIds', sort: true, hide: true}
         ,{field:'p12', title:'p12', sort:true}
         ,{field:'cer_content', title:'证书文本', sort: true, hide: true}
         ,{field:'status', title:'状态', templet: '#switchAppleAccountStatus', width: 150}
-        ,{field:'operate', title:'操作', toolbar: '#apple_accounts_table_operatebar', fixed: 'right', width: 300}
+        ,{field:'operate', title:'操作', toolbar: '#apple_accounts_table_operatebar', fixed: 'right', width: 280}
         ,{field:'operate', title:'危险操作', toolbar: '#apple_accounts_table_dangerousoperatebar', fixed: 'right', width: 100}
       ]]
       ,height:530
