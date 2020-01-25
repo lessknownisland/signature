@@ -50,6 +50,7 @@ class SendTelegram(object):
         self.__message = {}
         self.__doc     = doc
         self.__timeout = timeout
+        self.__verify  = False
         self.__url     = tg['url'][bot] if bot in tg['url'] else tg['url']['sa_monitor_bot']
         self.__message['parse_mode'] = message['parse_mode'] if 'parse_mode' in message else ''
         self.__message['doc_name']   = f"{settings.BASE_DIR}/tmp/{getDate()}_{message['doc_name']}" if 'doc_name' in message else getDate()+'_message.txt'
@@ -96,13 +97,13 @@ class SendTelegram(object):
         #logger.info(type(self.__message['text']))
         try:
             if (not self.__doc) or str(self.__doc).lower() == 'false':
-                ret = requests.post(self.__url+'sendMessage', data=self.__message, timeout=self.__timeout)
+                ret = requests.post(self.__url+'sendMessage', data=self.__message, timeout=self.__timeout, verify=self.__verify)
             else:
                 with open(self.__message['doc_name'], 'w') as f:
                     for line in self.__message['text'].split('\n'):
                         f.writelines(line+'\r\n')
                 self.__files = {'document': open(self.__message['doc_name'], 'rb')}
-                ret = requests.post(self.__url+'sendDocument', data=self.__message, files=self.__files, timeout=self.__timeout)
+                ret = requests.post(self.__url+'sendDocument', data=self.__message, files=self.__files, timeout=self.__timeout, verify=self.__verify)
                 
         except Exception as e:
             logger.error('Attention: send message failed!')
@@ -127,7 +128,7 @@ class SendTelegram(object):
         self.__message['caption'] = self.__message['text']
         files = {'photo': photo}
         try:
-            ret = requests.post(self.__url+'sendPhoto', data=self.__message, files=files, timeout=self.__timeout)
+            ret = requests.post(self.__url+'sendPhoto', data=self.__message, files=files, timeout=self.__timeout, verify=self.__verify)
                 
         except Exception as e:
             logger.error('Attention: send photo failed!')
@@ -152,7 +153,7 @@ class SendTelegram(object):
         self.__message['caption'] = self.__message['text']
         files = {'document': file}
         try:
-            ret = requests.post(self.__url+'sendDocument', data=self.__message, files=files, timeout=self.__timeout)
+            ret = requests.post(self.__url+'sendDocument', data=self.__message, files=files, timeout=self.__timeout, verify=self.__verify)
                 
         except Exception as e:
             logger.error('Attention: send file failed!')
