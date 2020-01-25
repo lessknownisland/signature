@@ -29,6 +29,8 @@ customers = CustomerTb.objects.filter(status=1).all()
 
 for customer in customers:
 
+    if customer.name == "默认": continue
+
     message['text'] = f"超级签\r\n业主: {customer.name}\r\n"
 
     logger.info(f"#"*100)
