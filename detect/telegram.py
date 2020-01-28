@@ -59,7 +59,7 @@ class SendTelegram(object):
         self.__message['disable_web_page_preview'] = False if 'disable_web_page_preview' in message and str(message['disable_web_page_preview']).lower() == 'false' else True
 
         if not os.path.exists(f"{settings.BASE_DIR}/tmp"):
-            os.mkdir(f"{settings.BASE_DIR}/tmp", 0755)
+            os.mkdir(f"{settings.BASE_DIR}/tmp")
 
         try: 
             self.__message['chat_id'] = TelegramChatGroupTb.objects.get(group=group).group_id 
