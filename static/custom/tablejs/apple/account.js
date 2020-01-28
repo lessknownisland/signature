@@ -20,6 +20,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
       ,cols: [[
         {type: 'checkbox', fixed: 'left'}
         ,{field:'id', title:'ID', sort:true, width: 80}
+        ,{field:'customer', title:'业主', sort:true, width: 80}
         ,{field:'account', title:'账号', sort:true, width: 300}
         ,{field:'count', title:'剩余次数', sort:true, width: 80}
         ,{field:'cer_id', title:'cer_id', sort:true, event: 'setSign', width: 150, style:'background-color: #FFB800; color: #fff;', templet: function(d){

@@ -5,6 +5,7 @@ from control.middleware.config      import RET_DATA
 from apple.middleware.api           import AppStoreConnectApi
 from apple.models  import AppleAccountTb, AppleDeviceTb, CsrTb
 from alioss.models import AliossBucketTb
+from customer.models import CustomerTb
 from detect.telegram                import SendTelegram
 from signature                      import settings
 from control.middleware.user        import User, login_required_layui, is_authenticated_to_request
@@ -174,22 +175,40 @@ def account_get(request):
     try:
         if request.method == 'POST':
             data = json.loads(request.body)
-            accounts = AppleAccountTb.objects.filter(account__icontains=data['account'], status__in=data['status']).order_by('-id')
-            logger.info(data)
+            if 'customer' not in data or not data['customer']:
+                accounts = AppleAccountTb.objects.filter(account__icontains=data['account'], status__in=data['status']).order_by('-id')
 
-            for account in accounts:
-                tmp_dict = {}
-                tmp_dict['id'] = account.id
-                tmp_dict['account'] = account.account
-                tmp_dict['count']   = account.count
-                tmp_dict['p12']     = account.p12
-                tmp_dict['cer_id']  = account.cer_id
-                tmp_dict['bundleId']   = account.bundleId
-                tmp_dict['bundleIds']   = account.bundleIds
-                tmp_dict['cer_content'] = account.cer_content
-                tmp_dict['status']  = account.status
+                for account in accounts:
+                    tmp_dict = {}
+                    tmp_dict['id'] = account.id
+                    tmp_dict['account'] = account.account
+                    tmp_dict['count']   = account.count
+                    tmp_dict['p12']     = account.p12
+                    tmp_dict['cer_id']  = account.cer_id
+                    tmp_dict['bundleId']   = account.bundleId
+                    tmp_dict['bundleIds']   = account.bundleIds
+                    tmp_dict['cer_content'] = account.cer_content
+                    tmp_dict['customer'] = 'None'
+                    tmp_dict['status']  = account.status
 
-                ret_data['data'].append(tmp_dict)
+                    ret_data['data'].append(tmp_dict)
+            else:
+                customers = CustomerTb.objects.filter(id__in=data['customer']).all()
+                for customer in customers:
+                    for account in customer.apple_account.all():
+                        tmp_dict = {}
+                        tmp_dict['id'] = account.id
+                        tmp_dict['account'] = account.account
+                        tmp_dict['count']   = account.count
+                        tmp_dict['p12']     = account.p12
+                        tmp_dict['cer_id']  = account.cer_id
+                        tmp_dict['bundleId']   = account.bundleId
+                        tmp_dict['bundleIds']   = account.bundleIds
+                        tmp_dict['cer_content'] = account.cer_content
+                        tmp_dict['customer'] = customer.name
+                        tmp_dict['status']  = account.status
+
+                        ret_data['data'].append(tmp_dict)
 
     except Exception as e:
         logger.error(str(e))

@@ -25,11 +25,12 @@
                         </select>
                   </div>
                 </div>
-                <script type="text/html" template lay-url="/oss/bucket/get" lay-done="layui.data.done_appleaccountossbucket(d);">
+
+                <script type="text/html" template lay-url="/customer/account/get" lay-done="layui.data.done_appleaccountcustomeraccount(d);">
                   <div class="layui-col-lg4">
-                    <label class="layui-form-label">Oss Bucket</label>
+                    <label class="layui-form-label">业主</label>
                     <div class="layui-input-block">
-                      <div name="apple_account_oss_bucket" id="apple_account_oss_bucket" class="xm-select-demo" lay-verify="apple_account_oss_bucket"></div>
+                      <div name="apple_account_customer_account" id="apple_account_customer_account" class="xm-select-demo" lay-verify="apple_account_customer_account"></div>
                     </div>
                   </div>
                 </script>
@@ -43,6 +44,15 @@
                       <input class="layui-input" name="apple_account" id="apple_account">
                     </div>
                 </div>
+
+                <script type="text/html" template lay-url="/oss/bucket/get" lay-done="layui.data.done_appleaccountossbucket(d);">
+                  <div class="layui-col-lg4">
+                    <label class="layui-form-label">Oss Bucket</label>
+                    <div class="layui-input-block">
+                      <div name="apple_account_oss_bucket" id="apple_account_oss_bucket" class="xm-select-demo" lay-verify="apple_account_oss_bucket"></div>
+                    </div>
+                  </div>
+                </script>
 
               </div>
 
@@ -87,6 +97,28 @@
 <script src="/static/custom/tablejs/apple/account.js"></script>
 
 <script>
+layui.data.done_appleaccountcustomeraccount = function(d){
+  layui.use(['admin', 'form', 'upload'], function(){
+    var $ = layui.$
+    ,form = layui.form
+    
+    layui.data.customer_account_data = d.data;
+
+    layui.data.apple_account_customer_account = xmSelect.render({
+      el: '#apple_account_customer_account', 
+      // radio: false,
+      // repeat: true,
+      toolbar: {show: true},
+      theme: {
+        color: '#8dc63f',
+      },
+      data: d.data
+    });
+
+  })
+
+}
+
 layui.data.done_appleaccountossbucket = function(d){
   layui.use(['form'], function(){
     var $ = layui.$
@@ -133,10 +165,13 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
   form.on('submit(appleaccount-form-element)', function(data){
     var type = $(this).data('type');
 
+    var ca = layui.data.apple_account_customer_account.getValue();
+
     // 初始化所选数据
     var postData = {
       'account': data.field.apple_account,
       'status': data.field.apple_account_status,
+      'customer': []
     };
 
     // 数据格式化，如果没有选择，默认获取所有选项的值
@@ -144,6 +179,11 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
       postData.status = [1, 0];
     }else {
       postData.status = postData.status.split(',').map(function (val) {return parseInt(val);})
+    }
+    if (ca.length !== 0){
+      for (var i in ca){
+        postData.customer.push(ca[i].value)
+      }
     }
 
     loading1.call(this); // 打开 等待的弹层
