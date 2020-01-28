@@ -45,6 +45,7 @@ for customer in customers:
 
     if len(message['text']) >= 1024:
         message['doc'] = True
+        message['caption'] = f"超级签 账号检测异常\r\n业主: {customer.name}\r\n"
 
     if "errors" in message['text']:
         message['group'] = "arno_test2"
