@@ -35,7 +35,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
         ,{field:'p12', title:'p12', sort:true}
         ,{field:'cer_content', title:'证书文本', sort: true, hide: true}
         ,{field:'status', title:'状态', templet: '#switchAppleAccountStatus', width: 150}
-        ,{field:'operate', title:'操作', toolbar: '#apple_accounts_table_operatebar', fixed: 'right', width: 280}
+        ,{field:'operate', title:'操作', toolbar: '#apple_accounts_table_operatebar', fixed: 'right', width: 320}
         ,{field:'operate', title:'危险操作', toolbar: '#apple_accounts_table_dangerousoperatebar', fixed: 'right', width: 100}
       ]]
       ,height:510
@@ -292,6 +292,107 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
           
         });
       });
+    }else if(obj.event === 'apple_account_customer_deploy'){
+      var ca = layui.data.apple_account_customer_account.getValue();
+      var customer = [];
+      var customer_selected = "";
+
+      if (ca.length === 0){
+        layer.msg('请至少选择一个业主', { // 如果证书文本不存在，则提示
+          offset: '15px'
+          ,icon: 2
+          ,time: 1500
+        })
+        return false;
+      }else {
+        for (var i in ca){
+          customer.push(ca[i].value);
+          customer_selected += ca[i].name + " "
+        }
+      }
+
+      layer.confirm('业主: '+ customer_selected, {
+          btn: ['分配业主', '删除当前业主'] //可以无限个按钮
+          ,icon: 3
+          ,title:data.account
+        },function(index){
+
+          loading1.call(this); // 打开 等待的弹层
+
+          admin.req({
+            url: '/apple/account/deploycustomer' //实际使用请改成服务端真实接口code == 1001
+            ,method: "post" 
+            ,data: JSON.stringify({
+                'id': data.id,
+                'customer': customer,
+                'deploy': 'add'
+              })
+            ,contentType: 'application/json'
+            ,done: function(res){
+              // 发送成功的提示
+              layer.msg(res.msg, {
+                offset: '15px'
+                ,icon: 1
+                ,time: 1500
+              });
+
+              layer.close(loading1_iii); // 关闭 等待的弹层
+              layer.close(index);
+            },success:function(res){
+              if (res.code == 1001){ // 登陆失效
+                layer.msg(res.msg, {
+                  offset: '15px'
+                  ,icon: 1
+                  ,time: 1500
+                })
+              };
+              layer.close(loading1_iii);
+            }
+        });
+      },function(index){
+        if(data.customer.toLowerCase() == "none"){
+          layer.msg('当前业主为空: None', { // 如果证书文本不存在，则提示
+            offset: '15px'
+            ,icon: 2
+            ,time: 1500
+          })
+          return false;
+        }
+
+        loading1.call(this); // 打开 等待的弹层
+
+        admin.req({
+          url: '/apple/account/deploycustomer' //实际使用请改成服务端真实接口code == 1001
+          ,method: "post" 
+          ,data: JSON.stringify({
+              'id': data.id,
+              'customer': data.customer,
+              'deploy': 'delete'
+          })
+          ,contentType: 'application/json'
+          ,done: function(res){
+            // 发送成功的提示
+            layer.msg(res.msg, {
+              offset: '15px'
+              ,icon: 1
+              ,time: 1500
+            });
+
+            layer.close(loading1_iii); // 关闭 等待的弹层
+            layer.close(index);
+            obj.del(); // 删除行
+          },success:function(res){data['customer']
+            if (res.code == 1001){ // 登陆失效
+              layer.msg(res.msg, {
+                offset: '15px'
+                ,icon: 1
+                ,time: 1500
+              })
+            };
+            layer.close(loading1_iii);
+          }
+        });
+      })
     }else if(obj.event === 'test_connect'){
 
       loading1.call(this); // 打开 等待的弹层

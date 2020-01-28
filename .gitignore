@@ -9,4 +9,5 @@ nohup.out
 *.p12
 *.mobileprovision
 tmp/*
+signature/settings.py
 #migrations

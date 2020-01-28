@@ -296,6 +296,47 @@ def account_edit(request):
 @csrf_exempt
 @login_required_layui
 @is_authenticated_to_request
+def account_deploycustomer(request):
+    '''
+        分配业主
+    '''
+    username, role, clientip = User(request).get_default_values()
+
+    # 初始化返回数据
+    ret_data = RET_DATA.copy()
+    ret_data['code'] = 0 # 请求正常，返回 0
+    ret_data['msg']  = '分配业主'
+    ret_data['data'] = []
+
+    try:
+        if request.method == 'POST':
+            data = json.loads(request.body)
+
+            logger.info(data)
+
+            account = AppleAccountTb.objects.get(id=data['id']) 
+
+            if data['deploy'] == 'add':
+                for customer in CustomerTb.objects.filter(id__in=data['customer']).all():
+                    customer.apple_account.add(account)
+            elif data['deploy'] == 'delete':
+                ret_data['msg']  = '删除业主'
+                customer = CustomerTb.objects.get(name=data['customer'])
+                customer.apple_account.remove(account)
+
+    except Exception as e:
+        logger.error(str(e))
+        ret_data['code'] = 500
+        ret_data['msg']  = f"{ret_data['msg']} 失败: {str(e)}"
+
+    else:
+        ret_data['msg']  = f"{ret_data['msg']} 成功"
+
+    return HttpResponse(json.dumps(ret_data))
+
+@csrf_exempt
+@login_required_layui
+@is_authenticated_to_request
 def account_test_connect(request):
     '''
         账号测试连接
