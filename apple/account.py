@@ -195,7 +195,7 @@ def account_get(request):
             else:
                 customers = CustomerTb.objects.filter(id__in=data['customer']).all()
                 for customer in customers:
-                    for account in customer.apple_account.all():
+                    for account in customer.apple_account.filter(account__icontains=data['account'], status__in=data['status']).order_by('-id').all():
                         tmp_dict = {}
                         tmp_dict['id'] = account.id
                         tmp_dict['account'] = account.account
