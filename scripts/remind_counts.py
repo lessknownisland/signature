@@ -53,6 +53,7 @@ for customer in customers:
 
     logger.info(caption)
     message['text'] += caption
+    message['caption'] = caption
 
     # 发送预警信息
     message['group'] = "arno_test2"
