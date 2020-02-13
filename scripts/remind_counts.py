@@ -54,6 +54,7 @@ for customer in customers:
     logger.info(caption)
     message['text'] += caption
     message['caption'] = caption
+    message['doc_name'] = f"超级签-{customer.name}.txt"
 
     # 发送预警信息
     message['group'] = "arno_test2"
