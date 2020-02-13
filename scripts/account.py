@@ -26,7 +26,7 @@ customers = CustomerTb.objects.filter(status=1).all()
 
 for customer in customers:
 
-    message['text'] = f"超级签 账号检测异常\r\n业主: {customer.name}\r\n"
+    message['text'] = f"超级签 账号检测异常\n业主: {customer.name}\n"
 
     logger.info(f"#"*100)
     logger.info(f"开始操作 业主: {customer.name}")
@@ -45,7 +45,7 @@ for customer in customers:
 
     if len(message['text']) >= 1024:
         message['doc'] = True
-        message['caption'] = f"超级签 账号检测异常\r\n业主: {customer.name}\r\n"
+        message['caption'] = f"超级签 账号检测异常\n业主: {customer.name}\n"
 
     if "errors" in message['text']:
         message['group'] = "arno_test2"

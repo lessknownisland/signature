@@ -1,6 +1,7 @@
 *.pyc
 logs/*
 log
+*.log
 ausign_runtime
 ausign_runtime/*
 tmp/*.txt

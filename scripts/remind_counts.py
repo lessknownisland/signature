@@ -31,7 +31,7 @@ for customer in customers:
 
     if customer.name == "默认": continue
 
-    message['text'] = f"超级签\r\n业主: {customer.name}\r\n"
+    message['text'] = f"超级签\n业主: {customer.name}\n"
 
     logger.info(f"#"*100)
     logger.info(f"开始操作 业主: {customer.name}")
@@ -41,15 +41,18 @@ for customer in customers:
 
     apple_accounts = customer.apple_account.filter(status=1).all()
     for apple_account in apple_accounts:
-        message['text'] += f"{apple_account.account}: {apple_account.count}\r\n"
+        message['text'] += f"{apple_account.account}: {apple_account.count}\n"
         logger.info(f"{apple_account.account}: {apple_account.count}")
         remain_all += apple_account.count
 
-    logger.info(f"所剩名额总数: {remain_all}")
-    message['text'] += "\r\n".join([
-            "所剩名额总数: %s" %remain_all,
+    caption = "\n".join([
+            f"账号总数: {len(apple_accounts)}",
+            f"签名所剩名额总数: {remain_all}",
             # "%s: %s" %(department.department, ", ".join(name)),
         ])
+
+    logger.info(caption)
+    message['text'] += caption
 
     # 发送预警信息
     message['group'] = "arno_test2"
