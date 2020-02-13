@@ -188,7 +188,7 @@ def account_get(request):
                     tmp_dict['bundleId']   = account.bundleId
                     tmp_dict['bundleIds']   = account.bundleIds
                     tmp_dict['cer_content'] = account.cer_content
-                    tmp_dict['customer'] = 'None'
+                    tmp_dict['customer'] = ','.join([ customer.name for customer in account.customertb_set.all() ])
                     tmp_dict['status']  = account.status
 
                     ret_data['data'].append(tmp_dict)
