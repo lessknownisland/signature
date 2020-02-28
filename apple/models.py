@@ -48,6 +48,7 @@ class PackageTb(models.Model):
     mini_version  = models.CharField(verbose_name="最低适配IOS版本号", max_length=8, null=False)
     bundle_identifier = models.CharField(verbose_name="BundleId", max_length=32, null=False)
     ipa = models.CharField(verbose_name="IOS 包地址", max_length=128, null=False)
+    apk = models.CharField(verbose_name="APK 包地址", max_length=128, null=True, blank=True)
     mobileconfig = models.CharField(verbose_name="mobileconfig 地址", max_length=128, null=False)
     count = models.IntegerField(verbose_name="当前下载量", null=False, default=0)
     customer = models.IntegerField(verbose_name="业主", null=False, default=1)

@@ -402,6 +402,51 @@ def package_install(request):
         return response
 
 @csrf_exempt
+# @login_required_layui
+# @is_authenticated_to_request
+def package_install_andios(request):
+    '''
+        区分 安卓 和 IOS
+    '''
+    username, role, clientip = User(request).get_default_values()
+    ret_data = RET_DATA.copy()
+
+    if request.method == "GET":
+        package_id = request.GET.get('id')
+        if not package_id or not IsSomeType(package_id).is_int():  # 如果传入的 ID 不正确
+            ret_data['msg'] = '传入的 package id 不正确'
+            ret_data['code'] = 500
+            return ret_error(ret_data)
+
+        # 获取package
+        try:
+            package = PackageTb.objects.get(id=package_id, status=1)
+
+        except PackageTb.DoesNotExist as e:
+            ret_data['msg'] = f"package: {package_id} 不存在或已禁用"
+            ret_data['code'] = 500
+            return ret_error(ret_data)
+
+        ios = re.compile(r".*(iphone|ipad|ipod).*", re.IGNORECASE)
+        android = re.compile(r".*Android.*", re.IGNORECASE)
+
+        if ios.match(request.META['HTTP_USER_AGENT']):
+            url = package.mobileconfig
+        
+        elif android.match(request.META['HTTP_USER_AGENT']):
+            url = package.apk
+        
+        else:
+            url = package.apk
+
+        # 跳转到对应的下载链接
+        redirect_url = url
+        response = HttpResponse(status=301, content_type="text/html;charset=UTF-8")
+        response['Location'] = redirect_url
+
+        return response
+
+@csrf_exempt
 @login_required_layui
 @is_authenticated_to_request
 def package_edit(request):
