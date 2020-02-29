@@ -30,6 +30,7 @@ layui.use(['admin', 'form', 'upload', 'table'], ()=>{
         ,{field:'customer', title:'业主', sort:true}
         ,{field:'status', title:'状态', templet: '#switchpackageStatus', width: 150}
         ,{field:'operate', title:'操作', toolbar: '#packages_table_operatebar', fixed: 'right', width: 200}
+        ,{field:'operate', title:'危险操作', toolbar: '#packages_table_dangerousoperatebar', fixed: 'right', width: 120}
       ]]
       ,height:530
       ,page: true
@@ -151,6 +152,43 @@ layui.use(['admin', 'form', 'upload', 'table'], ()=>{
             });
           });
         }
+      });
+    }else if(obj.event === 'package_delete'){
+      layer.confirm('删除: ID ' + data.id + ' - 包名 ' + data.name, {
+          icon: 3
+          ,title:'危险操作，请三思一下'
+        },function(index){
+
+          loading1.call(this); // 打开 等待的弹层
+
+          admin.req({
+            url: '/apple/package/delete' //实际使用请改成服务端真实接口code == 1001
+            ,method: "post" 
+            ,data: {'id': data.id}
+            // ,contentType: 'application/json'
+            ,done: function(res){
+              // 发送成功的提示
+              layer.msg(res.msg, {
+                offset: '15px'
+                ,icon: 1
+                ,time: 1500
+              });
+
+              layer.close(loading1_iii); // 关闭 等待的弹层
+              layer.close(index);
+              obj.del(); // 删除行
+            },success:function(res){
+              if (res.code == 1001){ // 登陆失效
+                layer.msg(res.msg, {
+                  offset: '15px'
+                  ,icon: 1
+                  ,time: 1500
+                })
+              };
+              layer.close(loading1_iii);
+            }
+          
+        });
       });
     }else if(obj.event === 'mobileconfig_create'){
 

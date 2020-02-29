@@ -4,7 +4,7 @@ from django.views.generic.base import RedirectView
 from . import views
 from apple.tests import *
 from apple.account import cer_create, account_get, account_delete, account_edit, p12_upload, csr_get, account_test_connect, account_deploycustomer
-from apple.package import package_upload, mobileconfig_create, package_install, package_install_andios, packages_get, package_edit
+from apple.package import package_upload, mobileconfig_create, package_install, package_install_andios, packages_get, package_edit, package_delete
 
 urlpatterns = [
     # APPLE
@@ -23,6 +23,7 @@ urlpatterns = [
     url('^package/install$', package_install, name='PackageInstall'), # 获取 签名过后的IPA 文件，用于用户下载安装
     url('^package/install/andios$', package_install_andios, name='PackageInstallAndIos'), # 区分安卓和IOS，用于用户下载安装
     url('^package/edit$', package_edit, name='PackageEdit'), # 修改 package
+    url('^package/delete$', package_delete, name='PackageDelete'), # 删除 package
     url('^packages/get$', packages_get, name='PackagesGet'), # 获取 packages
 
     # 测试

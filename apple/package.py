@@ -485,6 +485,51 @@ def package_edit(request):
 @csrf_exempt
 @login_required_layui
 @is_authenticated_to_request
+def package_delete(request):
+    '''
+        package 删除
+    '''
+    username, role, clientip = User(request).get_default_values()
+
+    # 初始化返回数据
+    ret_data = RET_DATA.copy()
+    ret_data['code'] = 0 # 请求正常，返回 0
+    ret_data['msg']  = 'package 删除'
+    ret_data['data'] = []
+
+    if request.method == 'POST':
+        data = request.POST
+
+        # 检查账号ID是否为空
+        if 'id' not in data or not IsSomeType(data['id']).is_int(): 
+            ret_data['msg'] = '传入的 Package id 不正确'
+            ret_data['code'] = 500
+            logger.error(ret_data['msg'])
+            return HttpResponse(json.dumps(ret_data))
+        else:
+            package_id = int(data['id'])
+
+        logger.info(data)
+
+        try:
+            package = PackageTb.objects.get(id=package_id)
+
+            # 删除package_id
+            package.delete()
+
+        except Exception as e:
+            logger.error(str(e))
+            ret_data['code'] = 500
+            ret_data['msg']  = f"{ret_data['msg']} 失败: {str(e)}"
+
+        else:
+            ret_data['msg']  = f"{ret_data['msg']} 成功"
+
+        return HttpResponse(json.dumps(ret_data))
+
+@csrf_exempt
+@login_required_layui
+@is_authenticated_to_request
 def packages_get(request):
     '''
         获取package 信息
