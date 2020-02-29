@@ -380,7 +380,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
 
             layer.close(loading1_iii); // 关闭 等待的弹层
             layer.close(index);
-            obj.del(); // 删除行
+            // obj.del(); // 删除行
           },success:function(res){data['customer']
             if (res.code == 1001){ // 登陆失效
               layer.msg(res.msg, {
