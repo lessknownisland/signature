@@ -361,7 +361,7 @@ def package_install(request):
             logger.info(f"mobiconfig 脚本执行成功: 耗时 {(e_time - s_time).total_seconds()} s")
 
         # 获取 oss bucket
-        ret_data = get_bucket()
+        ret_data = get_bucket_fromurl(ipa)
         if ret_data['code'] != 0:
             return ret_error(ret_data)
         else:
