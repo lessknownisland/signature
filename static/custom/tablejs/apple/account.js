@@ -366,7 +366,7 @@ layui.use(['admin', 'form', 'formSelects', 'upload', 'table'], ()=>{
           ,method: "post" 
           ,data: JSON.stringify({
               'id': data.id,
-              'customer': data.customer,
+              'customer': customer,
               'deploy': 'delete'
           })
           ,contentType: 'application/json'

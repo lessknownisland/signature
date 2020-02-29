@@ -321,8 +321,8 @@ def account_deploycustomer(request):
                     customer.apple_account.add(account)
             elif data['deploy'] == 'delete':
                 ret_data['msg']  = '删除业主'
-                customer = CustomerTb.objects.get(name=data['customer'])
-                customer.apple_account.remove(account)
+                for customer in CustomerTb.objects.filter(id__in=data['customer']).all():
+                    customer.apple_account.remove(account)
 
     except Exception as e:
         logger.error(str(e))
