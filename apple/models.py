@@ -41,11 +41,11 @@ class PackageTb(models.Model):
     '''
         苹果Ipa信息 表
     '''
-    name = models.CharField(verbose_name="IOS 包名", max_length=12, null=False)
+    name = models.CharField(verbose_name="IOS 包名", max_length=64, null=False)
     icon = models.CharField(verbose_name="Icon 地址", max_length=128, blank=True, null=True)
-    version = models.CharField(verbose_name="IOS 包版本号", max_length=8, null=False)
-    build_version = models.CharField(verbose_name="创建 版本号", max_length=8, null=False)
-    mini_version  = models.CharField(verbose_name="最低适配IOS版本号", max_length=8, null=False)
+    version = models.CharField(verbose_name="IOS 包版本号", max_length=32, null=False)
+    build_version = models.CharField(verbose_name="创建 版本号", max_length=32, null=False)
+    mini_version  = models.CharField(verbose_name="最低适配IOS版本号", max_length=32, null=False)
     bundle_identifier = models.CharField(verbose_name="BundleId", max_length=32, null=False)
     ipa = models.CharField(verbose_name="IOS 包地址", max_length=128, null=False)
     apk = models.CharField(verbose_name="APK 包地址", max_length=128, null=True, blank=True)
